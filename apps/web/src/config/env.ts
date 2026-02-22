@@ -1,16 +1,23 @@
 export const APP_ENV = import.meta.env.MODE
 
-const rawApiUrl = import.meta.env.VITE_API_URL as string | undefined
+const rawApiBase = import.meta.env.VITE_API_BASE_URL as string | undefined
+const rawWsBase = import.meta.env.VITE_WS_BASE_URL as string | undefined
 
-if (!rawApiUrl) {
-  // 统一兜底，避免在业务代码里出现硬编码地址
-  // 生产建议必须设置 VITE_API_URL
-  console.warn('[xgvst] VITE_API_URL is not set, fallback to /api')
-}
+if (!rawApiBase)
+  console.warn('[xgvst] VITE_API_BASE_URL is not set, fallback to /api')
 
-export const API_BASE_URL = (rawApiUrl?.trim() || '/api').replace(/\/$/, '')
+if (!rawWsBase)
+  console.warn('[xgvst] VITE_WS_BASE_URL is not set, fallback to /ws')
+
+export const API_BASE_URL = (rawApiBase?.trim() || '/api').replace(/\/$/, '')
+export const WS_BASE_URL = (rawWsBase?.trim() || '/ws').replace(/\/$/, '')
 
 export function buildApiUrl(path: string) {
   const normalized = path.startsWith('/') ? path : `/${path}`
   return `${API_BASE_URL}${normalized}`
+}
+
+export function buildWsUrl(path = '/ws') {
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return `${WS_BASE_URL}${normalized === '/ws' ? '' : normalized}`
 }

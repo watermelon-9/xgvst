@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import LoadingSkeleton from '~/components/LoadingSkeleton.vue'
+import { fetchApiHealth } from '~/api/status'
 import { API_BASE_URL } from '~/config/env'
 import { useMarketStore } from '~/stores/market'
 
@@ -10,8 +11,10 @@ useHead({ title: '西瓜说股 v3' })
 
 const market = useMarketStore()
 const loading = ref(true)
+const linkState = ref<'checking' | 'online' | 'offline'>('checking')
+const linkMessage = ref('初始化中…')
 
-onMounted(() => {
+onMounted(async () => {
   market.enqueueTick({
     symbol: '000001.SZ',
     price: 12.34,
@@ -21,18 +24,47 @@ onMounted(() => {
   setTimeout(() => {
     loading.value = false
   }, 850)
+
+  try {
+    const result = await fetchApiHealth()
+    if (result.status === 'ok') {
+      linkState.value = 'online'
+      linkMessage.value = `数据链路：在线 (${result.version} / ${result.tunnel})`
+    }
+    else {
+      linkState.value = 'offline'
+      linkMessage.value = `数据链路：异常 (${result.status || 'unknown'})`
+    }
+  }
+  catch (error) {
+    linkState.value = 'offline'
+    linkMessage.value = '数据链路：离线（Tunnel/API 未连通）'
+    console.warn('[xgvst] status check failed', error)
+  }
 })
 
 const tickCount = computed(() => market.ticks.length)
+const statusDotClass = computed(() => {
+  if (linkState.value === 'online')
+    return 'dot-online'
+  if (linkState.value === 'offline')
+    return 'dot-offline'
+  return 'dot-checking'
+})
 </script>
 
 <template>
   <section class="xg-landing bg-xg-bg text-xg-text border border-xg-border">
     <h1 class="text-3xl font-800">西瓜说股 v3</h1>
     <p>独立重构项目已启动（xgvst）。</p>
-    <p class="hint">当前阶段：P1.2（Cloudflare Pages 静态部署）</p>
+    <p class="hint">当前阶段：P1.3（API Tunnel 联通）</p>
 
-    <div class="mt-5 w-full max-w-190 rounded-lg border border-xg-border p-4 text-left text-sm">
+    <div class="status-row mt-2">
+      <span class="status-dot" :class="statusDotClass" />
+      <span>{{ linkMessage }}</span>
+    </div>
+
+    <div class="mt-4 w-full max-w-190 rounded-lg border border-xg-border p-4 text-left text-sm">
       <template v-if="loading">
         <LoadingSkeleton />
       </template>
@@ -59,6 +91,22 @@ const tickCount = computed(() => market.ticks.length)
   padding: 24px;
 }
 .hint { opacity: .7; font-size: 14px; }
+.status-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--xg-text-dim);
+}
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+.dot-online { background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, .6); }
+.dot-offline { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, .5); }
+.dot-checking { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, .5); }
 </style>
 
 <route lang="yaml">

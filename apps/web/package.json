@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.7.0",
   "scripts": {
-    "build": "vue-tsc --noEmit && vite-ssg build",
+    "build": "node scripts/check-env.mjs && vue-tsc --noEmit && vite-ssg build",
     "dev": "vite --port 3333 --open",
     "lint": "eslint .",
     "preview": "vite preview",

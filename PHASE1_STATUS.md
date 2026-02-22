@@ -2,35 +2,36 @@
 
 ## 当前阶段
 - P1.1 Vitesse 工程初始化：**已完成**
-- P1.2 Cloudflare Pages 静态部署：**进行中（鉴权与远程仓库待接入）**
+- P1.2 Cloudflare Pages 静态部署：**已完成**
+- P1.3 API Tunnel 联通：**进行中（核心链路已打通，等待你最终验收）**
 
-## 已完成
-- [x] 在 `xgvst/apps/web` 初始化 Vitesse 脚手架
-- [x] 安装依赖（`corepack pnpm install`）
-- [x] 本地开发服务可启动（`http://127.0.0.1:5174/`）
-- [x] 健康检查返回 `HTTP/1.1 200 OK`
-- [x] 清理 Vitesse Demo 页面（移除 `about` 与 `hi` 路由，首页改为 v3 项目落地页）
-- [x] 建立 UnoCSS 全局颜色变量（CSS Variables + Uno Theme）
-- [x] 建立高频状态基线：`Pinia + shallowRef + requestAnimationFrame`（`src/stores/market.ts`）
-- [x] 建立 CF Pages 配置文档与 `wrangler.toml`
-- [x] 建立 Monorepo 后端预留目录：`apps/server/`
-- [x] 建立首屏 Loading 骨架屏（CF 部署后可见验证点）
-- [x] 在 `index.html` 注入启动态背景+加载指示（降低白屏感知）
-- [x] 新增 Pages 自动化流水线草案：`.github/workflows/cloudflare-pages.yml`
-- [x] 锁定构建要求：`build` 内置 `vue-tsc --noEmit`
-- [x] 增加 `engines` 约束与示例环境文件（`.env.production.example`）
-- [x] 本地 `pnpm build` 再次通过（作为提交前门禁）
-- [x] 完成首版公网审计脚本：`scripts/check_ttfb_and_compression.sh`
+## P1.2 完成证据
+- 生产站点：`https://xgvst-web.pages.dev`
+- 预览站点：`https://develop.xgvst-web.pages.dev`
+- Brotli 生效：`content-encoding: br`
+- 首屏体验：用户手机 5G 反馈“几乎秒开，白屏 < 0.6s”
 
-## 兼容性修复
-- 由于当前环境访问字体源异常（TLS/ECONNRESET），已移除 UnoCSS `presetWebFonts` 远程字体处理，改为本地系统字体策略，保证 `pnpm dev` 稳定启动。
+## P1.3 已完成
+- [x] 新建并启动 API 隧道：`xgvst-api`（Cloudflare Tunnel）
+- [x] Public Hostname 绑定：`api.xgvst.com`
+- [x] 本地 Go/Gin 服务启动并由 launchd 保活：`com.xgvst.api.server`
+- [x] API 隧道守护进程保活：`com.xgvst.api.cloudflared`
+- [x] 后端健康接口：`GET /v3/health` -> `{"status":"ok","version":"v3.0.0","tunnel":"Cloudflare"}`
+- [x] 前端环境变量接入：
+  - `.env.production` -> `https://api.xgvst.com` / `wss://api.xgvst.com/ws`
+  - `.env.development` -> 本地 `127.0.0.1:8080`
+- [x] API 客户端封装：`src/api/client.ts`（fetch + timeout）
+- [x] 首页状态灯对接 `/v3/health` 联通检测
+- [x] 回归门禁：`pnpm build` 前执行 `scripts/check-env.mjs`（变量缺失即失败）
 
-## 当前阻塞（P1.2）
-1. 本地仓库尚未配置 `origin`（GitHub 远程缺失），无法把 `develop` 直接绑定到 Pages 预览。
-2. `wrangler whoami` 显示未登录，且在当前非交互环境执行 `wrangler pages project list` 报错要求 `CLOUDFLARE_API_TOKEN`；需完成 Cloudflare 鉴权后才能创建/关联 Pages 项目并拿到 `*.pages.dev` 预览地址。
+## Sub-C 审计摘要（P1.3）
+- API 连通性：`https://api.xgvst.com/v3/health` 返回 200
+- 证书：Cloudflare 边缘证书链有效（见审计报告）
+- 延迟抽样（本地到公网 API，HTTP/1.1）：
+  - 15 次中 14 次成功（1 次 TLS 瞬时失败）
+  - 成功样本平均 TTFB ≈ `0.179s`（p50≈0.166s，p95≈0.256s）
+- 断连演练：停掉 tunnel 后返回 530，恢复后回到 200
 
-## 下一步（待主Agent继续）
-1. 接入 GitHub 远程并推送 `main/develop`。
-2. 完成 Cloudflare 鉴权后执行 Pages 首次部署，回传 `*.pages.dev` URL。
-3. 拿到预览 URL 后执行 Sub-C 公网 TTFB 与压缩生效审计。
-4. 初始化 Go API 骨架与 proto（P2 前置，目录固定 `apps/server`）。
+## 待你确认
+1. 你侧手机访问：`https://api.xgvst.com/v3/health`
+2. 你确认 P1.3 通过后，我进入 P1.4（边缘协议与稳定性优化）。

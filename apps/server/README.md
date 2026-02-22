@@ -1,9 +1,15 @@
-# xgvst server (预留)
+# xgvst server
 
-此目录为 v3 后端服务预留路径（Sub-A 约束落地）。
+P1.3 使用 Go + Gin 提供占位动态接口（后续替换为完整行情服务）。
 
-- 推荐技术栈：Go + Gin + Gorilla WebSocket + Protobuf
-- 目录定位：Monorepo `apps/server`
-- 禁止写入 v2.039 项目目录
+## 启动
 
-后续 P2 阶段在此目录初始化服务骨架。
+```bash
+cd /Users/mac/.openclaw/workspace/xgvst/apps/server
+PATH=/Users/mac/.local/go/bin:$PATH go mod tidy
+PATH=/Users/mac/.local/go/bin:$PATH go run .
+```
+
+## 接口
+- `GET /status` -> `{ "status": "connected", ... }`
+- `GET /healthz` -> `{ "ok": true }`
