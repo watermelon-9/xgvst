@@ -1,0 +1,26 @@
+# dependencies
+**/node_modules/
+
+# build outputs
+apps/web/dist/
+apps/web/dist-ssr/
+apps/web/.vite-ssg-dist/
+apps/web/.vite-ssg-temp/
+
+# logs / temp
+*.log
+.DS_Store
+
+# reports & artifacts
+reports/lighthouse/*.html
+reports/lighthouse/*.json
+
+# large binary guardrails
+*.zip
+*.tar
+*.tar.gz
+*.dmg
+*.mp4
+*.mov
+*.psd
+*.ai
