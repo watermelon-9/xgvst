@@ -10,7 +10,7 @@ echo "[$(date '+%F %T')] supervisor start" >> "$LOG"
 
 while true; do
   echo "[$(date '+%F %T')] starting cloudflared" >> "$LOG"
-  /Users/mac/.local/bin/cloudflared --no-autoupdate --protocol quic --config "$CONFIG" tunnel run >> "$LOG" 2>&1 || true
+  /Users/mac/.local/bin/cloudflared --no-autoupdate --protocol http2 --config "$CONFIG" tunnel run >> "$LOG" 2>&1 || true
   echo "[$(date '+%F %T')] cloudflared exited, restart in 2s" >> "$LOG"
   sleep 2
 done
