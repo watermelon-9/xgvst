@@ -2,7 +2,8 @@
 import { computed, onMounted, ref } from 'vue'
 import LoadingSkeleton from '~/components/LoadingSkeleton.vue'
 import { fetchApiHealth } from '~/api/status'
-import { API_BASE_URL } from '~/config/env'
+import { API_BASE_URL, WS_BASE_URL } from '~/config/env'
+import { useMarketSocket } from '~/composables/useMarketSocket'
 import { useMarketStore } from '~/stores/market'
 
 defineOptions({ name: 'IndexPage' })
@@ -10,6 +11,8 @@ defineOptions({ name: 'IndexPage' })
 useHead({ title: '西瓜说股 v3' })
 
 const market = useMarketStore()
+const socket = useMarketSocket()
+
 const loading = ref(true)
 const linkState = ref<'checking' | 'online' | 'offline'>('checking')
 const linkMessage = ref('初始化中…')
@@ -25,8 +28,12 @@ onMounted(async () => {
     loading.value = false
   }, 850)
 
+  // P1.4: 首屏并发启动（API 健康检查 + WS 链路）
+  const healthTask = fetchApiHealth()
+  socket.connect()
+
   try {
-    const result = await fetchApiHealth()
+    const result = await healthTask
     if (result.status === 'ok') {
       linkState.value = 'online'
       linkMessage.value = `数据链路：在线 (${result.version} / ${result.tunnel})`
@@ -51,17 +58,30 @@ const statusDotClass = computed(() => {
     return 'dot-offline'
   return 'dot-checking'
 })
+
+const wsDotClass = computed(() => {
+  if (socket.state.value === 'online')
+    return 'dot-online'
+  if (socket.state.value === 'offline')
+    return 'dot-offline'
+  return 'dot-checking'
+})
 </script>
 
 <template>
   <section class="xg-landing bg-xg-bg text-xg-text border border-xg-border">
     <h1 class="text-3xl font-800">西瓜说股 v3</h1>
     <p>独立重构项目已启动（xgvst）。</p>
-    <p class="hint">当前阶段：P1.3（API Tunnel 联通）</p>
+    <p class="hint">当前阶段：P1.4（边缘协议加速 + WS 链路预热）</p>
 
     <div class="status-row mt-2">
       <span class="status-dot" :class="statusDotClass" />
       <span>{{ linkMessage }}</span>
+    </div>
+
+    <div class="status-row">
+      <span class="status-dot" :class="wsDotClass" />
+      <span>Socket：{{ socket.state }}（重连次数 {{ socket.reconnectAttempt }}）</span>
     </div>
 
     <div class="mt-4 w-full max-w-190 rounded-lg border border-xg-border p-4 text-left text-sm">
@@ -74,6 +94,8 @@ const statusDotClass = computed(() => {
         <div>Tick 缓冲后条数：{{ tickCount }}</div>
         <div>状态管理：<code>Pinia + shallowRef + requestAnimationFrame</code></div>
         <div>API 基址（env）：<code>{{ API_BASE_URL }}</code></div>
+        <div>WS 基址（env）：<code>{{ WS_BASE_URL }}</code></div>
+        <div>WS 最近事件：<code>{{ socket.lastEvent || '-' }}</code></div>
       </template>
     </div>
   </section>
