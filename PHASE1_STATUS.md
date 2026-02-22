@@ -3,7 +3,7 @@
 ## 当前阶段
 - P1.1 Vitesse 工程初始化：**已完成**
 - P1.2 Cloudflare Pages 静态部署：**已完成**
-- P1.3 API Tunnel 联通：**进行中（核心链路已打通，等待你最终验收）**
+- P1.3 API Tunnel 联通：**进行中（功能达标，链路波动待优化）**
 
 ## P1.2 完成证据
 - 生产站点：`https://xgvst-web.pages.dev`
@@ -19,10 +19,13 @@
 - [x] 后端健康接口：`GET /v3/health` -> `{"status":"ok","version":"v3.0.0","tunnel":"Cloudflare"}`
 - [x] 前端环境变量接入：
   - `.env.production` -> `https://api.xgvst.com` / `wss://api.xgvst.com/ws`
-  - `.env.development` -> 本地 `127.0.0.1:8080`
+  - `.env.development` -> `/api` + Vite Proxy 转发到本地 `127.0.0.1:8080`
 - [x] API 客户端封装：`src/api/client.ts`（fetch + timeout）
 - [x] 首页状态灯对接 `/v3/health` 联通检测
+- [x] Vite Dev Proxy 已接入（`/api`、`/ws` -> `127.0.0.1:8080`）
 - [x] 回归门禁：`pnpm build` 前执行 `scripts/check-env.mjs`（变量缺失即失败）
+- [x] 隧道启动脚本化：`scripts/tunnel_up.sh`（断线自动重启）
+- [x] Sub-C 脚本化审计：`sentry_heartbeat.sh` / `sentry_jitter_check.sh` / `sentry_throughput_test.sh`
 
 ## Sub-C 审计摘要（P1.3）
 - API 连通性：`https://api.xgvst.com/v3/health` 返回 200
@@ -31,6 +34,8 @@
   - 15 次中 14 次成功（1 次 TLS 瞬时失败）
   - 成功样本平均 TTFB ≈ `0.179s`（p50≈0.166s，p95≈0.256s）
 - 断连演练：停掉 tunnel 后返回 530，恢复后回到 200
+- Jitter 审计（10 次）：min 145.075ms / max 316.835ms / diff 171.760ms（按你红线判定：不稳定）
+- 1MB 吞吐测试：约 0.99s（≈1.01MB/s）
 
 ## 待你确认
 1. 你侧手机访问：`https://api.xgvst.com/v3/health`

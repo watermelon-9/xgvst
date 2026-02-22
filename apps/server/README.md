@@ -12,4 +12,6 @@ PATH=/Users/mac/.local/go/bin:$PATH go run .
 
 ## 接口
 - `GET /status` -> `{ "status": "connected", ... }`
+- `GET /v3/health` -> `{ "status":"ok", "version":"v3.0.0", "tunnel":"Cloudflare" }`
+- `GET /v3/blob?bytes=1048576` -> 返回 1MB 测试数据（吞吐审计用）
 - `GET /healthz` -> `{ "ok": true }`
