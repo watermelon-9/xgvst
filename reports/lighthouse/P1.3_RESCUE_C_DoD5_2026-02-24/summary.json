@@ -1,0 +1,256 @@
+{
+  "generatedAt": "2026-02-23T17:13:44.091Z",
+  "groups": {
+    "xgvst_com_mobile": {
+      "runCount": 5,
+      "runs": [
+        {
+          "file": "xgvst-com-mobile-20260224-011009-run1.json",
+          "score": 78,
+          "tbt": 969,
+          "lcp": 1587.6060000000002,
+          "fcp": 1077.3890000000001,
+          "si": 1222.2376690983256,
+          "cls": 0,
+          "jsdCount": 1,
+          "jsdTransfer": 139,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-com-mobile-20260224-011009-run2.json",
+          "score": 92,
+          "tbt": 363,
+          "lcp": 1127.069,
+          "fcp": 1122.069,
+          "si": 1123.582702043889,
+          "cls": 0,
+          "jsdCount": 1,
+          "jsdTransfer": 139,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-com-mobile-20260224-011009-run3.json",
+          "score": 85,
+          "tbt": 548,
+          "lcp": 2026.496,
+          "fcp": 1084.655,
+          "si": 1724.2993322514849,
+          "cls": 0,
+          "jsdCount": 1,
+          "jsdTransfer": 139,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-com-mobile-20260224-011009-run4.json",
+          "score": 94,
+          "tbt": 276,
+          "lcp": 1087.7705,
+          "fcp": 1081.7705,
+          "si": 1081.7705,
+          "cls": 0,
+          "jsdCount": 1,
+          "jsdTransfer": 139,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-com-mobile-20260224-011009-run5.json",
+          "score": 95,
+          "tbt": 256,
+          "lcp": 1073.777,
+          "fcp": 1073.777,
+          "si": 1073.777,
+          "cls": 0,
+          "jsdCount": 1,
+          "jsdTransfer": 139,
+          "jsdDuration": 0
+        }
+      ],
+      "medians": {
+        "score": 92,
+        "tbt": 363,
+        "lcp": 1127.1,
+        "fcp": 1081.8,
+        "si": 1123.6
+      },
+      "jsdPresentRuns": 5,
+      "scoreRange": [
+        78,
+        95
+      ]
+    },
+    "xgvst_com_desktop": {
+      "runCount": 2,
+      "runs": [
+        {
+          "file": "xgvst-com-desktop-20260224-011009-run1.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 456.2615,
+          "fcp": 304.4875,
+          "si": 407.12404236635973,
+          "cls": 0,
+          "jsdCount": 1,
+          "jsdTransfer": 139,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-com-desktop-20260224-011009-run2.json",
+          "score": 100,
+          "tbt": 47,
+          "lcp": 455.53149999999994,
+          "fcp": 301.4085,
+          "si": 364.4620216660621,
+          "cls": 0,
+          "jsdCount": 1,
+          "jsdTransfer": 139,
+          "jsdDuration": 0
+        }
+      ],
+      "medians": {
+        "score": 100,
+        "tbt": 23.5,
+        "lcp": 455.9,
+        "fcp": 302.9,
+        "si": 385.8
+      },
+      "jsdPresentRuns": 2,
+      "scoreRange": [
+        100,
+        100
+      ]
+    },
+    "xgvst_pages_mobile": {
+      "runCount": 5,
+      "runs": [
+        {
+          "file": "xgvst-pages-mobile-20260224-011138-run1.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 928.754,
+          "fcp": 921.754,
+          "si": 2425.4971240077975,
+          "cls": 0,
+          "jsdCount": 0,
+          "jsdTransfer": 0,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-pages-mobile-20260224-011138-run2.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 1090.1219999999998,
+          "fcp": 1083.6219999999998,
+          "si": 1083.6219999999998,
+          "cls": 0,
+          "jsdCount": 0,
+          "jsdTransfer": 0,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-pages-mobile-20260224-011138-run3.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 1112.153,
+          "fcp": 1100.153,
+          "si": 1100.153,
+          "cls": 0,
+          "jsdCount": 0,
+          "jsdTransfer": 0,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-pages-mobile-20260224-011138-run4.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 1121.4615,
+          "fcp": 1114.4615,
+          "si": 2350.065608354187,
+          "cls": 0,
+          "jsdCount": 0,
+          "jsdTransfer": 0,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-pages-mobile-20260224-011138-run5.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 1088.8395,
+          "fcp": 1084.3395,
+          "si": 2329.038012413788,
+          "cls": 0,
+          "jsdCount": 0,
+          "jsdTransfer": 0,
+          "jsdDuration": 0
+        }
+      ],
+      "medians": {
+        "score": 100,
+        "tbt": 0,
+        "lcp": 1090.1,
+        "fcp": 1084.3,
+        "si": 2329
+      },
+      "jsdPresentRuns": 0,
+      "scoreRange": [
+        100,
+        100
+      ]
+    },
+    "xgvst_pages_desktop": {
+      "runCount": 2,
+      "runs": [
+        {
+          "file": "xgvst-pages-desktop-20260224-011138-run1.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 317.8175,
+          "fcp": 317.8175,
+          "si": 317.8175,
+          "cls": 0,
+          "jsdCount": 0,
+          "jsdTransfer": 0,
+          "jsdDuration": 0
+        },
+        {
+          "file": "xgvst-pages-desktop-20260224-011138-run2.json",
+          "score": 100,
+          "tbt": 0,
+          "lcp": 324.327,
+          "fcp": 324.327,
+          "si": 335.28887506141666,
+          "cls": 0,
+          "jsdCount": 0,
+          "jsdTransfer": 0,
+          "jsdDuration": 0
+        }
+      ],
+      "medians": {
+        "score": 100,
+        "tbt": 0,
+        "lcp": 321.1,
+        "fcp": 321.1,
+        "si": 326.6
+      },
+      "jsdPresentRuns": 0,
+      "scoreRange": [
+        100,
+        100
+      ]
+    }
+  },
+  "baseline": {
+    "mobileScores": [
+      96,
+      98,
+      98,
+      97,
+      95
+    ],
+    "desktopScores": [
+      100,
+      100
+    ],
+    "mobileMedian": 97,
+    "desktopMedian": 100
+  }
+}
