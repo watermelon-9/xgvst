@@ -1,0 +1,29 @@
+{
+  "before": {
+    "clientJsKb": 87.25,
+    "clientCssKb": 3.49,
+    "otherKb": 5.95,
+    "jsCount": 18,
+    "cssCount": 1,
+    "precacheEntries": 26,
+    "precacheKiB": 90.22
+  },
+  "after": {
+    "clientJsKb": 87.46,
+    "clientCssKb": 3.49,
+    "otherKb": 5.95,
+    "jsCount": 18,
+    "cssCount": 1,
+    "precacheEntries": 26,
+    "precacheKiB": 90.41
+  },
+  "diff": {
+    "clientJsKb": 0.20999999999999375,
+    "clientCssKb": 0,
+    "otherKb": 0,
+    "jsCount": 0,
+    "cssCount": 0,
+    "precacheEntries": 0,
+    "precacheKiB": 0.18999999999999773
+  }
+}

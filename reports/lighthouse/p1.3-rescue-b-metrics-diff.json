@@ -1,0 +1,77 @@
+{
+  "before": {
+    "build": {
+      "clientJsKb": 87.25,
+      "clientCssKb": 3.49,
+      "otherKb": 5.95,
+      "jsCount": 18,
+      "cssCount": 1,
+      "precacheEntries": 26,
+      "precacheKiB": 90.22
+    },
+    "lh": {
+      "score": 99,
+      "fcp": 1371.2495,
+      "lcp": 1554.1996,
+      "tbt": 0,
+      "tti": 1554.1996,
+      "speedIndex": 1371.2495,
+      "mainThread": 186.98399999999998,
+      "totalBytes": 46828,
+      "scriptBytes": 41918,
+      "scriptReqCount": 15,
+      "scriptEval": 50.583999999999925,
+      "scriptParse": 1.8960000000000006
+    }
+  },
+  "after": {
+    "build": {
+      "clientJsKb": 87.46,
+      "clientCssKb": 3.49,
+      "otherKb": 5.95,
+      "jsCount": 18,
+      "cssCount": 1,
+      "precacheEntries": 26,
+      "precacheKiB": 90.41
+    },
+    "lh": {
+      "score": 100,
+      "fcp": 1358.799,
+      "lcp": 1538.799,
+      "tbt": 0,
+      "tti": 1538.799,
+      "speedIndex": 1358.799,
+      "mainThread": 164.936,
+      "totalBytes": 46895,
+      "scriptBytes": 41986,
+      "scriptReqCount": 15,
+      "scriptEval": 50.467999999999954,
+      "scriptParse": 2.1000000000000005
+    }
+  },
+  "diff": {
+    "build": {
+      "clientJsKb": 0.20999999999999375,
+      "clientCssKb": 0,
+      "otherKb": 0,
+      "jsCount": 0,
+      "cssCount": 0,
+      "precacheEntries": 0,
+      "precacheKiB": 0.18999999999999773
+    },
+    "lh": {
+      "score": 1,
+      "fcp": -12.45049999999992,
+      "lcp": -15.40059999999994,
+      "tbt": 0,
+      "tti": -15.40059999999994,
+      "speedIndex": -12.45049999999992,
+      "mainThread": -22.047999999999973,
+      "totalBytes": 67,
+      "scriptBytes": 68,
+      "scriptReqCount": 0,
+      "scriptEval": -0.11599999999997124,
+      "scriptParse": 0.20399999999999996
+    }
+  }
+}

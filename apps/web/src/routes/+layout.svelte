@@ -1,19 +1,27 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { initPwa } from '$lib/pwa';
 	import '../app.css';
 
 	let { children } = $props();
-	let theme = $state<'light' | 'dark'>('light');
+	let theme = $state<'light' | 'dark'>('dark');
+	let themeMeta: HTMLMetaElement | null = null;
+
+	const resolveInitialTheme = (): 'light' | 'dark' => {
+		if (typeof document === 'undefined') return 'dark';
+		return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+	};
 
 	const applyTheme = (value: 'light' | 'dark') => {
 		theme = value;
 		document.documentElement.dataset.theme = value;
+		themeMeta?.setAttribute('content', value === 'dark' ? '#111827' : '#f4f6fb');
 	};
 
 	onMount(() => {
-		const saved = localStorage.getItem('xgvst-theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		applyTheme(saved === 'dark' || (!saved && prefersDark) ? 'dark' : 'light');
+		themeMeta = document.querySelector('meta[name="theme-color"]');
+		theme = resolveInitialTheme();
+		initPwa();
 	});
 
 	const toggleTheme = () => {
@@ -27,6 +35,7 @@
 	<link rel="icon" href="/favicon.svg" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="description" content="西瓜说股 v3.0：市场总览与个股详情原型。" />
+	<meta name="theme-color" content="#111827" />
 	<title>西瓜说股 v3.0</title>
 </svelte:head>
 

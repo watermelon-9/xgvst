@@ -1,0 +1,25 @@
+{
+  "build": {
+    "clientJsKb": 87.25,
+    "clientCssKb": 3.49,
+    "otherKb": 5.95,
+    "jsCount": 18,
+    "cssCount": 1,
+    "precacheEntries": 26,
+    "precacheKiB": 90.22
+  },
+  "lighthouse": {
+    "score": 99,
+    "fcp": 1371.2495,
+    "lcp": 1554.1996,
+    "tbt": 0,
+    "tti": 1554.1996,
+    "speedIndex": 1371.2495,
+    "mainThread": 186.98399999999998,
+    "totalBytes": 46828,
+    "scriptBytes": 41918,
+    "scriptReqCount": 15,
+    "scriptEval": 50.583999999999925,
+    "scriptParse": 1.8960000000000006
+  }
+}
