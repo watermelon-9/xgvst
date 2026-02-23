@@ -52,7 +52,7 @@
 									<div>{item.name}</div>
 									<div class="muted">{item.symbol}</div>
 								</div>
-								<div style="text-align: right">
+								<div class="text-right">
 									<div>{item.last}</div>
 									<div class={item.changePct >= 0 ? 'up muted' : 'down muted'}>{item.changePct}%</div>
 								</div>
