@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fetchUniverse } from '$lib/api/client';
+	import { fetchUniverse } from '$lib/api';
 	import { marketState, getTopBoardName } from '$lib/runes/market-state.svelte';
 
 	onMount(async () => {
@@ -15,7 +15,7 @@
 <main class="page">
 	<div class="container">
 		<header class="topbar">
-			<h1 class="title">市场总览（Mock）</h1>
+			<h1 class="title">市场总览</h1>
 			<a href="/" class="back-link">返回首页</a>
 		</header>
 
