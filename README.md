@@ -11,6 +11,10 @@
 
 使用 pnpm workspace 管理多包结构。
 
+## 部署基线文档
+
+- Cloudflare Pages（`apps/web`）配置基线：`deploy/cloudflare-pages-baseline.md`
+
 ## Agent 协作机制（已固化）
 
 - 运行机制 / 交流协议 / 工作纪律：`team/AGENT_RUNTIME_CHARTER.md`
