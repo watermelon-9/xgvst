@@ -13,7 +13,7 @@
 				<h2>进入市场页</h2>
 				<p>查看 mock 版块与自选联动数据</p>
 			</a>
-			<a class="card" href="/detail/000001">
+			<a class="card" href="/detail">
 				<h2>进入个股详情</h2>
 				<p>查看 symbol 路由与详情骨架</p>
 			</a>

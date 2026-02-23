@@ -6,7 +6,7 @@
 	<div class="container max-w-[900px]">
 		<header class="topbar">
 			<h1 class="title">个股详情：{params.symbol}</h1>
-			<a href="/market" class="back-link">返回市场页</a>
+			<a href="/detail" class="back-link">返回详情索引</a>
 		</header>
 
 		<section class="panel mt-4 p-5">
