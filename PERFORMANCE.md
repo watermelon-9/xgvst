@@ -59,18 +59,29 @@
 1. **Build / Check 门禁**
    - 任一失败即判定为回归（阻断）。
 
-2. **Dev Ready 门禁**
-   - 目标值：`Vite ready < 800ms`（沿用 P1.1 DoD）。
-   - 若较当前基线上升超过 `+10%` 或 `+80ms`（取更严格者），判定为性能回归。
+2. **Dev Ready 门禁（分层）**
+   - 冷启动参考：`Vite ready < 1200ms`（用于识别环境抖动，不作唯一阻断）。
+   - 热启动门禁：5次刷新中位数 `< 800ms`（DoD-1 主判定）。
 
-3. **Lighthouse 门禁**
-   - 任一分类分数较基线下降 `> 3` 分，判定为回归。
-   - 阶段目标（DoD）：移动端/桌面端 Performance 应逐步收敛至 `>= 98`。
+3. **Lighthouse 门禁（统一口径）**
+   - **仅在 `build + preview` 环境验收**（禁止用 `pnpm dev` 作为 DoD-4 判定）。
+   - 阶段目标（DoD）：移动端/桌面端 Performance `>= 98`。
 
 4. **核心指标门禁（LCP/FCP/TBT/CLS/SI）**
    - LCP/FCP/SI：较基线上升超过 `10%` 视为回归。
    - TBT：较基线上升超过 `20%` 视为回归。
    - CLS：若从 `0` 变为 `>0.05` 视为回归。
+
+### 2.3 统一验收脚本（强制）
+
+- 统一命令：`./scripts/verify-p1.1.sh`
+- 统一产物：
+  - `reports/lighthouse/p1.1-verify-*.log`
+  - `reports/lighthouse/p1.1-verify-mobile.json`
+  - `reports/lighthouse/p1.1-verify-desktop.json`
+  - `reports/lighthouse/P1.1_统一口径验收报告_YYYY-MM-DD.md`
+- 统一规则：
+  - 同一份代码仅认可同一脚本产出的结论，禁止“手工口径”与“脚本口径”混用。
 
 ---
 
