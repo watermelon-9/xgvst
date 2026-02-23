@@ -52,6 +52,10 @@ a {
 	width: min(100%, 1024px);
 }
 
+.container-narrow {
+	width: min(100%, 900px);
+}
+
 .title {
 	margin: 0;
 	font-size: clamp(1.5rem, 2.2vw, 2rem);
@@ -63,10 +67,43 @@ a {
 	color: var(--color-subtle);
 }
 
+.subtitle-tight {
+	margin: 0;
+}
+
+.status-badge {
+	display: inline-block;
+	margin-left: 0.5rem;
+	padding: 0.125rem 0.5rem;
+	border-radius: 0.375rem;
+	font-size: 0.75rem;
+	line-height: 1.2;
+	background: color-mix(in srgb, var(--color-bg-purple) 45%, transparent);
+	color: #fff;
+}
+
+.trend-tag {
+	display: inline-block;
+	margin-left: 0.25rem;
+	font-size: 0.75rem;
+}
+
+.trend-up {
+	color: var(--color-up);
+}
+
+.trend-down {
+	color: var(--color-down);
+}
+
 .card-grid {
 	display: grid;
 	gap: 1rem;
 	margin-top: 1.5rem;
+}
+
+.card-grid-spaced {
+	margin-top: 1rem;
 }
 
 .card {
@@ -107,6 +144,11 @@ a {
 	border: 1px solid var(--color-border);
 }
 
+.panel-spaced {
+	margin-top: 1rem;
+	padding: 1.25rem;
+}
+
 .panel h2 {
 	margin: 0 0 0.75rem;
 	font-size: 1rem;
@@ -144,6 +186,10 @@ a {
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
+}
+
+.align-right {
+	text-align: right;
 }
 
 .muted {
