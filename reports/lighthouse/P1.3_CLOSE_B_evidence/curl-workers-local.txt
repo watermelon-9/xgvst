@@ -1,0 +1,12 @@
+# curl /v3/universe
+HTTP/1.1 200 OK
+Content-Length: 464
+Content-Type: application/json
+
+{"boards":[{"code":"BK001","name":"AI算力","changePct":2.31},{"code":"BK002","name":"半导体","changePct":-0.84},{"code":"BK003","name":"机器人","changePct":1.46}],"watchlist":[{"symbol":"000001","name":"平安银行","last":10.88,"changePct":0.56},{"symbol":"600519","name":"贵州茅台","last":1688,"changePct":-0.21},{"symbol":"300750","name":"宁德时代","last":205.5,"changePct":1.12}],"updatedAt":"2026-02-23T16:45:33.077Z","source":"workers-mock"}
+# curl /api/quote/mock
+HTTP/1.1 200 OK
+Content-Length: 193
+Content-Type: application/json
+
+{"symbol":"000001","name":"平安银行","price":10.88,"changePct":0.56,"ts":"2026-02-23T16:45:33.097Z","protoBase64":"CgYwMDAwMDERw/UoXI/CJUAZ7FG4HoXr4T8iGDIwMjYtMDItMjNUMTY6NDU6MzMuMDk3Wg=="}

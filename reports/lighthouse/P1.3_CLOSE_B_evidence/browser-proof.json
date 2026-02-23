@@ -1,0 +1,17 @@
+{
+  "records": [
+    {
+      "type": "request",
+      "url": "http://127.0.0.1:8791/v3/universe",
+      "method": "GET"
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8791/v3/universe",
+      "status": 200,
+      "body": "{\"boards\":[{\"code\":\"BK001\",\"name\":\"沪深主板\",\"changePct\":0.72},{\"code\":\"BK002\",\"name\":\"人工智能\",\"changePct\":1.38},{\"code\":\"BK003\",\"name\":\"新能源\",\"changePct\":-0.41}],\"watchlist\":[{\"symbol\":\"000001\",\"name\":\"平安银行\",\"last\":10.88,\"changePct\":0.56},{\"symbol\":\"600519\",\"name\":\""
+    }
+  ],
+  "errors": [],
+  "textPreview": "市场总览\n返回首页\n版块\n沪深主板\n0.72%\n人工智能\n1.38%\n新能源\n-0.41%\n自选\n平安银行\n000001\n10.88\n0.56%\n贵州茅台\n600519\n1628.3\n0.42%\n宁德时代\n300750\n182.45\n-0.35%\n当前版块：沪深主板 ｜ 当前个股：000001"
+}

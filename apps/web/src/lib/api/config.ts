@@ -1,3 +1,5 @@
+import { env } from '$env/dynamic/public';
+
 export type ApiProviderName = 'workers' | 'alltick' | 'sina' | 'tencent' | 'mock';
 
 function parseBoolean(value: string | undefined, defaultValue: boolean): boolean {
@@ -23,8 +25,8 @@ function resolveProvider(rawProvider: string | undefined): ApiProviderName {
 }
 
 export const apiConfig = {
-	provider: resolveProvider(import.meta.env.PUBLIC_API_PROVIDER),
-	workerApiUrl: import.meta.env.PUBLIC_WORKER_API_URL?.trim() ?? '',
-	legacyApiUrl: import.meta.env.PUBLIC_API_URL?.trim() ?? '',
-	fallbackToMock: parseBoolean(import.meta.env.PUBLIC_API_FALLBACK_MOCK, true)
+	provider: resolveProvider(env.PUBLIC_API_PROVIDER),
+	workerApiUrl: env.PUBLIC_WORKER_API_URL?.trim() ?? '',
+	legacyApiUrl: env.PUBLIC_API_URL?.trim() ?? '',
+	fallbackToMock: parseBoolean(env.PUBLIC_API_FALLBACK_MOCK, false)
 };
