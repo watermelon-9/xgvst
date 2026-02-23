@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import 'virtual:uno.css';
 	import '../app.css';
 
 	let { children } = $props();
