@@ -3,5 +3,10 @@ import UnoCSS from 'unocss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [UnoCSS(), sveltekit()]
+	plugins: [UnoCSS({ inspector: false }), sveltekit()],
+	optimizeDeps: {
+		noDiscovery: true,
+		include: [],
+		holdUntilCrawlEnd: false
+	}
 });
