@@ -17,3 +17,4 @@
 - 执行基线任务清单：`/Users/mac/.openclaw/workspace/西瓜说股_v3.0_详细任务安排_修订版_2026-02-23.md`
 - 文件边界：与 v3 新项目相关的所有文件统一存放在 `xgvst/` 目录。
 - 运行守护：`scripts/sentry_heartbeat.sh`（由 launchd 每 300 秒巡检一次）。
+- 强制播报：任务发布/领取/完成/阻塞/心跳五类消息必须对用户可见（见 `team/AGENT_RUNTIME_CHARTER.md`）。
