@@ -39,6 +39,20 @@
 - `reports/lighthouse/西瓜说股_v3.0_P1.1_初始性能报告.md`
 - `reports/p1.1-lighthouse.json`
 
+### 1.3 P1.2部署基准（当前已知）
+
+采样环境：Cloudflare Pages 生产域名 `https://xgvst-web.pages.dev/`。
+
+| 口径 | Performance 分数 | 证据路径 |
+|---|---:|---|
+| P1.2 Block-B 前置采样（mobile） | 98 | `reports/lighthouse/p1.2-blockb-before-mobile.json` |
+| P1.2 Block-B 前置采样（desktop） | 98 | `reports/lighthouse/p1.2-blockb-before-desktop.json` |
+| P1.2 DoD-6 采样（mobile） | 72 | `reports/lighthouse/p1.2-dod6-mobile.json` |
+| P1.2 DoD-6 采样（desktop） | 95 | `reports/lighthouse/p1.2-dod6-desktop.json` |
+
+补充部署证据：
+- `reports/lighthouse/P1.2_部署执行验收_2026-02-23.md`
+
 ---
 
 ## 2) 后续对比规则（必须遵守）
