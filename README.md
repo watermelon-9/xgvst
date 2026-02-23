@@ -15,3 +15,4 @@
 
 - 运行机制 / 交流协议 / 工作纪律：`team/AGENT_RUNTIME_CHARTER.md`
 - 执行基线任务清单：`/Users/mac/.openclaw/workspace/西瓜说股_v3.0_详细任务安排_修订版_2026-02-23.md`
+- 文件边界：与 v3 新项目相关的所有文件统一存放在 `xgvst/` 目录。
