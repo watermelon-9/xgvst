@@ -1,0 +1,11 @@
+HTTP/1.1 101 Switching Protocols
+Date: Mon, 23 Feb 2026 16:53:41 GMT
+Connection: upgrade
+Upgrade: websocket
+Sec-WebSocket-Accept: qGEgH3En71di5rrssAZTmtRTyFk=
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=t3ff%2BOlElSuTQsqvRLx%2B%2BPFiRi0zsHxilXsOcwH22Ol%2BmtyVtcZQvzEDvFhhzcJk%2BvP3812Uo1Jr2yXMarVUGsZIV6RN4CuOve98wBvR9WGSWlNiZrZnScd8suW4%2FbcK0iberkGxRhrvll1BbZvVG9XTGr4H"}],"group":"cf-nel","max_age":604800}
+NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+CF-RAY: 9d283da188742104-HKG
+alt-svc: h3=":443"; ma=86400
+

@@ -50,7 +50,12 @@ app.use('*', async (c, next) => {
   await next();
 
   for (const [key, value] of corsHeaders.entries()) {
-    c.res.headers.set(key, value);
+    try {
+      c.res.headers.set(key, value);
+    } catch {
+      // WebSocket upgrade responses have immutable headers in workerd.
+      // Ignore to avoid breaking upgrade handshakes.
+    }
   }
 });
 

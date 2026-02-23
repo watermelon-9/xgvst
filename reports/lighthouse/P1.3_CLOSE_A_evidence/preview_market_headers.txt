@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+content-length: 2336
+content-type: text/html
+etag: "1dycz0"
+link: <./_app/immutable/assets/0.Ck3ckOkr.css>; rel="preload"; as="style"; nopush, <./_app/immutable/entry/start.BfKe8PkS.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/C9HGKBS7.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/BXLxv6HR.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/YTUX3QaG.js>; rel="modulepreload"; nopush, <./_app/immutable/entry/app.DzuVK6Vl.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/DyVHCirA.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/D3edlb6y.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/Byn4Cv87.js>; rel="modulepreload"; nopush, <./_app/immutable/nodes/0.C9fRdFuA.js>; rel="modulepreload"; nopush, <./_app/immutable/nodes/5.uVZjqyjK.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/CPa0nT3a.js>; rel="modulepreload"; nopush, <./_app/immutable/chunks/Iw_1n_bw.js>; rel="modulepreload"; nopush
+x-sveltekit-page: true
+Date: Mon, 23 Feb 2026 16:50:41 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

@@ -1,0 +1,25 @@
+{
+  "health_total_time": {
+    "samples": 20,
+    "min_ms": 1.12,
+    "p50_ms": 2.19,
+    "p95_ms": 5.31,
+    "max_ms": 11.32
+  },
+  "quote_total_time": {
+    "samples": 20,
+    "min_ms": 1.0,
+    "p50_ms": 1.72,
+    "p95_ms": 2.52,
+    "max_ms": 2.53
+  },
+  "ws_upgrade_starttransfer_101_only": {
+    "samples": 20,
+    "min_ms": 1.15,
+    "p50_ms": 1.99,
+    "p95_ms": 3.86,
+    "max_ms": 4.1
+  },
+  "ws_101_success_count": 20,
+  "ws_total_samples": 20
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			(() => {
+				try {
+					const saved = localStorage.getItem('xgvst-theme');
+					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					const theme = saved === 'dark' || (!saved && prefersDark) ? 'dark' : 'light';
+					document.documentElement.dataset.theme = theme;
+				} catch {
+					document.documentElement.dataset.theme = 'dark';
+				}
+			})();
+		</script>
+		<!--12qhfyh--><link rel="icon" href="/favicon.svg"/> <meta name="viewport" content="width=device-width, initial-scale=1"/> <meta name="description" content="西瓜说股 v3.0：市场总览与个股详情原型。"/> <meta name="theme-color" content="#111827"/><!----><title>西瓜说股 v3.0</title>
+		<link href="./_app/immutable/assets/0.Ck3ckOkr.css" rel="stylesheet">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[--><!--[--><button type="button" class="theme-toggle" aria-label="切换明暗主题"><span>🌙 暗黑</span></button> <!--[--><main class="page"><div class="container"><header class="topbar"><h1 class="title">市场总览</h1> <a href="/" class="back-link">返回首页</a></header> <section class="panel-grid"><div class="panel"><h2>版块</h2> <div class="list"><!--[--><!--]--></div></div> <div class="panel"><h2>自选</h2> <div class="list"><!--[--><!--]--></div></div></section> <footer class="footer">当前版块：未选择 ｜ 当前个股：未选择</footer></div></main><!--]--><!----><!--]--><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_tz6jbv = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {"PUBLIC_API_PROVIDER":"workers","PUBLIC_WORKER_API_URL":"https://xgvst-workers.viehh642.workers.dev","PUBLIC_API_FALLBACK_MOCK":"false"}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("./_app/immutable/entry/start.BfKe8PkS.js"),
+						import("./_app/immutable/entry/app.DzuVK6Vl.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data: [null,null],
+							form: null,

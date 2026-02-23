@@ -1,0 +1,15 @@
+HTTP/2 200 
+date: Mon, 23 Feb 2026 16:56:57 GMT
+content-type: application/json
+content-length: 193
+access-control-allow-origin: *
+vary: Origin
+access-control-allow-headers: Content-Type, Authorization, Upgrade
+access-control-allow-methods: GET,POST,OPTIONS
+access-control-max-age: 86400
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Ex4JpGsTC6%2Fta4G3GEnjP4q9lBq6VIXCiIzQxslFXao4IpVL1XSdl7IOkOoMjnfj7MVG5eBCjGSfUOLHSpv1pOUkbGZiQBJKuF8jCWMPit3SaMIDc4OUwq5dw5EmTgntIkE%3D"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server: cloudflare
+cf-ray: 9d28426ecdb90701-HKG
+alt-svc: h3=":443"; ma=86400
+
