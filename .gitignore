@@ -24,3 +24,7 @@ yarn-error.log*
 .DS_Store
 .vscode/
 .idea/
+
+# cloudflare local state
+.wrangler/
+**/.wrangler/

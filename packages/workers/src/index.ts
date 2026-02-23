@@ -3,12 +3,10 @@ import { QuoteDurableObject } from './durable/QuoteDurableObject';
 import { encodeQuote } from './proto/quote';
 
 type Bindings = {
-  API_URL: string;
-  KV_NAMESPACE: string;
-  D1_DATABASE_ID: string;
   QUOTE_KV: KVNamespace;
   QUOTE_DB: D1Database;
   QUOTE_DO: DurableObjectNamespace;
+  QUOTE_API_TOKEN?: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();

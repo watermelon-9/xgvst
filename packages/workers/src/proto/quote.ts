@@ -1,4 +1,4 @@
-import protobuf from 'protobufjs/light';
+import { Writer } from 'protobufjs/minimal';
 
 export interface QuotePayload {
   symbol: string;
@@ -7,13 +7,20 @@ export interface QuotePayload {
   ts: string;
 }
 
-const QuoteType = new protobuf.Type('QuotePayload')
-  .add(new protobuf.Field('symbol', 1, 'string'))
-  .add(new protobuf.Field('price', 2, 'double'))
-  .add(new protobuf.Field('changePct', 3, 'double'))
-  .add(new protobuf.Field('ts', 4, 'string'));
-
+/**
+ * QuotePayload proto3 encoding:
+ * 1 -> symbol (string)
+ * 2 -> price (double)
+ * 3 -> changePct (double)
+ * 4 -> ts (string)
+ */
 export function encodeQuote(payload: QuotePayload): Uint8Array {
-  const message = QuoteType.create(payload);
-  return QuoteType.encode(message).finish();
+  const writer = Writer.create();
+
+  writer.uint32(10).string(payload.symbol);
+  writer.uint32(17).double(payload.price);
+  writer.uint32(25).double(payload.changePct);
+  writer.uint32(34).string(payload.ts);
+
+  return writer.finish();
 }
