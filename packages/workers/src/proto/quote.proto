@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message QuotePayload {
+  string symbol = 1;
+  double price = 2;
+  double changePct = 3;
+  string ts = 4;
+}

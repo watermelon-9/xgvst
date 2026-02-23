@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "corepack pnpm --filter web dev",
     "build": "corepack pnpm --filter web build",
-    "check": "corepack pnpm --filter web check"
+    "check": "corepack pnpm --filter web check",
+    "workers:dev": "corepack pnpm --filter workers dev",
+    "workers:check": "corepack pnpm --filter workers check",
+    "workers:deploy": "corepack pnpm --filter workers deploy"
   }
 }

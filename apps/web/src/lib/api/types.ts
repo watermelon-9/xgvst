@@ -16,3 +16,12 @@ export interface UniverseResponse {
 	watchlist: WatchItem[];
 	updatedAt: string;
 }
+
+export interface QuoteResponse {
+	symbol: string;
+	name: string;
+	price: number;
+	changePct: number;
+	ts: string;
+	protoBase64?: string;
+}

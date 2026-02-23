@@ -1,0 +1,27 @@
+name = "xgvst-workers"
+main = "src/index.ts"
+compatibility_date = "2026-02-23"
+workers_dev = true
+
+[vars]
+API_URL = "https://api.placeholder.invalid"
+KV_NAMESPACE = "REPLACE_WITH_KV_NAMESPACE"
+D1_DATABASE_ID = "00000000-0000-0000-0000-000000000000"
+
+[[kv_namespaces]]
+binding = "QUOTE_KV"
+id = "00000000000000000000000000000000"
+preview_id = "00000000000000000000000000000000"
+
+[[d1_databases]]
+binding = "QUOTE_DB"
+database_name = "xgvst_quote"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+[[durable_objects.bindings]]
+name = "QUOTE_DO"
+class_name = "QuoteDurableObject"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["QuoteDurableObject"]
