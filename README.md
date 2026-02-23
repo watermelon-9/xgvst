@@ -18,3 +18,4 @@
 - 文件边界：与 v3 新项目相关的所有文件统一存放在 `xgvst/` 目录。
 - 运行守护：`scripts/sentry_heartbeat.sh`（由 launchd 每 300 秒巡检一次）。
 - 强制播报：任务发布/领取/完成/阻塞/心跳五类消息必须对用户可见（见 `team/AGENT_RUNTIME_CHARTER.md`）。
+- 心跳主线：每次5分钟心跳需同步“当前主线任务”一句话。
