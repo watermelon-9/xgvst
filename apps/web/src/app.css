@@ -1,10 +1,13 @@
 :root {
+	--color-up: #ef4444;
+	--color-down: #22c55e;
+	--color-bg-purple: #4f46e5;
 	font-family: Inter, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, -apple-system,
 		'Segoe UI', sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
 	color: #ffffff;
-	background: #4f46e5;
+	background: var(--color-bg-purple);
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -17,7 +20,7 @@
 body {
 	margin: 0;
 	min-height: 100vh;
-	background: #4f46e5;
+	background: var(--color-bg-purple);
 }
 
 a {
@@ -135,11 +138,11 @@ a {
 }
 
 .up {
-	color: #ef4444;
+	color: var(--color-up);
 }
 
 .down {
-	color: #22c55e;
+	color: var(--color-down);
 }
 
 .topbar {
