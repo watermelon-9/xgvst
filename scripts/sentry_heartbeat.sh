@@ -11,6 +11,9 @@ mkdir -p "$BASE/reports/lighthouse"
 NOW_EPOCH="$(date +%s)"
 NOW_HUMAN="$(date '+%Y-%m-%d %H:%M:%S')"
 
+# 主线任务（写死）
+MAINLINE="主Agent总控推进西瓜说股v3重构：按《西瓜说股_v3.0_详细任务安排_修订版_2026-02-23.md》执行，确保xgvst与v2.039隔离，持续派发/验收/播报。"
+
 # main session 最近活动滞后秒数
 MAIN_LAG_SEC="$(python3 - <<'PY'
 import json, time
@@ -79,12 +82,12 @@ print(cnt)
 PY
 )"
 
-printf "%s main_lag=%ss stale_subagents=%s recent_exec_fails=%s\n" \
-  "$NOW_HUMAN" "$MAIN_LAG_SEC" "$STALE_SUBAGENTS" "$RECENT_EXEC_FAILS" >> "$LOG"
+printf "%s mainline=\"%s\" main_lag=%ss stale_subagents=%s recent_exec_fails=%s\n" \
+  "$NOW_HUMAN" "$MAINLINE" "$MAIN_LAG_SEC" "$STALE_SUBAGENTS" "$RECENT_EXEC_FAILS" >> "$LOG"
 
 # 仅写告警标记，不做破坏性动作
 if [[ "$MAIN_LAG_SEC" -gt 300 || "$STALE_SUBAGENTS" -gt 0 ]]; then
-  printf "%s ALERT lag=%ss stale_subagents=%s\n" "$NOW_HUMAN" "$MAIN_LAG_SEC" "$STALE_SUBAGENTS" \
+  printf "%s ALERT mainline=\"%s\" lag=%ss stale_subagents=%s\n" "$NOW_HUMAN" "$MAINLINE" "$MAIN_LAG_SEC" "$STALE_SUBAGENTS" \
     >> "$BASE/reports/lighthouse/p1.3-heartbeat.alert.log"
 fi
 
