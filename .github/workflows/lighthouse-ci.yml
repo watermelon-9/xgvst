@@ -1,0 +1,30 @@
+name: Lighthouse CI (Mobile Median Gate)
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse-mobile-gate:
+    runs-on: ubuntu-latest
+    env:
+      LIGHTHOUSE_URL: ${{ vars.LIGHTHOUSE_URL || 'https://xgvst.com/' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lighthouse CI (3 runs, mobile)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ env.LIGHTHOUSE_URL }}
+          runs: 3
+          configPath: ./lighthouserc.mobile.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Local-equivalent median gate (score >= 97)
+        run: bash scripts/lh-median-check.sh "${LIGHTHOUSE_URL}" 97

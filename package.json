@@ -7,6 +7,7 @@
     "dev": "corepack pnpm --filter web dev",
     "build": "corepack pnpm --filter web build",
     "check": "corepack pnpm --filter web check",
+    "lh:median": "bash scripts/lh-median-check.sh",
     "workers:dev": "corepack pnpm --filter workers dev",
     "workers:check": "corepack pnpm --filter workers check",
     "workers:deploy": "corepack pnpm --filter workers deploy"

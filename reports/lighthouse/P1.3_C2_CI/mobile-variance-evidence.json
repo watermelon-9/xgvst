@@ -1,0 +1,30 @@
+{
+  "source": "reports/lighthouse/P1.3_C2_CI/lh-median-20260224-001407-run{1,2,3}.json",
+  "metrics": [
+    {
+      "run": 1,
+      "score": 65,
+      "tbtMs": 41157,
+      "lcpMs": 1657,
+      "cfJsdBootScriptingMs": 25600,
+      "maxLongTaskMs": 10000
+    },
+    {
+      "run": 2,
+      "score": 87,
+      "tbtMs": 495,
+      "lcpMs": 1111,
+      "cfJsdBootScriptingMs": 1088,
+      "maxLongTaskMs": 545
+    },
+    {
+      "run": 3,
+      "score": 87,
+      "tbtMs": 482,
+      "lcpMs": 2112,
+      "cfJsdBootScriptingMs": 1060,
+      "maxLongTaskMs": 532
+    }
+  ],
+  "finding": "Cloudflare cdn-cgi/challenge-platform/scripts/jsd/main.js 的主线程脚本执行时长在移动端存在数量级波动（~1s 到 ~25.6s），直接拉高 TBT 并拖低性能分。"
+}

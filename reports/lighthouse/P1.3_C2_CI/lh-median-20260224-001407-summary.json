@@ -1,0 +1,18 @@
+{
+  "url": "https://xgvst.com/",
+  "threshold": 97,
+  "runs": 3,
+  "scores": [
+    65,
+    87,
+    87
+  ],
+  "sortedScores": [
+    65,
+    87,
+    87
+  ],
+  "median": 87,
+  "pass": false,
+  "generatedAt": "2026-02-23T16:15:22.994Z"
+}
