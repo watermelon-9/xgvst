@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { createHmac } from 'node:crypto';
 
 const BASE_URL = (process.env.P24_BASE_URL ?? 'http://127.0.0.1:8787').replace(/\/$/, '');
 const OUT_DIR = path.resolve(process.env.P24_OUT_DIR ?? 'reports/lighthouse/P2.4_C/raw');
@@ -12,6 +13,8 @@ const MIGRATION_SYMBOL_COUNT = Number(process.env.P24_MIGRATION_SYMBOL_COUNT ?? 
 const SYNC_TIMEOUT_MS = Number(process.env.P24_SYNC_TIMEOUT_MS ?? 5000);
 const SYNC_POLL_MS = Number(process.env.P24_SYNC_POLL_MS ?? 80);
 const USER_PREFIX = process.env.P24_USER_PREFIX ?? 'p24-baseline';
+
+const TIMESTAMP_TAG = new Date().toISOString().replace(/[:.]/g, '-');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -41,6 +44,33 @@ function generateSymbols(count, offset = 0) {
   return Array.from({ length: count }, (_, i) => normalizeSymbol(offset + i + 1));
 }
 
+function b64url(input) {
+  return Buffer.from(input).toString('base64url');
+}
+
+function signJwt(payload, secret) {
+  const header = { alg: 'HS256', typ: 'JWT' };
+  const head = b64url(JSON.stringify(header));
+  const body = b64url(JSON.stringify(payload));
+  const sig = createHmac('sha256', secret).update(`${head}.${body}`).digest('base64url');
+  return `${head}.${body}.${sig}`;
+}
+
+function resolveAuthToken() {
+  const explicit = process.env.P24_TEST_TOKEN?.trim();
+  if (explicit) return { token: explicit, mode: 'provided-token' };
+
+  const secret = process.env.P24_JWT_HS256_SECRET ?? process.env.ACCESS_JWT_HS256_SECRET ?? 'dev-access-secret';
+  const user = process.env.P24_JWT_USER ?? 'p24-baseline@example.com';
+  const aud = process.env.P24_JWT_AUD ?? process.env.ACCESS_JWT_AUD ?? undefined;
+  const iss = process.env.P24_JWT_ISS ?? process.env.ACCESS_JWT_ISS ?? undefined;
+  const exp = Math.floor(Date.now() / 1000) + 10 * 60;
+  const token = signJwt({ sub: user, email: user, exp, ...(aud ? { aud } : {}), ...(iss ? { iss } : {}) }, secret);
+  return { token, mode: 'generated-hs256' };
+}
+
+const AUTH = resolveAuthToken();
+
 async function requestJson(method, urlPath, { headers = {}, body, timeoutMs = 5000 } = {}) {
   const started = performance.now();
   const controller = new AbortController();
@@ -51,6 +81,7 @@ async function requestJson(method, urlPath, { headers = {}, body, timeoutMs = 50
       method,
       headers: {
         'content-type': 'application/json',
+        authorization: `Bearer ${AUTH.token}`,
         ...headers
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -227,6 +258,10 @@ async function runSyncBaseline() {
 
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
+  await mkdir(path.join(OUT_DIR, 'auth'), { recursive: true });
+  await mkdir(path.join(OUT_DIR, 'migration'), { recursive: true });
+  await mkdir(path.join(OUT_DIR, 'sync'), { recursive: true });
+  await mkdir(path.join(OUT_DIR, 'logs'), { recursive: true });
 
   const login = await runLoginBaseline();
   const migration = await runMigrationBaseline();
@@ -235,6 +270,10 @@ async function main() {
   const report = {
     generatedAt: new Date().toISOString(),
     baseUrl: BASE_URL,
+    auth: {
+      mode: AUTH.mode,
+      tokenPreview: `${AUTH.token.slice(0, 18)}...`
+    },
     config: {
       LOGIN_ITERATIONS,
       MIGRATION_ITERATIONS,
@@ -251,10 +290,65 @@ async function main() {
     }
   };
 
+  const loginEvidenceFile = path.join(OUT_DIR, 'auth', `login-latency-${TIMESTAMP_TAG}.json`);
+  const migrationEvidenceFile = path.join(OUT_DIR, 'migration', `migration-latency-${TIMESTAMP_TAG}.json`);
+  const syncEvidenceFile = path.join(OUT_DIR, 'sync', `sync-latency-${TIMESTAMP_TAG}.json`);
+  const logsEvidenceFile = path.join(OUT_DIR, 'logs', `wrangler-tail-${TIMESTAMP_TAG}.log`);
+
+  const loginEvidence = {
+    generatedAt: report.generatedAt,
+    baseUrl: BASE_URL,
+    mode: 'login-latency',
+    p50Ms: login.latency.p50Ms,
+    p95Ms: login.latency.p95Ms,
+    samples: login.samples
+  };
+
+  const migrationEvidence = {
+    generatedAt: report.generatedAt,
+    baseUrl: BASE_URL,
+    mode: 'migration-single-user-latency',
+    symbolCountPerUser: MIGRATION_SYMBOL_COUNT,
+    p50Ms: migration.latency.p50Ms,
+    p95Ms: migration.latency.p95Ms,
+    perUserLatencyMs: migration.samples.map((s) => ({
+      userId: s.userId,
+      latencyMs: s.latencyMs,
+      importedCount: s.importedCount,
+      expectedCount: s.expectedCount,
+      ok: s.ok,
+      status: s.status
+    })),
+    samples: migration.samples
+  };
+
+  const syncEvidence = {
+    generatedAt: report.generatedAt,
+    baseUrl: BASE_URL,
+    mode: 'cross-device-sync-latency',
+    p50Ms: sync.latency.p50Ms,
+    p95Ms: sync.latency.p95Ms,
+    perUserSyncLatencyMs: sync.samples.map((s) => ({
+      userId: s.userId,
+      syncLatencyMs: s.syncLatencyMs,
+      syncObserved: s.syncObserved,
+      pollCount: s.pollCount,
+      mutateOk: s.mutateOk,
+      mutateStatus: s.mutateStatus
+    })),
+    samples: sync.samples
+  };
+
   const evidenceManifest = {
     generatedAt: report.generatedAt,
     stage: 'P2.4_C',
     baselineFiles: ['p24-auth-baseline.json'],
+    evidenceFiles: [
+      path.relative(OUT_DIR, loginEvidenceFile),
+      path.relative(OUT_DIR, migrationEvidenceFile),
+      path.relative(OUT_DIR, syncEvidenceFile),
+      path.relative(OUT_DIR, logsEvidenceFile)
+    ],
     expectedArtifacts: [
       'auth/login-latency-*.json',
       'migration/migration-latency-*.json',
@@ -270,7 +364,12 @@ async function main() {
 
   const reportFile = path.join(OUT_DIR, 'p24-auth-baseline.json');
   const manifestFile = path.join(OUT_DIR, 'p24-evidence-manifest.json');
+
   await writeFile(reportFile, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  await writeFile(loginEvidenceFile, `${JSON.stringify(loginEvidence, null, 2)}\n`, 'utf8');
+  await writeFile(migrationEvidenceFile, `${JSON.stringify(migrationEvidence, null, 2)}\n`, 'utf8');
+  await writeFile(syncEvidenceFile, `${JSON.stringify(syncEvidence, null, 2)}\n`, 'utf8');
+  await writeFile(logsEvidenceFile, `[${report.generatedAt}] baseline-run mode=${AUTH.mode} baseUrl=${BASE_URL}\n`, 'utf8');
   await writeFile(manifestFile, `${JSON.stringify(evidenceManifest, null, 2)}\n`, 'utf8');
 
   console.log(
@@ -279,6 +378,9 @@ async function main() {
         ok: true,
         reportFile,
         manifestFile,
+        loginEvidenceFile,
+        migrationEvidenceFile,
+        syncEvidenceFile,
         loginP95Ms: login.latency.p95Ms,
         migrationP95Ms: migration.latency.p95Ms,
         syncP95Ms: sync.latency.p95Ms

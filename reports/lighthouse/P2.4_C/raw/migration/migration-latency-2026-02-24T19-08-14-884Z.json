@@ -1,0 +1,182 @@
+{
+  "generatedAt": "2026-02-24T19:08:15.178Z",
+  "baseUrl": "http://127.0.0.1:8787",
+  "mode": "migration-single-user-latency",
+  "symbolCountPerUser": 200,
+  "p50Ms": 12.738,
+  "p95Ms": 15.444,
+  "perUserLatencyMs": [
+    {
+      "userId": "p24-baseline-migrate-0",
+      "latencyMs": 15.444,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-1",
+      "latencyMs": 14.198,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-2",
+      "latencyMs": 12.624,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-3",
+      "latencyMs": 13.884,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-4",
+      "latencyMs": 14.785,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-5",
+      "latencyMs": 11.653,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-6",
+      "latencyMs": 10.89,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-7",
+      "latencyMs": 12.738,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-8",
+      "latencyMs": 10.839,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-9",
+      "latencyMs": 13.063,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    }
+  ],
+  "samples": [
+    {
+      "iteration": 0,
+      "userId": "p24-baseline-migrate-0",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 15.444,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 1,
+      "userId": "p24-baseline-migrate-1",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 14.198,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 2,
+      "userId": "p24-baseline-migrate-2",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 12.624,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 3,
+      "userId": "p24-baseline-migrate-3",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 13.884,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 4,
+      "userId": "p24-baseline-migrate-4",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 14.785,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 5,
+      "userId": "p24-baseline-migrate-5",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11.653,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 6,
+      "userId": "p24-baseline-migrate-6",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 10.89,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 7,
+      "userId": "p24-baseline-migrate-7",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 12.738,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 8,
+      "userId": "p24-baseline-migrate-8",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 10.839,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 9,
+      "userId": "p24-baseline-migrate-9",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 13.063,
+      "expectedCount": 200,
+      "importedCount": 200
+    }
+  ]
+}

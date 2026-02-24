@@ -1,10 +1,14 @@
 {
-  "generatedAt": "2026-02-24T18:58:57.038Z",
+  "generatedAt": "2026-02-24T19:08:15.178Z",
   "baseUrl": "http://127.0.0.1:8787",
+  "auth": {
+    "mode": "generated-hs256",
+    "tokenPreview": "eyJhbGciOiJIUzI1Ni..."
+  },
   "config": {
-    "LOGIN_ITERATIONS": 5,
-    "MIGRATION_ITERATIONS": 3,
-    "SYNC_ITERATIONS": 3,
+    "LOGIN_ITERATIONS": 30,
+    "MIGRATION_ITERATIONS": 10,
+    "SYNC_ITERATIONS": 12,
     "MIGRATION_SYMBOL_COUNT": 200,
     "SYNC_TIMEOUT_MS": 5000,
     "SYNC_POLL_MS": 80,
@@ -12,136 +16,455 @@
   },
   "metrics": {
     "login": {
-      "iterations": 5,
-      "success": 0,
-      "successRate": 0,
+      "iterations": 30,
+      "success": 30,
+      "successRate": 1,
       "latency": {
-        "count": 5,
-        "p50Ms": 1.587,
-        "p95Ms": 25.214,
-        "maxMs": 25.214,
-        "meanMs": 6.417199999999999
+        "count": 30,
+        "p50Ms": 1.846,
+        "p95Ms": 3.382,
+        "maxMs": 21.849,
+        "meanMs": 2.660466666666667
       },
       "samples": [
         {
           "iteration": 0,
           "userId": "p24-baseline-login-0",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 25.214
+          "ok": true,
+          "status": 200,
+          "latencyMs": 21.849
         },
         {
           "iteration": 1,
           "userId": "p24-baseline-login-1",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 2.523
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.366
         },
         {
           "iteration": 2,
           "userId": "p24-baseline-login-2",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 1.471
+          "ok": true,
+          "status": 200,
+          "latencyMs": 3.316
         },
         {
           "iteration": 3,
           "userId": "p24-baseline-login-3",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 1.291
+          "ok": true,
+          "status": 200,
+          "latencyMs": 3.382
         },
         {
           "iteration": 4,
           "userId": "p24-baseline-login-4",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 1.587
+          "ok": true,
+          "status": 200,
+          "latencyMs": 3.112
+        },
+        {
+          "iteration": 5,
+          "userId": "p24-baseline-login-5",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.686
+        },
+        {
+          "iteration": 6,
+          "userId": "p24-baseline-login-6",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.28
+        },
+        {
+          "iteration": 7,
+          "userId": "p24-baseline-login-7",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.923
+        },
+        {
+          "iteration": 8,
+          "userId": "p24-baseline-login-8",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.001
+        },
+        {
+          "iteration": 9,
+          "userId": "p24-baseline-login-9",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.594
+        },
+        {
+          "iteration": 10,
+          "userId": "p24-baseline-login-10",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.216
+        },
+        {
+          "iteration": 11,
+          "userId": "p24-baseline-login-11",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 2.296
+        },
+        {
+          "iteration": 12,
+          "userId": "p24-baseline-login-12",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.81
+        },
+        {
+          "iteration": 13,
+          "userId": "p24-baseline-login-13",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.442
+        },
+        {
+          "iteration": 14,
+          "userId": "p24-baseline-login-14",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.595
+        },
+        {
+          "iteration": 15,
+          "userId": "p24-baseline-login-15",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.917
+        },
+        {
+          "iteration": 16,
+          "userId": "p24-baseline-login-16",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.363
+        },
+        {
+          "iteration": 17,
+          "userId": "p24-baseline-login-17",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.586
+        },
+        {
+          "iteration": 18,
+          "userId": "p24-baseline-login-18",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.477
+        },
+        {
+          "iteration": 19,
+          "userId": "p24-baseline-login-19",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.517
+        },
+        {
+          "iteration": 20,
+          "userId": "p24-baseline-login-20",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.436
+        },
+        {
+          "iteration": 21,
+          "userId": "p24-baseline-login-21",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.245
+        },
+        {
+          "iteration": 22,
+          "userId": "p24-baseline-login-22",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.246
+        },
+        {
+          "iteration": 23,
+          "userId": "p24-baseline-login-23",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.284
+        },
+        {
+          "iteration": 24,
+          "userId": "p24-baseline-login-24",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.929
+        },
+        {
+          "iteration": 25,
+          "userId": "p24-baseline-login-25",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.637
+        },
+        {
+          "iteration": 26,
+          "userId": "p24-baseline-login-26",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.846
+        },
+        {
+          "iteration": 27,
+          "userId": "p24-baseline-login-27",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.827
+        },
+        {
+          "iteration": 28,
+          "userId": "p24-baseline-login-28",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.989
+        },
+        {
+          "iteration": 29,
+          "userId": "p24-baseline-login-29",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 1.647
         }
       ]
     },
     "migration": {
-      "iterations": 3,
+      "iterations": 10,
       "symbolCountPerUser": 200,
-      "success": 0,
-      "successRate": 0,
+      "success": 10,
+      "successRate": 1,
       "latency": {
-        "count": 3,
-        "p50Ms": 1.27,
-        "p95Ms": 2.621,
-        "maxMs": 2.621,
-        "meanMs": 1.6466666666666665
+        "count": 10,
+        "p50Ms": 12.738,
+        "p95Ms": 15.444,
+        "maxMs": 15.444,
+        "meanMs": 13.0118
       },
       "samples": [
         {
           "iteration": 0,
           "userId": "p24-baseline-migrate-0",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 2.621,
+          "ok": true,
+          "status": 200,
+          "latencyMs": 15.444,
           "expectedCount": 200,
-          "importedCount": 0
+          "importedCount": 200
         },
         {
           "iteration": 1,
           "userId": "p24-baseline-migrate-1",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 1.27,
+          "ok": true,
+          "status": 200,
+          "latencyMs": 14.198,
           "expectedCount": 200,
-          "importedCount": 0
+          "importedCount": 200
         },
         {
           "iteration": 2,
           "userId": "p24-baseline-migrate-2",
-          "ok": false,
-          "status": 401,
-          "latencyMs": 1.049,
+          "ok": true,
+          "status": 200,
+          "latencyMs": 12.624,
           "expectedCount": 200,
-          "importedCount": 0
+          "importedCount": 200
+        },
+        {
+          "iteration": 3,
+          "userId": "p24-baseline-migrate-3",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 13.884,
+          "expectedCount": 200,
+          "importedCount": 200
+        },
+        {
+          "iteration": 4,
+          "userId": "p24-baseline-migrate-4",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 14.785,
+          "expectedCount": 200,
+          "importedCount": 200
+        },
+        {
+          "iteration": 5,
+          "userId": "p24-baseline-migrate-5",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 11.653,
+          "expectedCount": 200,
+          "importedCount": 200
+        },
+        {
+          "iteration": 6,
+          "userId": "p24-baseline-migrate-6",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 10.89,
+          "expectedCount": 200,
+          "importedCount": 200
+        },
+        {
+          "iteration": 7,
+          "userId": "p24-baseline-migrate-7",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 12.738,
+          "expectedCount": 200,
+          "importedCount": 200
+        },
+        {
+          "iteration": 8,
+          "userId": "p24-baseline-migrate-8",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 10.839,
+          "expectedCount": 200,
+          "importedCount": 200
+        },
+        {
+          "iteration": 9,
+          "userId": "p24-baseline-migrate-9",
+          "ok": true,
+          "status": 200,
+          "latencyMs": 13.063,
+          "expectedCount": 200,
+          "importedCount": 200
         }
       ]
     },
     "sync": {
-      "iterations": 3,
+      "iterations": 12,
       "timeoutMs": 5000,
       "pollMs": 80,
-      "success": 0,
-      "successRate": 0,
+      "success": 12,
+      "successRate": 1,
       "latency": {
-        "count": 3,
-        "p50Ms": 5039.582,
-        "p95Ms": 5057.618,
-        "maxMs": 5057.618,
-        "meanMs": 5043.533
+        "count": 12,
+        "p50Ms": 3.686,
+        "p95Ms": 6.444,
+        "maxMs": 6.444,
+        "meanMs": 4.059083333333333
       },
       "samples": [
         {
           "iteration": 0,
           "userId": "p24-baseline-sync-0",
-          "mutateOk": false,
-          "mutateStatus": 401,
-          "syncObserved": false,
-          "syncLatencyMs": 5039.582,
-          "pollCount": 59
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 4.35,
+          "pollCount": 1
         },
         {
           "iteration": 1,
           "userId": "p24-baseline-sync-1",
-          "mutateOk": false,
-          "mutateStatus": 401,
-          "syncObserved": false,
-          "syncLatencyMs": 5057.618,
-          "pollCount": 59
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 3.148,
+          "pollCount": 1
         },
         {
           "iteration": 2,
           "userId": "p24-baseline-sync-2",
-          "mutateOk": false,
-          "mutateStatus": 401,
-          "syncObserved": false,
-          "syncLatencyMs": 5033.399,
-          "pollCount": 59
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 6.444,
+          "pollCount": 1
+        },
+        {
+          "iteration": 3,
+          "userId": "p24-baseline-sync-3",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 4.758,
+          "pollCount": 1
+        },
+        {
+          "iteration": 4,
+          "userId": "p24-baseline-sync-4",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 3.807,
+          "pollCount": 1
+        },
+        {
+          "iteration": 5,
+          "userId": "p24-baseline-sync-5",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 3.339,
+          "pollCount": 1
+        },
+        {
+          "iteration": 6,
+          "userId": "p24-baseline-sync-6",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 4.213,
+          "pollCount": 1
+        },
+        {
+          "iteration": 7,
+          "userId": "p24-baseline-sync-7",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 4.17,
+          "pollCount": 1
+        },
+        {
+          "iteration": 8,
+          "userId": "p24-baseline-sync-8",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 3.612,
+          "pollCount": 1
+        },
+        {
+          "iteration": 9,
+          "userId": "p24-baseline-sync-9",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 3.522,
+          "pollCount": 1
+        },
+        {
+          "iteration": 10,
+          "userId": "p24-baseline-sync-10",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 3.66,
+          "pollCount": 1
+        },
+        {
+          "iteration": 11,
+          "userId": "p24-baseline-sync-11",
+          "mutateOk": true,
+          "mutateStatus": 200,
+          "syncObserved": true,
+          "syncLatencyMs": 3.686,
+          "pollCount": 1
         }
       ]
     }
