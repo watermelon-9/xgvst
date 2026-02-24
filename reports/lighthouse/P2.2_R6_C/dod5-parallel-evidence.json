@@ -1,0 +1,138 @@
+{
+  "generatedAt": "2026-02-24T14:22:57.022Z",
+  "loadTest": {
+    "sourceFile": "reports/lighthouse/P2.2_C/sentinel-load-evidence.json",
+    "targetConcurrency": 1000,
+    "actualConcurrency": 1000,
+    "connectedInitial": 1000,
+    "bandwidthSavingVsJsonPct": 51.716041806440124,
+    "reconnect": {
+      "attempted": 600,
+      "success": 600,
+      "successRatePct": 100,
+      "p50OpenMs": 959,
+      "p95OpenMs": 1357
+    },
+    "subscriptionRecovery": {
+      "attempted": 600,
+      "success": 600,
+      "successRatePct": 100,
+      "p50RecoveryMs": 269,
+      "p95RecoveryMs": 396
+    },
+    "bandwidth": {
+      "rawBytes": 15185160,
+      "jsonEquivalentBytes": 31449700,
+      "savingVsJsonPct": 51.716041806440124,
+      "binaryFrames": 253086,
+      "jsonFallbackFrames": 0
+    },
+    "bundle": {
+      "rawFrames": 253086,
+      "bundledFrames": 2363,
+      "bundledBytes": 25955061,
+      "reductionByFramePct": 99.06632528073462,
+      "reductionByBytesPctVsRaw": -70.92385592249275,
+      "windowMs": 100
+    },
+    "memorySampler": {
+      "observable": true,
+      "note": "仅可观测压测器进程内存；Worker 单实例内存需平台级指标补充。",
+      "peakRssBytes": 479019008,
+      "peakHeapUsedBytes": 134836808,
+      "sampleCount": 63
+    }
+  },
+  "doMetrics": {
+    "endpoint": "https://xgvst-workers.viehh642.workers.dev/api/do/metrics",
+    "snapshot": {
+      "ok": true,
+      "sessionKey": "anonymous",
+      "payload": {
+        "ok": true,
+        "do": "quote",
+        "stats": {
+          "clients": 0,
+          "subscriptions": 0,
+          "pendingSymbols": 0,
+          "flushCount": 0,
+          "sentBinaryFrames": 0,
+          "sentProtobufFrames": 0,
+          "sentFallbackFrames": 0,
+          "droppedFrames": 0,
+          "lastFlushAt": null,
+          "source": {
+            "activeSource": null,
+            "priorityOrder": [
+              "alltick",
+              "sina",
+              "eastmoney",
+              "tencent"
+            ],
+            "subscribedSymbols": [],
+            "failoverCount": 0,
+            "reconnecting": false,
+            "debugForcedSource": null
+          },
+          "limits": {
+            "heartbeatSweepMs": 15000,
+            "heartbeatTimeoutMs": 30000,
+            "batchFlushMs": 100
+          }
+        }
+      }
+    },
+    "memoryMetricAvailable": false,
+    "gap": "现有 /api/do/metrics 仅暴露连接/flush/frame 计数，不含 Durable Object 实例内存。缺少 Cloudflare Dashboard/API 内存观测权限或指标接入。",
+    "alternativeEvidence": {
+      "doSentBinaryFrames": 0,
+      "doDroppedFrames": 0,
+      "loadGeneratorPeakRssBytes": 479019008,
+      "loadGeneratorPeakHeapUsedBytes": 134836808
+    }
+  },
+  "lighthouseMobile": {
+    "summaryFile": "reports/lighthouse/P2.2_R6_C/lighthouse-mobile-summary.json",
+    "current": {
+      "generatedAt": "2026-02-24T14:22:24.329Z",
+      "home": {
+        "score": 82,
+        "fcp": 934.1755,
+        "lcp": 2265.9085,
+        "tbt": 583,
+        "cls": null,
+        "si": 3672.2477349707515
+      },
+      "market": {
+        "score": 96,
+        "fcp": 1132.8709999999999,
+        "lcp": 1132.8709999999999,
+        "tbt": 235,
+        "cls": null,
+        "si": 1207.7286993421812
+      }
+    },
+    "baselineHomeScoreMedian": 92,
+    "baselineSource": "reports/lighthouse/P1.3_RESCUE_C_DoD5_2026-02-24/summary.json#groups.xgvst_com_mobile.medians.score",
+    "deltaHomeScore": -10,
+    "marketTrend": "无历史 market 专项基线；本轮得分 96，暂未见下降信号。"
+  },
+  "verdict": {
+    "dod5Target80Plus": {
+      "target": 80,
+      "actual": 51.716041806440124,
+      "pass": false,
+      "gap": 28.283958193559876
+    },
+    "dod4RecoveryLatencyCurrent": {
+      "p50RecoveryMs": 269,
+      "p95RecoveryMs": 396,
+      "successRatePct": 100
+    },
+    "dod4OptionalFixes": [
+      "在客户端重连后优先下发最近一帧快照（warm tick），将 p95 恢复进一步压低到 <300ms。",
+      "保持 reconnect backoff 抖动，但将首次重连延迟下探至 80~120ms 区间，减少并发恢复尾延迟。",
+      "对 batch flush (100ms) 做“重连后首帧旁路”策略：首帧即时发，其后恢复合包。"
+    ]
+  }
+}
