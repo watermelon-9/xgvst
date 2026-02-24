@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Content-Length: 139
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Vary: Origin
+access-control-allow-headers: Content-Type, Authorization, Upgrade, X-Debug-Token
+access-control-allow-methods: GET,POST,PUT,DELETE,OPTIONS
+access-control-max-age: 86400
+
+{"ok":true,"userId":"p24-r4@example.com","symbols":["000001","600519","300750"],"diff":{"added":["000001","600519","300750"],"removed":[]}}

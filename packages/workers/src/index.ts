@@ -105,7 +105,7 @@ function buildCorsHeaders(c: { req: { header: (name: string) => string | undefin
 
   return new Headers({
     'Access-Control-Allow-Origin': resolved,
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Upgrade, X-Debug-Token',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin'
