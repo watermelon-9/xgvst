@@ -1,0 +1,49 @@
+{
+  "startedAt": "2026-02-24T11:37:16.716Z",
+  "completedAt": "2026-02-24T11:37:29.526Z",
+  "endpoint": "wss://xgvst-workers.viehh642.workers.dev/ws/quote",
+  "metricsEndpoint": "https://xgvst-workers.viehh642.workers.dev/api/do/metrics",
+  "session": "p22-min-1771933036716",
+  "clients": 40,
+  "durationMs": 8000,
+  "opened": 39,
+  "closed": 1,
+  "errors": 1,
+  "binaryFrames": 1249,
+  "controlFrames": 78,
+  "doMetrics": {
+    "ok": true,
+    "sessionKey": "sess:p22-min-1771933036716",
+    "payload": {
+      "ok": true,
+      "do": "quote",
+      "stats": {
+        "clients": 0,
+        "subscriptions": 0,
+        "pendingSymbols": 0,
+        "flushCount": 33,
+        "sentBinaryFrames": 1249,
+        "droppedFrames": 0,
+        "lastFlushAt": "2026-02-24T11:37:24.700Z",
+        "source": {
+          "activeSource": "alltick",
+          "priorityOrder": [
+            "alltick",
+            "sina",
+            "eastmoney",
+            "tencent"
+          ],
+          "subscribedSymbols": [],
+          "failoverCount": 0,
+          "reconnecting": false,
+          "debugForcedSource": null
+        },
+        "limits": {
+          "heartbeatSweepMs": 15000,
+          "heartbeatTimeoutMs": 30000,
+          "batchFlushMs": 100
+        }
+      }
+    }
+  }
+}

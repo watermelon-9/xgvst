@@ -1,0 +1,21 @@
+
+> workers@0.0.1 deploy /Users/mac/.openclaw/workspace/xgvst/packages/workers
+> wrangler deploy
+
+
+ ⛅️ wrangler 4.67.0 (update available 4.68.0)
+─────────────────────────────────────────────
+Total Upload: 144.45 KiB / gzip: 31.68 KiB
+Worker Startup Time: 2 ms
+Your Worker has access to the following bindings:
+Binding                                                        Resource                  
+env.QUOTE_DO (QuoteDurableObject)                              Durable Object            
+env.QUOTE_KV (e52352ff583f4ebdb6c8256f2a97c931)                KV Namespace              
+env.QUOTE_DB (xgvst_quote)                                     D1 Database               
+env.CORS_ALLOW_ORIGINS ("")                                    Environment Variable      
+
+Uploaded xgvst-workers (6.34 sec)
+Deployed xgvst-workers triggers (2.09 sec)
+  https://xgvst-workers.viehh642.workers.dev
+  xgvst.com/ws/* (zone name: xgvst.com)
+Current Version ID: ad8c87f6-f884-471b-a878-226ee42da582

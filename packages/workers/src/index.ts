@@ -424,14 +424,40 @@ app.post('/api/debug/source/control', async (c) => {
   return c.json({ ok: false, error: 'unsupported action', expected: ['switch', 'auto', 'failover'] }, 400);
 });
 
+function resolveQuoteSessionKey(c: { req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined } }) {
+  const fromQuery = c.req.query('session');
+  if (fromQuery?.trim()) return `sess:${fromQuery.trim()}`;
+
+  const fromAccess = c.req.header('cf-access-authenticated-user-email');
+  if (fromAccess?.trim()) return `acc:${fromAccess.trim().toLowerCase()}`;
+
+  const fromHeader = c.req.header('x-session-id');
+  if (fromHeader?.trim()) return `hdr:${fromHeader.trim()}`;
+
+  return 'anonymous';
+}
+
+app.get('/api/do/metrics', async (c) => {
+  const sessionKey = resolveQuoteSessionKey(c);
+  const doId = c.env.QUOTE_DO.idFromName(sessionKey);
+  const stub = c.env.QUOTE_DO.get(doId);
+
+  const response = await stub.fetch('https://quote-do/metrics');
+  const payload = await response.json();
+  return c.json({ ok: true, sessionKey, payload });
+});
+
 app.get('/ws/quote', async (c) => {
   if ((c.req.header('upgrade') ?? '').toLowerCase() !== 'websocket') {
     return c.json({ ok: false, error: 'Expected websocket upgrade' }, 426);
   }
 
-  const pool = getQuotePool(c.env);
-  await pool.start();
-  return pool.acceptWebSocket();
+  const sessionKey = resolveQuoteSessionKey(c);
+  const doId = c.env.QUOTE_DO.idFromName(sessionKey);
+  const stub = c.env.QUOTE_DO.get(doId);
+
+  const doRequest = new Request('https://quote-do/ws', c.req.raw);
+  return stub.fetch(doRequest);
 });
 
 export { QuoteDurableObject };
