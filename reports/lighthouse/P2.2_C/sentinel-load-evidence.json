@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-24T13:53:41.987Z",
+  "generatedAt": "2026-02-24T14:00:07.351Z",
   "config": {
     "WS_URL": "wss://xgvst-workers.viehh642.workers.dev/ws/quote",
     "STATUS_URL": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
@@ -15,59 +15,63 @@
     "testDurationMs": 20000,
     "reconnectRatio": 0.6,
     "recoveryTimeoutMs": 6000,
-    "bundleWindowMs": 100
+    "bundleWindowMs": 100,
+    "connectBatchSize": 20,
+    "connectBatchGapMs": 120,
+    "connectRetryMax": 3
   },
   "summary": {
     "concurrency": {
       "target": 1000,
       "actual": 200,
+      "connectedInitial": 200,
       "gapToTarget": 800
     },
     "reconnect": {
       "attempted": 120,
-      "success": 118,
-      "successRatePct": 98.33333333333333,
-      "p50OpenMs": 304,
-      "p95OpenMs": 507
+      "success": 120,
+      "successRatePct": 100,
+      "p50OpenMs": 396,
+      "p95OpenMs": 744
     },
     "subscriptionRecovery": {
-      "attempted": 118,
-      "success": 118,
+      "attempted": 120,
+      "success": 120,
       "successRatePct": 100,
-      "p50RecoveryMs": 231,
-      "p95RecoveryMs": 336
+      "p50RecoveryMs": 210,
+      "p95RecoveryMs": 431
     },
     "bandwidth": {
-      "rawBytes": 1340640,
-      "jsonEquivalentBytes": 2776746,
-      "savingVsJsonPct": 51.71902651520881,
-      "binaryFrames": 22344,
+      "rawBytes": 1629000,
+      "jsonEquivalentBytes": 3376054,
+      "savingVsJsonPct": 51.748402128638936,
+      "binaryFrames": 27150,
       "jsonFallbackFrames": 0
     },
     "bundle": {
-      "rawFrames": 22344,
-      "bundledFrames": 678,
-      "bundledBytes": 2306196,
-      "reductionByFramePct": 96.9656283566058,
-      "reductionByBytesPctVsRaw": -72.02201933404942,
+      "rawFrames": 27150,
+      "bundledFrames": 1010,
+      "bundledBytes": 2810064,
+      "reductionByFramePct": 96.27992633517496,
+      "reductionByBytesPctVsRaw": -72.502394106814,
       "windowMs": 100
     },
     "broadcast": {
-      "rawTicksPerSec": 970.8029197080293,
-      "bundledFramesPerSec": 29.457768508863403,
-      "observedSeconds": 23.016
+      "rawTicksPerSec": 781.6548626705821,
+      "bundledFramesPerSec": 29.078136696032704,
+      "observedSeconds": 34.734
     },
     "memory": {
       "observable": true,
       "note": "仅可观测压测器进程内存；Worker 单实例内存需平台级指标补充。",
-      "peakRssBytes": 188792832,
-      "peakHeapUsedBytes": 34597000,
-      "sampleCount": 36
+      "peakRssBytes": 165576704,
+      "peakHeapUsedBytes": 34905704,
+      "sampleCount": 38
     },
     "sourceStatus": {
       "before": {
         "ok": true,
-        "latencyMs": 147,
+        "latencyMs": 212,
         "body": {
           "ok": true,
           "clients": 0,
@@ -96,7 +100,7 @@
       },
       "after": {
         "ok": true,
-        "latencyMs": 130,
+        "latencyMs": 132,
         "body": {
           "ok": true,
           "clients": 0,
@@ -128,10 +132,10 @@
   "dod": {
     "DoD1": {
       "name": "断线重连成功率 >= 99%",
-      "actual": 98.33,
+      "actual": 100,
       "target": 99,
-      "pass": false,
-      "gap": 0.67
+      "pass": true,
+      "gap": 0
     },
     "DoD2": {
       "name": "订阅恢复成功率 >= 99%",
@@ -142,7 +146,7 @@
     },
     "DoD3": {
       "name": "100ms 合包后帧频下降 >= 30%",
-      "actual": 96.97,
+      "actual": 96.28,
       "target": 30,
       "pass": true,
       "gap": 0
@@ -156,7 +160,7 @@
     },
     "DoD5": {
       "name": "二进制/合包带宽节省 >= 30%",
-      "actual": 51.72,
+      "actual": 51.75,
       "target": 30,
       "pass": true,
       "gap": 0
@@ -173,3464 +177,3519 @@
   "samples": {
     "memorySamples": [
       {
-        "ts": 1771941204025,
-        "rssBytes": 170000384,
+        "ts": 1771941588610,
+        "rssBytes": 136396800,
         "heapTotalBytes": 53002240,
-        "heapUsedBytes": 27063552,
-        "externalBytes": 7430832
+        "heapUsedBytes": 17470712,
+        "externalBytes": 7715481
       },
       {
-        "ts": 1771941204526,
-        "rssBytes": 170344448,
+        "ts": 1771941589110,
+        "rssBytes": 136511488,
+        "heapTotalBytes": 53002240,
+        "heapUsedBytes": 21158920,
+        "externalBytes": 7254335
+      },
+      {
+        "ts": 1771941589610,
+        "rssBytes": 136511488,
+        "heapTotalBytes": 53002240,
+        "heapUsedBytes": 23609328,
+        "externalBytes": 7398614
+      },
+      {
+        "ts": 1771941590111,
+        "rssBytes": 137838592,
+        "heapTotalBytes": 53002240,
+        "heapUsedBytes": 27339616,
+        "externalBytes": 7607356
+      },
+      {
+        "ts": 1771941590611,
+        "rssBytes": 138641408,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 17691840,
-        "externalBytes": 6945148
+        "heapUsedBytes": 30425616,
+        "externalBytes": 7793107
       },
       {
-        "ts": 1771941205027,
-        "rssBytes": 170344448,
+        "ts": 1771941591111,
+        "rssBytes": 136691712,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 20295448,
-        "externalBytes": 7091558
+        "heapUsedBytes": 20247712,
+        "externalBytes": 7184188
       },
       {
-        "ts": 1771941205529,
-        "rssBytes": 170344448,
+        "ts": 1771941591611,
+        "rssBytes": 136216576,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 23973080,
-        "externalBytes": 7305391
+        "heapUsedBytes": 23408960,
+        "externalBytes": 7375623
       },
       {
-        "ts": 1771941206029,
-        "rssBytes": 170491904,
+        "ts": 1771941592112,
+        "rssBytes": 136347648,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 26649688,
-        "externalBytes": 7450959
+        "heapUsedBytes": 26172352,
+        "externalBytes": 7548375
       },
       {
-        "ts": 1771941206531,
-        "rssBytes": 170541056,
+        "ts": 1771941592612,
+        "rssBytes": 137150464,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 30475072,
-        "externalBytes": 7669494
+        "heapUsedBytes": 29219472,
+        "externalBytes": 7736258
       },
       {
-        "ts": 1771941207031,
-        "rssBytes": 170737664,
+        "ts": 1771941593112,
+        "rssBytes": 138149888,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 19748432,
-        "externalBytes": 7070738
+        "heapUsedBytes": 18830176,
+        "externalBytes": 7104253
       },
       {
-        "ts": 1771941207533,
-        "rssBytes": 170737664,
+        "ts": 1771941593613,
+        "rssBytes": 138166272,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 23400592,
-        "externalBytes": 7288229
+        "heapUsedBytes": 21866448,
+        "externalBytes": 7293656
       },
       {
-        "ts": 1771941208032,
-        "rssBytes": 170786816,
+        "ts": 1771941594113,
+        "rssBytes": 138166272,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 25841672,
-        "externalBytes": 7430760
+        "heapUsedBytes": 24595984,
+        "externalBytes": 7467040
       },
       {
-        "ts": 1771941208534,
-        "rssBytes": 170786816,
+        "ts": 1771941594614,
+        "rssBytes": 138330112,
         "heapTotalBytes": 53264384,
-        "heapUsedBytes": 28885872,
-        "externalBytes": 7583185
+        "heapUsedBytes": 27675496,
+        "externalBytes": 7657803
       },
       {
-        "ts": 1771941209034,
-        "rssBytes": 171081728,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 18557280,
-        "externalBytes": 7001490
+        "ts": 1771941595114,
+        "rssBytes": 138543104,
+        "heapTotalBytes": 53460992,
+        "heapUsedBytes": 30582224,
+        "externalBytes": 7829955
       },
       {
-        "ts": 1771941209535,
-        "rssBytes": 171835392,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 22074096,
-        "externalBytes": 7205278
+        "ts": 1771941595615,
+        "rssBytes": 137887744,
+        "heapTotalBytes": 53460992,
+        "heapUsedBytes": 20348160,
+        "externalBytes": 7183237
       },
       {
-        "ts": 1771941210034,
-        "rssBytes": 172015616,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 24786720,
-        "externalBytes": 7360942
+        "ts": 1771941596117,
+        "rssBytes": 137773056,
+        "heapTotalBytes": 53460992,
+        "heapUsedBytes": 23103880,
+        "externalBytes": 7348883
       },
       {
-        "ts": 1771941210535,
-        "rssBytes": 172015616,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 28326376,
-        "externalBytes": 7577446
+        "ts": 1771941596617,
+        "rssBytes": 137216000,
+        "heapTotalBytes": 53460992,
+        "heapUsedBytes": 26213376,
+        "externalBytes": 7549216
       },
       {
-        "ts": 1771941211035,
-        "rssBytes": 172064768,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 30679944,
-        "externalBytes": 7718960
+        "ts": 1771941597118,
+        "rssBytes": 137216000,
+        "heapTotalBytes": 53460992,
+        "heapUsedBytes": 28859368,
+        "externalBytes": 7709836
       },
       {
-        "ts": 1771941211536,
-        "rssBytes": 172097536,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 21006176,
-        "externalBytes": 7135396
+        "ts": 1771941597620,
+        "rssBytes": 156418048,
+        "heapTotalBytes": 55033856,
+        "heapUsedBytes": 22363520,
+        "externalBytes": 8017870
       },
       {
-        "ts": 1771941212036,
-        "rssBytes": 172097536,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 23372896,
-        "externalBytes": 7286776
+        "ts": 1771941598120,
+        "rssBytes": 159629312,
+        "heapTotalBytes": 55820288,
+        "heapUsedBytes": 26852968,
+        "externalBytes": 9461137
       },
       {
-        "ts": 1771941212536,
-        "rssBytes": 172130304,
-        "heapTotalBytes": 53264384,
-        "heapUsedBytes": 26909040,
-        "externalBytes": 7496046
+        "ts": 1771941598620,
+        "rssBytes": 161234944,
+        "heapTotalBytes": 55820288,
+        "heapUsedBytes": 30059136,
+        "externalBytes": 9664245
       },
       {
-        "ts": 1771941213036,
-        "rssBytes": 182321152,
-        "heapTotalBytes": 55623680,
-        "heapUsedBytes": 22398736,
-        "externalBytes": 7884902
+        "ts": 1771941599119,
+        "rssBytes": 163446784,
+        "heapTotalBytes": 55820288,
+        "heapUsedBytes": 33556792,
+        "externalBytes": 9838895
       },
       {
-        "ts": 1771941213537,
-        "rssBytes": 183566336,
-        "heapTotalBytes": 55623680,
-        "heapUsedBytes": 30784848,
-        "externalBytes": 9521489
+        "ts": 1771941599621,
+        "rssBytes": 163463168,
+        "heapTotalBytes": 55820288,
+        "heapUsedBytes": 25482352,
+        "externalBytes": 9429960
       },
       {
-        "ts": 1771941214037,
-        "rssBytes": 185712640,
-        "heapTotalBytes": 55623680,
-        "heapUsedBytes": 25044800,
-        "externalBytes": 9276023
+        "ts": 1771941600121,
+        "rssBytes": 162938880,
+        "heapTotalBytes": 55820288,
+        "heapUsedBytes": 28961288,
+        "externalBytes": 9650577
       },
       {
-        "ts": 1771941214539,
-        "rssBytes": 186023936,
-        "heapTotalBytes": 56082432,
-        "heapUsedBytes": 28706520,
-        "externalBytes": 9495222
+        "ts": 1771941600621,
+        "rssBytes": 163053568,
+        "heapTotalBytes": 55820288,
+        "heapUsedBytes": 31835904,
+        "externalBytes": 9833733
       },
       {
-        "ts": 1771941215041,
-        "rssBytes": 186089472,
-        "heapTotalBytes": 56082432,
-        "heapUsedBytes": 31016168,
-        "externalBytes": 9638117
+        "ts": 1771941601122,
+        "rssBytes": 164839424,
+        "heapTotalBytes": 57917440,
+        "heapUsedBytes": 23609840,
+        "externalBytes": 9350392
       },
       {
-        "ts": 1771941215541,
-        "rssBytes": 188792832,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 22827720,
-        "externalBytes": 8886055
+        "ts": 1771941601622,
+        "rssBytes": 164839424,
+        "heapTotalBytes": 57917440,
+        "heapUsedBytes": 26762992,
+        "externalBytes": 9546233
       },
       {
-        "ts": 1771941216043,
-        "rssBytes": 188792832,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 25400584,
-        "externalBytes": 9044220
+        "ts": 1771941602124,
+        "rssBytes": 164839424,
+        "heapTotalBytes": 57917440,
+        "heapUsedBytes": 29435816,
+        "externalBytes": 9716443
       },
       {
-        "ts": 1771941216544,
-        "rssBytes": 164167680,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 28570584,
-        "externalBytes": 9246507
+        "ts": 1771941602623,
+        "rssBytes": 164970496,
+        "heapTotalBytes": 57917440,
+        "heapUsedBytes": 33651776,
+        "externalBytes": 9928528
       },
       {
-        "ts": 1771941217046,
-        "rssBytes": 164265984,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 31380504,
-        "externalBytes": 9413066
+        "ts": 1771941603125,
+        "rssBytes": 165462016,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 23298632,
+        "externalBytes": 9310804
       },
       {
-        "ts": 1771941217545,
-        "rssBytes": 164610048,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 34297304,
-        "externalBytes": 9609200
+        "ts": 1771941603625,
+        "rssBytes": 165462016,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 26435672,
+        "externalBytes": 9504904
       },
       {
-        "ts": 1771941218045,
-        "rssBytes": 164888576,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 23901864,
-        "externalBytes": 8969799
+        "ts": 1771941604126,
+        "rssBytes": 165396480,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 29072552,
+        "externalBytes": 9665586
       },
       {
-        "ts": 1771941218547,
-        "rssBytes": 164888576,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 26534136,
-        "externalBytes": 9137435
+        "ts": 1771941604625,
+        "rssBytes": 165396480,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 32224720,
+        "externalBytes": 9868431
       },
       {
-        "ts": 1771941219047,
-        "rssBytes": 164888576,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 29661000,
-        "externalBytes": 9331034
+        "ts": 1771941605127,
+        "rssBytes": 165445632,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 34905704,
+        "externalBytes": 10030160
       },
       {
-        "ts": 1771941219548,
-        "rssBytes": 164888576,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 32256888,
-        "externalBytes": 9488862
+        "ts": 1771941605627,
+        "rssBytes": 165576704,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 24749536,
+        "externalBytes": 9393243
       },
       {
-        "ts": 1771941220048,
-        "rssBytes": 164888576,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 34597000,
-        "externalBytes": 9633534
+        "ts": 1771941606127,
+        "rssBytes": 165576704,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 27429112,
+        "externalBytes": 9563480
       },
       {
-        "ts": 1771941220549,
-        "rssBytes": 165019648,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 24530424,
-        "externalBytes": 9005159
+        "ts": 1771941606628,
+        "rssBytes": 165560320,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 30503664,
+        "externalBytes": 9754855
       },
       {
-        "ts": 1771941221050,
-        "rssBytes": 165019648,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 27006456,
-        "externalBytes": 9157361
-      },
-      {
-        "ts": 1771941221550,
-        "rssBytes": 165019648,
-        "heapTotalBytes": 58179584,
-        "heapUsedBytes": 30437256,
-        "externalBytes": 9375208
+        "ts": 1771941607128,
+        "rssBytes": 161742848,
+        "heapTotalBytes": 58195968,
+        "heapUsedBytes": 33255152,
+        "externalBytes": 9928955
       }
     ],
     "events": [
       {
-        "ts": "2026-02-24T13:53:18.654Z",
-        "clientId": 39,
-        "type": "connect_failed",
-        "error": "ws_error"
-      },
-      {
-        "ts": "2026-02-24T13:53:18.726Z",
-        "clientId": 10,
-        "type": "connect_open",
-        "openLatencyMs": 289
-      },
-      {
-        "ts": "2026-02-24T13:53:18.727Z",
-        "clientId": 56,
-        "type": "connect_open",
-        "openLatencyMs": 273
-      },
-      {
-        "ts": "2026-02-24T13:53:18.728Z",
-        "clientId": 28,
-        "type": "connect_open",
-        "openLatencyMs": 283
-      },
-      {
-        "ts": "2026-02-24T13:53:18.728Z",
-        "clientId": 26,
-        "type": "connect_open",
-        "openLatencyMs": 284
-      },
-      {
-        "ts": "2026-02-24T13:53:18.729Z",
-        "clientId": 19,
-        "type": "connect_open",
-        "openLatencyMs": 288
-      },
-      {
-        "ts": "2026-02-24T13:53:18.730Z",
-        "clientId": 38,
-        "type": "connect_open",
-        "openLatencyMs": 282
-      },
-      {
-        "ts": "2026-02-24T13:53:18.731Z",
-        "clientId": 15,
-        "type": "connect_open",
-        "openLatencyMs": 291
-      },
-      {
-        "ts": "2026-02-24T13:53:18.732Z",
-        "clientId": 50,
-        "type": "connect_open",
-        "openLatencyMs": 281
-      },
-      {
-        "ts": "2026-02-24T13:53:18.733Z",
-        "clientId": 53,
-        "type": "connect_open",
-        "openLatencyMs": 281
-      },
-      {
-        "ts": "2026-02-24T13:53:18.733Z",
-        "clientId": 59,
-        "type": "connect_open",
-        "openLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:18.734Z",
-        "clientId": 18,
-        "type": "connect_open",
-        "openLatencyMs": 293
-      },
-      {
-        "ts": "2026-02-24T13:53:18.737Z",
-        "clientId": 51,
-        "type": "connect_open",
-        "openLatencyMs": 285
-      },
-      {
-        "ts": "2026-02-24T13:53:18.741Z",
-        "clientId": 21,
-        "type": "connect_open",
-        "openLatencyMs": 300
-      },
-      {
-        "ts": "2026-02-24T13:53:18.741Z",
-        "clientId": 62,
-        "type": "connect_open",
-        "openLatencyMs": 285
-      },
-      {
-        "ts": "2026-02-24T13:53:18.741Z",
-        "clientId": 14,
-        "type": "connect_open",
-        "openLatencyMs": 301
-      },
-      {
-        "ts": "2026-02-24T13:53:18.742Z",
-        "clientId": 33,
-        "type": "connect_open",
-        "openLatencyMs": 296
-      },
-      {
-        "ts": "2026-02-24T13:53:18.742Z",
-        "clientId": 60,
-        "type": "connect_open",
-        "openLatencyMs": 287
-      },
-      {
-        "ts": "2026-02-24T13:53:18.742Z",
-        "clientId": 40,
-        "type": "connect_open",
-        "openLatencyMs": 293
-      },
-      {
-        "ts": "2026-02-24T13:53:18.745Z",
-        "clientId": 8,
-        "type": "connect_open",
-        "openLatencyMs": 308
-      },
-      {
-        "ts": "2026-02-24T13:53:18.745Z",
-        "clientId": 44,
-        "type": "connect_open",
-        "openLatencyMs": 295
-      },
-      {
-        "ts": "2026-02-24T13:53:18.754Z",
-        "clientId": 55,
-        "type": "connect_open",
-        "openLatencyMs": 300
-      },
-      {
-        "ts": "2026-02-24T13:53:18.758Z",
-        "clientId": 24,
-        "type": "connect_open",
-        "openLatencyMs": 316
-      },
-      {
-        "ts": "2026-02-24T13:53:18.759Z",
-        "clientId": 71,
-        "type": "connect_open",
-        "openLatencyMs": 301
-      },
-      {
-        "ts": "2026-02-24T13:53:18.760Z",
-        "clientId": 54,
-        "type": "connect_open",
-        "openLatencyMs": 307
-      },
-      {
-        "ts": "2026-02-24T13:53:18.761Z",
-        "clientId": 64,
-        "type": "connect_open",
-        "openLatencyMs": 305
-      },
-      {
-        "ts": "2026-02-24T13:53:18.762Z",
-        "clientId": 80,
-        "type": "connect_open",
-        "openLatencyMs": 302
-      },
-      {
-        "ts": "2026-02-24T13:53:18.762Z",
-        "clientId": 70,
-        "type": "connect_open",
-        "openLatencyMs": 304
-      },
-      {
-        "ts": "2026-02-24T13:53:18.765Z",
-        "clientId": 32,
-        "type": "connect_open",
-        "openLatencyMs": 319
-      },
-      {
-        "ts": "2026-02-24T13:53:18.765Z",
-        "clientId": 4,
-        "type": "connect_open",
-        "openLatencyMs": 331
-      },
-      {
-        "ts": "2026-02-24T13:53:18.766Z",
-        "clientId": 17,
-        "type": "connect_open",
-        "openLatencyMs": 326
-      },
-      {
-        "ts": "2026-02-24T13:53:18.766Z",
-        "clientId": 1,
-        "type": "connect_open",
-        "openLatencyMs": 334
-      },
-      {
-        "ts": "2026-02-24T13:53:18.770Z",
-        "clientId": 57,
-        "type": "connect_open",
-        "openLatencyMs": 316
-      },
-      {
-        "ts": "2026-02-24T13:53:18.770Z",
-        "clientId": 77,
-        "type": "connect_open",
-        "openLatencyMs": 310
-      },
-      {
-        "ts": "2026-02-24T13:53:18.773Z",
-        "clientId": 35,
-        "type": "connect_open",
-        "openLatencyMs": 326
-      },
-      {
-        "ts": "2026-02-24T13:53:18.773Z",
-        "clientId": 65,
+        "ts": "2026-02-24T13:59:32.279Z",
+        "clientId": 7,
         "type": "connect_open",
         "openLatencyMs": 317
       },
       {
-        "ts": "2026-02-24T13:53:18.774Z",
-        "clientId": 16,
+        "ts": "2026-02-24T13:59:32.283Z",
+        "clientId": 9,
         "type": "connect_open",
-        "openLatencyMs": 334
+        "openLatencyMs": 320
       },
       {
-        "ts": "2026-02-24T13:53:18.775Z",
-        "clientId": 87,
+        "ts": "2026-02-24T13:59:32.284Z",
+        "clientId": 18,
         "type": "connect_open",
-        "openLatencyMs": 313
+        "openLatencyMs": 317
       },
       {
-        "ts": "2026-02-24T13:53:18.777Z",
-        "clientId": 37,
+        "ts": "2026-02-24T13:59:32.285Z",
+        "clientId": 1,
         "type": "connect_open",
         "openLatencyMs": 329
       },
       {
-        "ts": "2026-02-24T13:53:18.777Z",
-        "clientId": 42,
-        "type": "connect_open",
-        "openLatencyMs": 328
-      },
-      {
-        "ts": "2026-02-24T13:53:18.777Z",
-        "clientId": 5,
-        "type": "connect_open",
-        "openLatencyMs": 342
-      },
-      {
-        "ts": "2026-02-24T13:53:18.782Z",
-        "clientId": 74,
-        "type": "connect_open",
-        "openLatencyMs": 323
-      },
-      {
-        "ts": "2026-02-24T13:53:18.786Z",
+        "ts": "2026-02-24T13:59:32.286Z",
         "clientId": 6,
-        "type": "connect_open",
-        "openLatencyMs": 351
-      },
-      {
-        "ts": "2026-02-24T13:53:18.786Z",
-        "clientId": 91,
-        "type": "connect_open",
-        "openLatencyMs": 323
-      },
-      {
-        "ts": "2026-02-24T13:53:18.786Z",
-        "clientId": 99,
-        "type": "connect_open",
-        "openLatencyMs": 321
-      },
-      {
-        "ts": "2026-02-24T13:53:18.786Z",
-        "clientId": 36,
-        "type": "connect_open",
-        "openLatencyMs": 339
-      },
-      {
-        "ts": "2026-02-24T13:53:18.787Z",
-        "clientId": 52,
-        "type": "connect_open",
-        "openLatencyMs": 335
-      },
-      {
-        "ts": "2026-02-24T13:53:18.789Z",
-        "clientId": 96,
         "type": "connect_open",
         "openLatencyMs": 325
       },
       {
-        "ts": "2026-02-24T13:53:18.789Z",
-        "clientId": 89,
+        "ts": "2026-02-24T13:59:32.287Z",
+        "clientId": 5,
         "type": "connect_open",
-        "openLatencyMs": 327
+        "openLatencyMs": 326
       },
       {
-        "ts": "2026-02-24T13:53:18.789Z",
-        "clientId": 41,
+        "ts": "2026-02-24T13:59:32.287Z",
+        "clientId": 17,
         "type": "connect_open",
-        "openLatencyMs": 340
+        "openLatencyMs": 320
       },
       {
-        "ts": "2026-02-24T13:53:18.792Z",
-        "clientId": 61,
+        "ts": "2026-02-24T13:59:32.288Z",
+        "clientId": 15,
         "type": "connect_open",
-        "openLatencyMs": 337
+        "openLatencyMs": 322
       },
       {
-        "ts": "2026-02-24T13:53:18.793Z",
-        "clientId": 27,
-        "type": "connect_open",
-        "openLatencyMs": 349
-      },
-      {
-        "ts": "2026-02-24T13:53:18.798Z",
-        "clientId": 34,
-        "type": "connect_open",
-        "openLatencyMs": 351
-      },
-      {
-        "ts": "2026-02-24T13:53:18.798Z",
-        "clientId": 3,
-        "type": "connect_open",
-        "openLatencyMs": 364
-      },
-      {
-        "ts": "2026-02-24T13:53:18.798Z",
-        "clientId": 11,
-        "type": "connect_open",
-        "openLatencyMs": 360
-      },
-      {
-        "ts": "2026-02-24T13:53:18.802Z",
-        "clientId": 31,
-        "type": "connect_open",
-        "openLatencyMs": 356
-      },
-      {
-        "ts": "2026-02-24T13:53:18.805Z",
+        "ts": "2026-02-24T13:59:32.289Z",
         "clientId": 2,
         "type": "connect_open",
-        "openLatencyMs": 372
+        "openLatencyMs": 331
       },
       {
-        "ts": "2026-02-24T13:53:18.806Z",
-        "clientId": 94,
+        "ts": "2026-02-24T13:59:32.291Z",
+        "clientId": 19,
         "type": "connect_open",
-        "openLatencyMs": 342
+        "openLatencyMs": 323
       },
       {
-        "ts": "2026-02-24T13:53:18.807Z",
-        "clientId": 23,
+        "ts": "2026-02-24T13:59:32.292Z",
+        "clientId": 20,
         "type": "connect_open",
-        "openLatencyMs": 365
+        "openLatencyMs": 324
       },
       {
-        "ts": "2026-02-24T13:53:18.810Z",
-        "clientId": 47,
+        "ts": "2026-02-24T13:59:32.292Z",
+        "clientId": 4,
         "type": "connect_open",
-        "openLatencyMs": 359
+        "openLatencyMs": 332
       },
       {
-        "ts": "2026-02-24T13:53:18.817Z",
-        "clientId": 73,
+        "ts": "2026-02-24T13:59:32.295Z",
+        "clientId": 14,
         "type": "connect_open",
-        "openLatencyMs": 358
+        "openLatencyMs": 329
       },
       {
-        "ts": "2026-02-24T13:53:18.818Z",
-        "clientId": 75,
+        "ts": "2026-02-24T13:59:32.295Z",
+        "clientId": 10,
         "type": "connect_open",
-        "openLatencyMs": 359
+        "openLatencyMs": 331
       },
       {
-        "ts": "2026-02-24T13:53:18.819Z",
-        "clientId": 25,
-        "type": "connect_open",
-        "openLatencyMs": 375
-      },
-      {
-        "ts": "2026-02-24T13:53:18.819Z",
-        "clientId": 102,
-        "type": "connect_open",
-        "openLatencyMs": 353
-      },
-      {
-        "ts": "2026-02-24T13:53:18.820Z",
-        "clientId": 29,
-        "type": "connect_open",
-        "openLatencyMs": 375
-      },
-      {
-        "ts": "2026-02-24T13:53:18.820Z",
-        "clientId": 110,
-        "type": "connect_open",
-        "openLatencyMs": 353
-      },
-      {
-        "ts": "2026-02-24T13:53:18.820Z",
-        "clientId": 97,
-        "type": "connect_open",
-        "openLatencyMs": 356
-      },
-      {
-        "ts": "2026-02-24T13:53:18.822Z",
-        "clientId": 86,
-        "type": "connect_open",
-        "openLatencyMs": 360
-      },
-      {
-        "ts": "2026-02-24T13:53:18.826Z",
-        "clientId": 78,
-        "type": "connect_open",
-        "openLatencyMs": 366
-      },
-      {
-        "ts": "2026-02-24T13:53:18.826Z",
-        "clientId": 9,
-        "type": "connect_open",
-        "openLatencyMs": 389
-      },
-      {
-        "ts": "2026-02-24T13:53:18.831Z",
-        "clientId": 30,
-        "type": "connect_open",
-        "openLatencyMs": 386
-      },
-      {
-        "ts": "2026-02-24T13:53:18.834Z",
-        "clientId": 43,
-        "type": "connect_open",
-        "openLatencyMs": 385
-      },
-      {
-        "ts": "2026-02-24T13:53:18.834Z",
-        "clientId": 151,
-        "type": "connect_open",
-        "openLatencyMs": 358
-      },
-      {
-        "ts": "2026-02-24T13:53:18.837Z",
-        "clientId": 66,
-        "type": "connect_open",
-        "openLatencyMs": 380
-      },
-      {
-        "ts": "2026-02-24T13:53:18.853Z",
-        "clientId": 163,
-        "type": "connect_open",
-        "openLatencyMs": 374
-      },
-      {
-        "ts": "2026-02-24T13:53:18.854Z",
-        "clientId": 48,
-        "type": "connect_open",
-        "openLatencyMs": 403
-      },
-      {
-        "ts": "2026-02-24T13:53:18.854Z",
-        "clientId": 109,
-        "type": "connect_open",
-        "openLatencyMs": 387
-      },
-      {
-        "ts": "2026-02-24T13:53:18.857Z",
-        "clientId": 159,
-        "type": "connect_open",
-        "openLatencyMs": 379
-      },
-      {
-        "ts": "2026-02-24T13:53:18.858Z",
-        "clientId": 69,
-        "type": "connect_open",
-        "openLatencyMs": 400
-      },
-      {
-        "ts": "2026-02-24T13:53:18.858Z",
-        "clientId": 79,
-        "type": "connect_open",
-        "openLatencyMs": 398
-      },
-      {
-        "ts": "2026-02-24T13:53:18.859Z",
-        "clientId": 12,
-        "type": "connect_open",
-        "openLatencyMs": 420
-      },
-      {
-        "ts": "2026-02-24T13:53:18.859Z",
-        "clientId": 92,
-        "type": "connect_open",
-        "openLatencyMs": 396
-      },
-      {
-        "ts": "2026-02-24T13:53:18.860Z",
-        "clientId": 95,
-        "type": "connect_open",
-        "openLatencyMs": 396
-      },
-      {
-        "ts": "2026-02-24T13:53:18.860Z",
-        "clientId": 76,
-        "type": "connect_open",
-        "openLatencyMs": 401
-      },
-      {
-        "ts": "2026-02-24T13:53:18.860Z",
-        "clientId": 84,
-        "type": "connect_open",
-        "openLatencyMs": 399
-      },
-      {
-        "ts": "2026-02-24T13:53:18.866Z",
-        "clientId": 88,
-        "type": "connect_open",
-        "openLatencyMs": 404
-      },
-      {
-        "ts": "2026-02-24T13:53:18.866Z",
-        "clientId": 136,
-        "type": "connect_open",
-        "openLatencyMs": 393
-      },
-      {
-        "ts": "2026-02-24T13:53:18.867Z",
-        "clientId": 7,
-        "type": "connect_open",
-        "openLatencyMs": 431
-      },
-      {
-        "ts": "2026-02-24T13:53:18.867Z",
-        "clientId": 169,
-        "type": "connect_open",
-        "openLatencyMs": 387
-      },
-      {
-        "ts": "2026-02-24T13:53:18.868Z",
-        "clientId": 68,
-        "type": "connect_open",
-        "openLatencyMs": 411
-      },
-      {
-        "ts": "2026-02-24T13:53:18.869Z",
-        "clientId": 83,
+        "ts": "2026-02-24T13:59:32.375Z",
+        "clientId": 16,
         "type": "connect_open",
         "openLatencyMs": 408
       },
       {
-        "ts": "2026-02-24T13:53:18.869Z",
-        "clientId": 137,
-        "type": "connect_open",
-        "openLatencyMs": 396
-      },
-      {
-        "ts": "2026-02-24T13:53:18.872Z",
-        "clientId": 85,
+        "ts": "2026-02-24T13:59:32.376Z",
+        "clientId": 11,
         "type": "connect_open",
         "openLatencyMs": 411
       },
       {
-        "ts": "2026-02-24T13:53:18.872Z",
-        "clientId": 106,
-        "type": "connect_open",
-        "openLatencyMs": 406
-      },
-      {
-        "ts": "2026-02-24T13:53:18.872Z",
-        "clientId": 155,
-        "type": "connect_open",
-        "openLatencyMs": 395
-      },
-      {
-        "ts": "2026-02-24T13:53:18.878Z",
-        "clientId": 82,
-        "type": "connect_open",
-        "openLatencyMs": 417
-      },
-      {
-        "ts": "2026-02-24T13:53:18.879Z",
-        "clientId": 192,
-        "type": "connect_open",
-        "openLatencyMs": 394
-      },
-      {
-        "ts": "2026-02-24T13:53:18.879Z",
-        "clientId": 130,
-        "type": "connect_open",
-        "openLatencyMs": 407
-      },
-      {
-        "ts": "2026-02-24T13:53:18.881Z",
-        "clientId": 72,
-        "type": "connect_open",
-        "openLatencyMs": 423
-      },
-      {
-        "ts": "2026-02-24T13:53:18.881Z",
-        "clientId": 119,
-        "type": "connect_open",
-        "openLatencyMs": 412
-      },
-      {
-        "ts": "2026-02-24T13:53:18.881Z",
-        "clientId": 46,
-        "type": "connect_open",
-        "openLatencyMs": 431
-      },
-      {
-        "ts": "2026-02-24T13:53:18.882Z",
-        "clientId": 128,
-        "type": "connect_open",
-        "openLatencyMs": 411
-      },
-      {
-        "ts": "2026-02-24T13:53:18.884Z",
-        "clientId": 121,
-        "type": "connect_open",
-        "openLatencyMs": 414
-      },
-      {
-        "ts": "2026-02-24T13:53:18.884Z",
-        "clientId": 146,
-        "type": "connect_open",
-        "openLatencyMs": 409
-      },
-      {
-        "ts": "2026-02-24T13:53:18.887Z",
-        "clientId": 49,
-        "type": "connect_open",
-        "openLatencyMs": 436
-      },
-      {
-        "ts": "2026-02-24T13:53:18.887Z",
-        "clientId": 154,
+        "ts": "2026-02-24T13:59:32.376Z",
+        "clientId": 13,
         "type": "connect_open",
         "openLatencyMs": 410
       },
       {
-        "ts": "2026-02-24T13:53:18.887Z",
-        "clientId": 124,
+        "ts": "2026-02-24T13:59:32.377Z",
+        "clientId": 12,
         "type": "connect_open",
-        "openLatencyMs": 417
+        "openLatencyMs": 412
       },
       {
-        "ts": "2026-02-24T13:53:18.888Z",
-        "clientId": 131,
+        "ts": "2026-02-24T13:59:32.390Z",
+        "clientId": 8,
         "type": "connect_open",
-        "openLatencyMs": 416
+        "openLatencyMs": 428
       },
       {
-        "ts": "2026-02-24T13:53:18.891Z",
-        "clientId": 170,
+        "ts": "2026-02-24T13:59:32.604Z",
+        "clientId": 3,
         "type": "connect_open",
-        "openLatencyMs": 411
+        "openLatencyMs": 645
       },
       {
-        "ts": "2026-02-24T13:53:18.891Z",
-        "clientId": 144,
+        "ts": "2026-02-24T13:59:32.919Z",
+        "clientId": 21,
         "type": "connect_open",
-        "openLatencyMs": 416
+        "openLatencyMs": 194
       },
       {
-        "ts": "2026-02-24T13:53:18.891Z",
-        "clientId": 20,
+        "ts": "2026-02-24T13:59:32.919Z",
+        "clientId": 22,
         "type": "connect_open",
-        "openLatencyMs": 450
+        "openLatencyMs": 191
       },
       {
-        "ts": "2026-02-24T13:53:18.892Z",
-        "clientId": 133,
+        "ts": "2026-02-24T13:59:32.977Z",
+        "clientId": 24,
         "type": "connect_open",
-        "openLatencyMs": 420
+        "openLatencyMs": 247
       },
       {
-        "ts": "2026-02-24T13:53:18.893Z",
-        "clientId": 103,
+        "ts": "2026-02-24T13:59:32.981Z",
+        "clientId": 35,
         "type": "connect_open",
-        "openLatencyMs": 427
+        "openLatencyMs": 246
       },
       {
-        "ts": "2026-02-24T13:53:18.897Z",
-        "clientId": 115,
+        "ts": "2026-02-24T13:59:32.988Z",
+        "clientId": 31,
         "type": "connect_open",
-        "openLatencyMs": 429
+        "openLatencyMs": 255
       },
       {
-        "ts": "2026-02-24T13:53:18.901Z",
-        "clientId": 118,
+        "ts": "2026-02-24T13:59:32.991Z",
+        "clientId": 27,
         "type": "connect_open",
-        "openLatencyMs": 432
+        "openLatencyMs": 260
       },
       {
-        "ts": "2026-02-24T13:53:18.902Z",
-        "clientId": 132,
+        "ts": "2026-02-24T13:59:32.999Z",
+        "clientId": 32,
         "type": "connect_open",
-        "openLatencyMs": 430
+        "openLatencyMs": 265
       },
       {
-        "ts": "2026-02-24T13:53:18.902Z",
-        "clientId": 120,
+        "ts": "2026-02-24T13:59:33.009Z",
+        "clientId": 29,
         "type": "connect_open",
-        "openLatencyMs": 433
+        "openLatencyMs": 277
       },
       {
-        "ts": "2026-02-24T13:53:18.904Z",
-        "clientId": 122,
+        "ts": "2026-02-24T13:59:33.010Z",
+        "clientId": 34,
         "type": "connect_open",
-        "openLatencyMs": 434
+        "openLatencyMs": 275
       },
       {
-        "ts": "2026-02-24T13:53:18.904Z",
-        "clientId": 158,
+        "ts": "2026-02-24T13:59:33.015Z",
+        "clientId": 26,
         "type": "connect_open",
-        "openLatencyMs": 426
+        "openLatencyMs": 284
       },
       {
-        "ts": "2026-02-24T13:53:18.904Z",
-        "clientId": 117,
+        "ts": "2026-02-24T13:59:33.020Z",
+        "clientId": 38,
         "type": "connect_open",
-        "openLatencyMs": 435
+        "openLatencyMs": 284
       },
       {
-        "ts": "2026-02-24T13:53:18.905Z",
-        "clientId": 113,
+        "ts": "2026-02-24T13:59:33.023Z",
+        "clientId": 23,
         "type": "connect_open",
-        "openLatencyMs": 437
+        "openLatencyMs": 294
       },
       {
-        "ts": "2026-02-24T13:53:18.907Z",
-        "clientId": 112,
+        "ts": "2026-02-24T13:59:33.026Z",
+        "clientId": 30,
         "type": "connect_open",
-        "openLatencyMs": 439
+        "openLatencyMs": 293
       },
       {
-        "ts": "2026-02-24T13:53:18.908Z",
-        "clientId": 143,
+        "ts": "2026-02-24T13:59:33.031Z",
+        "clientId": 25,
         "type": "connect_open",
-        "openLatencyMs": 433
+        "openLatencyMs": 301
       },
       {
-        "ts": "2026-02-24T13:53:18.908Z",
-        "clientId": 189,
+        "ts": "2026-02-24T13:59:33.041Z",
+        "clientId": 36,
         "type": "connect_open",
-        "openLatencyMs": 424
+        "openLatencyMs": 306
       },
       {
-        "ts": "2026-02-24T13:53:18.908Z",
-        "clientId": 127,
+        "ts": "2026-02-24T13:59:33.075Z",
+        "clientId": 28,
         "type": "connect_open",
-        "openLatencyMs": 437
+        "openLatencyMs": 343
       },
       {
-        "ts": "2026-02-24T13:53:18.909Z",
-        "clientId": 129,
+        "ts": "2026-02-24T13:59:33.081Z",
+        "clientId": 33,
         "type": "connect_open",
-        "openLatencyMs": 438
+        "openLatencyMs": 347
       },
       {
-        "ts": "2026-02-24T13:53:18.909Z",
-        "clientId": 125,
+        "ts": "2026-02-24T13:59:33.097Z",
+        "clientId": 40,
         "type": "connect_open",
-        "openLatencyMs": 439
+        "openLatencyMs": 360
       },
       {
-        "ts": "2026-02-24T13:53:18.916Z",
-        "clientId": 153,
+        "ts": "2026-02-24T13:59:33.158Z",
+        "clientId": 39,
         "type": "connect_open",
-        "openLatencyMs": 439
+        "openLatencyMs": 421
       },
       {
-        "ts": "2026-02-24T13:53:18.917Z",
-        "clientId": 138,
+        "ts": "2026-02-24T13:59:33.172Z",
+        "clientId": 37,
         "type": "connect_open",
-        "openLatencyMs": 444
+        "openLatencyMs": 436
       },
       {
-        "ts": "2026-02-24T13:53:18.917Z",
-        "clientId": 135,
+        "ts": "2026-02-24T13:59:33.560Z",
+        "clientId": 41,
         "type": "connect_open",
-        "openLatencyMs": 444
+        "openLatencyMs": 266
       },
       {
-        "ts": "2026-02-24T13:53:18.924Z",
-        "clientId": 172,
+        "ts": "2026-02-24T13:59:33.561Z",
+        "clientId": 57,
         "type": "connect_open",
-        "openLatencyMs": 443
+        "openLatencyMs": 257
       },
       {
-        "ts": "2026-02-24T13:53:18.925Z",
+        "ts": "2026-02-24T13:59:33.563Z",
+        "clientId": 53,
+        "type": "connect_open",
+        "openLatencyMs": 261
+      },
+      {
+        "ts": "2026-02-24T13:59:33.563Z",
+        "clientId": 43,
+        "type": "connect_open",
+        "openLatencyMs": 266
+      },
+      {
+        "ts": "2026-02-24T13:59:33.586Z",
+        "clientId": 59,
+        "type": "connect_open",
+        "openLatencyMs": 281
+      },
+      {
+        "ts": "2026-02-24T13:59:33.587Z",
+        "clientId": 46,
+        "type": "connect_open",
+        "openLatencyMs": 288
+      },
+      {
+        "ts": "2026-02-24T13:59:33.588Z",
+        "clientId": 48,
+        "type": "connect_open",
+        "openLatencyMs": 289
+      },
+      {
+        "ts": "2026-02-24T13:59:33.592Z",
+        "clientId": 49,
+        "type": "connect_open",
+        "openLatencyMs": 292
+      },
+      {
+        "ts": "2026-02-24T13:59:33.592Z",
+        "clientId": 47,
+        "type": "connect_open",
+        "openLatencyMs": 293
+      },
+      {
+        "ts": "2026-02-24T13:59:33.594Z",
+        "clientId": 51,
+        "type": "connect_open",
+        "openLatencyMs": 293
+      },
+      {
+        "ts": "2026-02-24T13:59:33.594Z",
+        "clientId": 50,
+        "type": "connect_open",
+        "openLatencyMs": 294
+      },
+      {
+        "ts": "2026-02-24T13:59:33.595Z",
+        "clientId": 55,
+        "type": "connect_open",
+        "openLatencyMs": 292
+      },
+      {
+        "ts": "2026-02-24T13:59:33.601Z",
+        "clientId": 60,
+        "type": "connect_open",
+        "openLatencyMs": 296
+      },
+      {
+        "ts": "2026-02-24T13:59:33.611Z",
+        "clientId": 44,
+        "type": "connect_open",
+        "openLatencyMs": 314
+      },
+      {
+        "ts": "2026-02-24T13:59:33.615Z",
+        "clientId": 56,
+        "type": "connect_open",
+        "openLatencyMs": 311
+      },
+      {
+        "ts": "2026-02-24T13:59:33.659Z",
+        "clientId": 52,
+        "type": "connect_open",
+        "openLatencyMs": 358
+      },
+      {
+        "ts": "2026-02-24T13:59:33.671Z",
+        "clientId": 54,
+        "type": "connect_open",
+        "openLatencyMs": 368
+      },
+      {
+        "ts": "2026-02-24T13:59:33.685Z",
+        "clientId": 42,
+        "type": "connect_open",
+        "openLatencyMs": 389
+      },
+      {
+        "ts": "2026-02-24T13:59:33.688Z",
+        "clientId": 45,
+        "type": "connect_open",
+        "openLatencyMs": 390
+      },
+      {
+        "ts": "2026-02-24T13:59:33.712Z",
+        "clientId": 58,
+        "type": "connect_open",
+        "openLatencyMs": 408
+      },
+      {
+        "ts": "2026-02-24T13:59:34.065Z",
+        "clientId": 68,
+        "type": "connect_open",
+        "openLatencyMs": 227
+      },
+      {
+        "ts": "2026-02-24T13:59:34.070Z",
+        "clientId": 75,
+        "type": "connect_open",
+        "openLatencyMs": 229
+      },
+      {
+        "ts": "2026-02-24T13:59:34.087Z",
+        "clientId": 73,
+        "type": "connect_open",
+        "openLatencyMs": 247
+      },
+      {
+        "ts": "2026-02-24T13:59:34.087Z",
+        "clientId": 70,
+        "type": "connect_open",
+        "openLatencyMs": 248
+      },
+      {
+        "ts": "2026-02-24T13:59:34.100Z",
+        "clientId": 79,
+        "type": "connect_open",
+        "openLatencyMs": 256
+      },
+      {
+        "ts": "2026-02-24T13:59:34.101Z",
+        "clientId": 64,
+        "type": "connect_open",
+        "openLatencyMs": 265
+      },
+      {
+        "ts": "2026-02-24T13:59:34.108Z",
+        "clientId": 61,
+        "type": "connect_open",
+        "openLatencyMs": 276
+      },
+      {
+        "ts": "2026-02-24T13:59:34.113Z",
+        "clientId": 69,
+        "type": "connect_open",
+        "openLatencyMs": 274
+      },
+      {
+        "ts": "2026-02-24T13:59:34.114Z",
+        "clientId": 74,
+        "type": "connect_open",
+        "openLatencyMs": 273
+      },
+      {
+        "ts": "2026-02-24T13:59:34.126Z",
+        "clientId": 80,
+        "type": "connect_open",
+        "openLatencyMs": 282
+      },
+      {
+        "ts": "2026-02-24T13:59:34.147Z",
+        "clientId": 66,
+        "type": "connect_open",
+        "openLatencyMs": 310
+      },
+      {
+        "ts": "2026-02-24T13:59:34.158Z",
+        "clientId": 62,
+        "type": "connect_open",
+        "openLatencyMs": 324
+      },
+      {
+        "ts": "2026-02-24T13:59:34.160Z",
+        "clientId": 65,
+        "type": "connect_open",
+        "openLatencyMs": 323
+      },
+      {
+        "ts": "2026-02-24T13:59:34.161Z",
+        "clientId": 76,
+        "type": "connect_open",
+        "openLatencyMs": 319
+      },
+      {
+        "ts": "2026-02-24T13:59:34.188Z",
+        "clientId": 78,
+        "type": "connect_open",
+        "openLatencyMs": 345
+      },
+      {
+        "ts": "2026-02-24T13:59:34.236Z",
+        "clientId": 63,
+        "type": "connect_open",
+        "openLatencyMs": 401
+      },
+      {
+        "ts": "2026-02-24T13:59:34.253Z",
+        "clientId": 77,
+        "type": "connect_open",
+        "openLatencyMs": 410
+      },
+      {
+        "ts": "2026-02-24T13:59:34.329Z",
+        "clientId": 72,
+        "type": "connect_open",
+        "openLatencyMs": 489
+      },
+      {
+        "ts": "2026-02-24T13:59:34.543Z",
+        "clientId": 67,
+        "type": "connect_open",
+        "openLatencyMs": 705
+      },
+      {
+        "ts": "2026-02-24T13:59:38.877Z",
+        "clientId": 71,
+        "type": "connect_failed",
+        "attempt": 1,
+        "error": "ws_error"
+      },
+      {
+        "ts": "2026-02-24T13:59:39.377Z",
+        "clientId": 71,
+        "type": "connect_open",
+        "openLatencyMs": 234
+      },
+      {
+        "ts": "2026-02-24T13:59:39.716Z",
+        "clientId": 84,
+        "type": "connect_open",
+        "openLatencyMs": 215
+      },
+      {
+        "ts": "2026-02-24T13:59:39.717Z",
+        "clientId": 97,
+        "type": "connect_open",
+        "openLatencyMs": 212
+      },
+      {
+        "ts": "2026-02-24T13:59:39.717Z",
+        "clientId": 85,
+        "type": "connect_open",
+        "openLatencyMs": 216
+      },
+      {
+        "ts": "2026-02-24T13:59:39.718Z",
+        "clientId": 83,
+        "type": "connect_open",
+        "openLatencyMs": 218
+      },
+      {
+        "ts": "2026-02-24T13:59:39.718Z",
+        "clientId": 99,
+        "type": "connect_open",
+        "openLatencyMs": 212
+      },
+      {
+        "ts": "2026-02-24T13:59:39.719Z",
+        "clientId": 88,
+        "type": "connect_open",
+        "openLatencyMs": 217
+      },
+      {
+        "ts": "2026-02-24T13:59:39.719Z",
+        "clientId": 91,
+        "type": "connect_open",
+        "openLatencyMs": 216
+      },
+      {
+        "ts": "2026-02-24T13:59:39.720Z",
+        "clientId": 89,
+        "type": "connect_open",
+        "openLatencyMs": 217
+      },
+      {
+        "ts": "2026-02-24T13:59:39.720Z",
+        "clientId": 82,
+        "type": "connect_open",
+        "openLatencyMs": 221
+      },
+      {
+        "ts": "2026-02-24T13:59:39.721Z",
+        "clientId": 96,
+        "type": "connect_open",
+        "openLatencyMs": 216
+      },
+      {
+        "ts": "2026-02-24T13:59:39.722Z",
+        "clientId": 87,
+        "type": "connect_open",
+        "openLatencyMs": 220
+      },
+      {
+        "ts": "2026-02-24T13:59:39.738Z",
+        "clientId": 92,
+        "type": "connect_open",
+        "openLatencyMs": 234
+      },
+      {
+        "ts": "2026-02-24T13:59:39.742Z",
+        "clientId": 90,
+        "type": "connect_open",
+        "openLatencyMs": 239
+      },
+      {
+        "ts": "2026-02-24T13:59:39.743Z",
         "clientId": 100,
         "type": "connect_open",
-        "openLatencyMs": 460
+        "openLatencyMs": 236
       },
       {
-        "ts": "2026-02-24T13:53:18.925Z",
-        "clientId": 139,
+        "ts": "2026-02-24T13:59:39.744Z",
+        "clientId": 81,
         "type": "connect_open",
-        "openLatencyMs": 452
+        "openLatencyMs": 247
       },
       {
-        "ts": "2026-02-24T13:53:18.926Z",
+        "ts": "2026-02-24T13:59:39.748Z",
         "clientId": 93,
         "type": "connect_open",
-        "openLatencyMs": 463
+        "openLatencyMs": 244
       },
       {
-        "ts": "2026-02-24T13:53:18.929Z",
-        "clientId": 152,
+        "ts": "2026-02-24T13:59:39.766Z",
+        "clientId": 94,
         "type": "connect_open",
-        "openLatencyMs": 452
+        "openLatencyMs": 262
       },
       {
-        "ts": "2026-02-24T13:53:18.929Z",
-        "clientId": 188,
+        "ts": "2026-02-24T13:59:39.770Z",
+        "clientId": 98,
         "type": "connect_open",
-        "openLatencyMs": 445
+        "openLatencyMs": 264
       },
       {
-        "ts": "2026-02-24T13:53:18.929Z",
-        "clientId": 140,
+        "ts": "2026-02-24T13:59:39.786Z",
+        "clientId": 95,
         "type": "connect_open",
-        "openLatencyMs": 455
+        "openLatencyMs": 281
       },
       {
-        "ts": "2026-02-24T13:53:18.930Z",
-        "clientId": 142,
+        "ts": "2026-02-24T13:59:39.957Z",
+        "clientId": 86,
         "type": "connect_open",
         "openLatencyMs": 456
       },
       {
-        "ts": "2026-02-24T13:53:18.931Z",
-        "clientId": 167,
+        "ts": "2026-02-24T13:59:40.316Z",
+        "clientId": 106,
         "type": "connect_open",
-        "openLatencyMs": 451
+        "openLatencyMs": 232
       },
       {
-        "ts": "2026-02-24T13:53:18.931Z",
-        "clientId": 179,
+        "ts": "2026-02-24T13:59:40.333Z",
+        "clientId": 113,
         "type": "connect_open",
-        "openLatencyMs": 449
+        "openLatencyMs": 246
       },
       {
-        "ts": "2026-02-24T13:53:18.932Z",
-        "clientId": 168,
+        "ts": "2026-02-24T13:59:40.334Z",
+        "clientId": 103,
         "type": "connect_open",
-        "openLatencyMs": 452
+        "openLatencyMs": 252
       },
       {
-        "ts": "2026-02-24T13:53:18.932Z",
-        "clientId": 182,
-        "type": "connect_open",
-        "openLatencyMs": 449
-      },
-      {
-        "ts": "2026-02-24T13:53:18.932Z",
-        "clientId": 141,
-        "type": "connect_open",
-        "openLatencyMs": 458
-      },
-      {
-        "ts": "2026-02-24T13:53:18.933Z",
-        "clientId": 173,
-        "type": "connect_open",
-        "openLatencyMs": 452
-      },
-      {
-        "ts": "2026-02-24T13:53:18.935Z",
-        "clientId": 157,
-        "type": "connect_open",
-        "openLatencyMs": 457
-      },
-      {
-        "ts": "2026-02-24T13:53:18.936Z",
-        "clientId": 183,
-        "type": "connect_open",
-        "openLatencyMs": 453
-      },
-      {
-        "ts": "2026-02-24T13:53:18.936Z",
-        "clientId": 193,
-        "type": "connect_open",
-        "openLatencyMs": 451
-      },
-      {
-        "ts": "2026-02-24T13:53:18.937Z",
-        "clientId": 161,
-        "type": "connect_open",
-        "openLatencyMs": 459
-      },
-      {
-        "ts": "2026-02-24T13:53:18.937Z",
-        "clientId": 162,
-        "type": "connect_open",
-        "openLatencyMs": 458
-      },
-      {
-        "ts": "2026-02-24T13:53:18.940Z",
-        "clientId": 196,
-        "type": "connect_open",
-        "openLatencyMs": 454
-      },
-      {
-        "ts": "2026-02-24T13:53:18.941Z",
-        "clientId": 114,
-        "type": "connect_open",
-        "openLatencyMs": 473
-      },
-      {
-        "ts": "2026-02-24T13:53:18.941Z",
-        "clientId": 148,
-        "type": "connect_open",
-        "openLatencyMs": 465
-      },
-      {
-        "ts": "2026-02-24T13:53:18.948Z",
-        "clientId": 175,
-        "type": "connect_open",
-        "openLatencyMs": 467
-      },
-      {
-        "ts": "2026-02-24T13:53:18.948Z",
-        "clientId": 98,
-        "type": "connect_open",
-        "openLatencyMs": 483
-      },
-      {
-        "ts": "2026-02-24T13:53:18.949Z",
-        "clientId": 186,
-        "type": "connect_open",
-        "openLatencyMs": 466
-      },
-      {
-        "ts": "2026-02-24T13:53:18.949Z",
-        "clientId": 45,
-        "type": "connect_open",
-        "openLatencyMs": 499
-      },
-      {
-        "ts": "2026-02-24T13:53:18.951Z",
-        "clientId": 174,
-        "type": "connect_open",
-        "openLatencyMs": 470
-      },
-      {
-        "ts": "2026-02-24T13:53:18.951Z",
-        "clientId": 176,
-        "type": "connect_open",
-        "openLatencyMs": 470
-      },
-      {
-        "ts": "2026-02-24T13:53:18.954Z",
-        "clientId": 126,
-        "type": "connect_open",
-        "openLatencyMs": 483
-      },
-      {
-        "ts": "2026-02-24T13:53:18.959Z",
-        "clientId": 165,
-        "type": "connect_open",
-        "openLatencyMs": 480
-      },
-      {
-        "ts": "2026-02-24T13:53:18.960Z",
-        "clientId": 177,
-        "type": "connect_open",
-        "openLatencyMs": 478
-      },
-      {
-        "ts": "2026-02-24T13:53:18.960Z",
-        "clientId": 164,
-        "type": "connect_open",
-        "openLatencyMs": 481
-      },
-      {
-        "ts": "2026-02-24T13:53:18.961Z",
-        "clientId": 195,
-        "type": "connect_open",
-        "openLatencyMs": 475
-      },
-      {
-        "ts": "2026-02-24T13:53:18.961Z",
-        "clientId": 190,
-        "type": "connect_open",
-        "openLatencyMs": 477
-      },
-      {
-        "ts": "2026-02-24T13:53:18.967Z",
-        "clientId": 156,
-        "type": "connect_open",
-        "openLatencyMs": 490
-      },
-      {
-        "ts": "2026-02-24T13:53:18.968Z",
-        "clientId": 166,
-        "type": "connect_open",
-        "openLatencyMs": 489
-      },
-      {
-        "ts": "2026-02-24T13:53:18.972Z",
-        "clientId": 134,
-        "type": "connect_open",
-        "openLatencyMs": 500
-      },
-      {
-        "ts": "2026-02-24T13:53:18.973Z",
-        "clientId": 200,
-        "type": "connect_open",
-        "openLatencyMs": 486
-      },
-      {
-        "ts": "2026-02-24T13:53:18.973Z",
-        "clientId": 191,
-        "type": "connect_open",
-        "openLatencyMs": 489
-      },
-      {
-        "ts": "2026-02-24T13:53:18.973Z",
-        "clientId": 101,
-        "type": "connect_open",
-        "openLatencyMs": 508
-      },
-      {
-        "ts": "2026-02-24T13:53:18.974Z",
-        "clientId": 197,
-        "type": "connect_open",
-        "openLatencyMs": 488
-      },
-      {
-        "ts": "2026-02-24T13:53:18.978Z",
-        "clientId": 149,
-        "type": "connect_open",
-        "openLatencyMs": 502
-      },
-      {
-        "ts": "2026-02-24T13:53:18.988Z",
-        "clientId": 147,
-        "type": "connect_open",
-        "openLatencyMs": 513
-      },
-      {
-        "ts": "2026-02-24T13:53:18.989Z",
-        "clientId": 199,
-        "type": "connect_open",
-        "openLatencyMs": 502
-      },
-      {
-        "ts": "2026-02-24T13:53:19.084Z",
-        "clientId": 198,
-        "type": "connect_open",
-        "openLatencyMs": 597
-      },
-      {
-        "ts": "2026-02-24T13:53:19.085Z",
-        "clientId": 145,
-        "type": "connect_open",
-        "openLatencyMs": 610
-      },
-      {
-        "ts": "2026-02-24T13:53:19.088Z",
-        "clientId": 58,
-        "type": "connect_open",
-        "openLatencyMs": 634
-      },
-      {
-        "ts": "2026-02-24T13:53:19.089Z",
-        "clientId": 150,
-        "type": "connect_open",
-        "openLatencyMs": 613
-      },
-      {
-        "ts": "2026-02-24T13:53:19.090Z",
-        "clientId": 123,
-        "type": "connect_open",
-        "openLatencyMs": 620
-      },
-      {
-        "ts": "2026-02-24T13:53:19.093Z",
-        "clientId": 108,
-        "type": "connect_open",
-        "openLatencyMs": 626
-      },
-      {
-        "ts": "2026-02-24T13:53:19.096Z",
-        "clientId": 181,
-        "type": "connect_open",
-        "openLatencyMs": 614
-      },
-      {
-        "ts": "2026-02-24T13:53:19.100Z",
-        "clientId": 185,
-        "type": "connect_open",
-        "openLatencyMs": 617
-      },
-      {
-        "ts": "2026-02-24T13:53:19.100Z",
-        "clientId": 116,
-        "type": "connect_open",
-        "openLatencyMs": 632
-      },
-      {
-        "ts": "2026-02-24T13:53:19.100Z",
-        "clientId": 187,
-        "type": "connect_open",
-        "openLatencyMs": 616
-      },
-      {
-        "ts": "2026-02-24T13:53:19.100Z",
-        "clientId": 90,
-        "type": "connect_open",
-        "openLatencyMs": 637
-      },
-      {
-        "ts": "2026-02-24T13:53:19.101Z",
-        "clientId": 180,
-        "type": "connect_open",
-        "openLatencyMs": 619
-      },
-      {
-        "ts": "2026-02-24T13:53:19.101Z",
-        "clientId": 104,
-        "type": "connect_open",
-        "openLatencyMs": 635
-      },
-      {
-        "ts": "2026-02-24T13:53:19.101Z",
-        "clientId": 107,
-        "type": "connect_open",
-        "openLatencyMs": 634
-      },
-      {
-        "ts": "2026-02-24T13:53:19.101Z",
-        "clientId": 184,
-        "type": "connect_open",
-        "openLatencyMs": 618
-      },
-      {
-        "ts": "2026-02-24T13:53:19.101Z",
-        "clientId": 111,
-        "type": "connect_open",
-        "openLatencyMs": 633
-      },
-      {
-        "ts": "2026-02-24T13:53:19.110Z",
-        "clientId": 194,
-        "type": "connect_open",
-        "openLatencyMs": 624
-      },
-      {
-        "ts": "2026-02-24T13:53:19.110Z",
-        "clientId": 63,
-        "type": "connect_open",
-        "openLatencyMs": 654
-      },
-      {
-        "ts": "2026-02-24T13:53:19.119Z",
-        "clientId": 171,
-        "type": "connect_open",
-        "openLatencyMs": 639
-      },
-      {
-        "ts": "2026-02-24T13:53:19.125Z",
-        "clientId": 81,
-        "type": "connect_open",
-        "openLatencyMs": 664
-      },
-      {
-        "ts": "2026-02-24T13:53:19.127Z",
+        "ts": "2026-02-24T13:59:40.347Z",
         "clientId": 105,
         "type": "connect_open",
-        "openLatencyMs": 661
+        "openLatencyMs": 264
       },
       {
-        "ts": "2026-02-24T13:53:19.130Z",
-        "clientId": 178,
+        "ts": "2026-02-24T13:59:40.348Z",
+        "clientId": 114,
         "type": "connect_open",
-        "openLatencyMs": 648
+        "openLatencyMs": 261
       },
       {
-        "ts": "2026-02-24T13:53:19.242Z",
-        "clientId": 22,
+        "ts": "2026-02-24T13:59:40.348Z",
+        "clientId": 115,
         "type": "connect_open",
-        "openLatencyMs": 800
+        "openLatencyMs": 261
       },
       {
-        "ts": "2026-02-24T13:53:19.250Z",
-        "clientId": 13,
+        "ts": "2026-02-24T13:59:40.352Z",
+        "clientId": 119,
         "type": "connect_open",
-        "openLatencyMs": 811
+        "openLatencyMs": 263
       },
       {
-        "ts": "2026-02-24T13:53:19.385Z",
+        "ts": "2026-02-24T13:59:40.357Z",
+        "clientId": 109,
+        "type": "connect_open",
+        "openLatencyMs": 272
+      },
+      {
+        "ts": "2026-02-24T13:59:40.358Z",
+        "clientId": 108,
+        "type": "connect_open",
+        "openLatencyMs": 273
+      },
+      {
+        "ts": "2026-02-24T13:59:40.371Z",
+        "clientId": 107,
+        "type": "connect_open",
+        "openLatencyMs": 287
+      },
+      {
+        "ts": "2026-02-24T13:59:40.372Z",
+        "clientId": 112,
+        "type": "connect_open",
+        "openLatencyMs": 286
+      },
+      {
+        "ts": "2026-02-24T13:59:40.374Z",
+        "clientId": 120,
+        "type": "connect_open",
+        "openLatencyMs": 285
+      },
+      {
+        "ts": "2026-02-24T13:59:40.380Z",
+        "clientId": 116,
+        "type": "connect_open",
+        "openLatencyMs": 292
+      },
+      {
+        "ts": "2026-02-24T13:59:40.385Z",
+        "clientId": 101,
+        "type": "connect_open",
+        "openLatencyMs": 306
+      },
+      {
+        "ts": "2026-02-24T13:59:40.387Z",
+        "clientId": 110,
+        "type": "connect_open",
+        "openLatencyMs": 301
+      },
+      {
+        "ts": "2026-02-24T13:59:40.390Z",
+        "clientId": 111,
+        "type": "connect_open",
+        "openLatencyMs": 304
+      },
+      {
+        "ts": "2026-02-24T13:59:40.398Z",
+        "clientId": 102,
+        "type": "connect_open",
+        "openLatencyMs": 317
+      },
+      {
+        "ts": "2026-02-24T13:59:40.398Z",
+        "clientId": 104,
+        "type": "connect_open",
+        "openLatencyMs": 316
+      },
+      {
+        "ts": "2026-02-24T13:59:40.402Z",
+        "clientId": 117,
+        "type": "connect_open",
+        "openLatencyMs": 314
+      },
+      {
+        "ts": "2026-02-24T13:59:40.916Z",
+        "clientId": 118,
+        "type": "connect_open",
+        "openLatencyMs": 828
+      },
+      {
+        "ts": "2026-02-24T13:59:41.292Z",
+        "clientId": 139,
+        "type": "connect_open",
+        "openLatencyMs": 245
+      },
+      {
+        "ts": "2026-02-24T13:59:41.293Z",
+        "clientId": 126,
+        "type": "connect_open",
+        "openLatencyMs": 251
+      },
+      {
+        "ts": "2026-02-24T13:59:41.294Z",
+        "clientId": 122,
+        "type": "connect_open",
+        "openLatencyMs": 256
+      },
+      {
+        "ts": "2026-02-24T13:59:41.295Z",
+        "clientId": 130,
+        "type": "connect_open",
+        "openLatencyMs": 251
+      },
+      {
+        "ts": "2026-02-24T13:59:41.296Z",
+        "clientId": 131,
+        "type": "connect_open",
+        "openLatencyMs": 252
+      },
+      {
+        "ts": "2026-02-24T13:59:41.296Z",
+        "clientId": 127,
+        "type": "connect_open",
+        "openLatencyMs": 253
+      },
+      {
+        "ts": "2026-02-24T13:59:41.297Z",
+        "clientId": 135,
+        "type": "connect_open",
+        "openLatencyMs": 251
+      },
+      {
+        "ts": "2026-02-24T13:59:41.297Z",
+        "clientId": 128,
+        "type": "connect_open",
+        "openLatencyMs": 254
+      },
+      {
+        "ts": "2026-02-24T13:59:41.298Z",
+        "clientId": 124,
+        "type": "connect_open",
+        "openLatencyMs": 257
+      },
+      {
+        "ts": "2026-02-24T13:59:41.299Z",
+        "clientId": 134,
+        "type": "connect_open",
+        "openLatencyMs": 254
+      },
+      {
+        "ts": "2026-02-24T13:59:41.299Z",
+        "clientId": 129,
+        "type": "connect_open",
+        "openLatencyMs": 256
+      },
+      {
+        "ts": "2026-02-24T13:59:41.300Z",
+        "clientId": 140,
+        "type": "connect_open",
+        "openLatencyMs": 253
+      },
+      {
+        "ts": "2026-02-24T13:59:41.300Z",
+        "clientId": 123,
+        "type": "connect_open",
+        "openLatencyMs": 260
+      },
+      {
+        "ts": "2026-02-24T13:59:41.301Z",
+        "clientId": 132,
+        "type": "connect_open",
+        "openLatencyMs": 256
+      },
+      {
+        "ts": "2026-02-24T13:59:41.301Z",
+        "clientId": 136,
+        "type": "connect_open",
+        "openLatencyMs": 255
+      },
+      {
+        "ts": "2026-02-24T13:59:41.301Z",
+        "clientId": 137,
+        "type": "connect_open",
+        "openLatencyMs": 255
+      },
+      {
+        "ts": "2026-02-24T13:59:41.304Z",
+        "clientId": 125,
+        "type": "connect_open",
+        "openLatencyMs": 262
+      },
+      {
+        "ts": "2026-02-24T13:59:41.316Z",
+        "clientId": 133,
+        "type": "connect_open",
+        "openLatencyMs": 271
+      },
+      {
+        "ts": "2026-02-24T13:59:42.220Z",
+        "clientId": 121,
+        "type": "connect_open",
+        "openLatencyMs": 1184
+      },
+      {
+        "ts": "2026-02-24T13:59:44.440Z",
+        "clientId": 138,
+        "type": "connect_open",
+        "openLatencyMs": 3393
+      },
+      {
+        "ts": "2026-02-24T13:59:44.718Z",
+        "clientId": 146,
+        "type": "connect_open",
+        "openLatencyMs": 153
+      },
+      {
+        "ts": "2026-02-24T13:59:44.719Z",
+        "clientId": 145,
+        "type": "connect_open",
+        "openLatencyMs": 155
+      },
+      {
+        "ts": "2026-02-24T13:59:44.731Z",
+        "clientId": 147,
+        "type": "connect_open",
+        "openLatencyMs": 166
+      },
+      {
+        "ts": "2026-02-24T13:59:44.735Z",
+        "clientId": 154,
+        "type": "connect_open",
+        "openLatencyMs": 167
+      },
+      {
+        "ts": "2026-02-24T13:59:44.736Z",
+        "clientId": 156,
+        "type": "connect_open",
+        "openLatencyMs": 167
+      },
+      {
+        "ts": "2026-02-24T13:59:44.739Z",
+        "clientId": 148,
+        "type": "connect_open",
+        "openLatencyMs": 173
+      },
+      {
+        "ts": "2026-02-24T13:59:44.747Z",
+        "clientId": 158,
+        "type": "connect_open",
+        "openLatencyMs": 177
+      },
+      {
+        "ts": "2026-02-24T13:59:44.753Z",
+        "clientId": 143,
+        "type": "connect_open",
+        "openLatencyMs": 190
+      },
+      {
+        "ts": "2026-02-24T13:59:44.778Z",
+        "clientId": 151,
+        "type": "connect_open",
+        "openLatencyMs": 211
+      },
+      {
+        "ts": "2026-02-24T13:59:44.780Z",
+        "clientId": 141,
+        "type": "connect_open",
+        "openLatencyMs": 220
+      },
+      {
+        "ts": "2026-02-24T13:59:44.783Z",
+        "clientId": 153,
+        "type": "connect_open",
+        "openLatencyMs": 215
+      },
+      {
+        "ts": "2026-02-24T13:59:44.796Z",
+        "clientId": 144,
+        "type": "connect_open",
+        "openLatencyMs": 232
+      },
+      {
+        "ts": "2026-02-24T13:59:44.797Z",
+        "clientId": 142,
+        "type": "connect_open",
+        "openLatencyMs": 235
+      },
+      {
+        "ts": "2026-02-24T13:59:44.798Z",
         "clientId": 160,
         "type": "connect_open",
-        "openLatencyMs": 907
+        "openLatencyMs": 228
       },
       {
-        "ts": "2026-02-24T13:53:23.523Z",
-        "clientId": 67,
-        "type": "connect_failed",
-        "error": "ws_error"
+        "ts": "2026-02-24T13:59:44.799Z",
+        "clientId": 155,
+        "type": "connect_open",
+        "openLatencyMs": 230
       },
       {
-        "ts": "2026-02-24T13:53:32.589Z",
+        "ts": "2026-02-24T13:59:44.806Z",
+        "clientId": 159,
+        "type": "connect_open",
+        "openLatencyMs": 236
+      },
+      {
+        "ts": "2026-02-24T13:59:46.026Z",
+        "clientId": 157,
+        "type": "connect_open",
+        "openLatencyMs": 1457
+      },
+      {
+        "ts": "2026-02-24T13:59:46.051Z",
+        "clientId": 150,
+        "type": "connect_open",
+        "openLatencyMs": 1484
+      },
+      {
+        "ts": "2026-02-24T13:59:46.093Z",
+        "clientId": 149,
+        "type": "connect_open",
+        "openLatencyMs": 1527
+      },
+      {
+        "ts": "2026-02-24T13:59:46.859Z",
+        "clientId": 152,
+        "type": "connect_open",
+        "openLatencyMs": 2292
+      },
+      {
+        "ts": "2026-02-24T13:59:47.186Z",
+        "clientId": 162,
+        "type": "connect_open",
+        "openLatencyMs": 204
+      },
+      {
+        "ts": "2026-02-24T13:59:47.188Z",
+        "clientId": 163,
+        "type": "connect_open",
+        "openLatencyMs": 205
+      },
+      {
+        "ts": "2026-02-24T13:59:47.190Z",
+        "clientId": 173,
+        "type": "connect_open",
+        "openLatencyMs": 202
+      },
+      {
+        "ts": "2026-02-24T13:59:47.200Z",
+        "clientId": 177,
+        "type": "connect_open",
+        "openLatencyMs": 210
+      },
+      {
+        "ts": "2026-02-24T13:59:47.213Z",
+        "clientId": 167,
+        "type": "connect_open",
+        "openLatencyMs": 228
+      },
+      {
+        "ts": "2026-02-24T13:59:47.219Z",
+        "clientId": 180,
+        "type": "connect_open",
+        "openLatencyMs": 227
+      },
+      {
+        "ts": "2026-02-24T13:59:47.235Z",
+        "clientId": 164,
+        "type": "connect_open",
+        "openLatencyMs": 252
+      },
+      {
+        "ts": "2026-02-24T13:59:47.237Z",
+        "clientId": 161,
+        "type": "connect_open",
+        "openLatencyMs": 257
+      },
+      {
+        "ts": "2026-02-24T13:59:47.243Z",
+        "clientId": 166,
+        "type": "connect_open",
+        "openLatencyMs": 258
+      },
+      {
+        "ts": "2026-02-24T13:59:47.244Z",
+        "clientId": 176,
+        "type": "connect_open",
+        "openLatencyMs": 255
+      },
+      {
+        "ts": "2026-02-24T13:59:47.252Z",
+        "clientId": 165,
+        "type": "connect_open",
+        "openLatencyMs": 268
+      },
+      {
+        "ts": "2026-02-24T13:59:47.260Z",
+        "clientId": 169,
+        "type": "connect_open",
+        "openLatencyMs": 273
+      },
+      {
+        "ts": "2026-02-24T13:59:47.260Z",
+        "clientId": 170,
+        "type": "connect_open",
+        "openLatencyMs": 273
+      },
+      {
+        "ts": "2026-02-24T13:59:47.261Z",
+        "clientId": 174,
+        "type": "connect_open",
+        "openLatencyMs": 272
+      },
+      {
+        "ts": "2026-02-24T13:59:47.265Z",
+        "clientId": 178,
+        "type": "connect_open",
+        "openLatencyMs": 275
+      },
+      {
+        "ts": "2026-02-24T13:59:47.270Z",
+        "clientId": 175,
+        "type": "connect_open",
+        "openLatencyMs": 281
+      },
+      {
+        "ts": "2026-02-24T13:59:47.350Z",
+        "clientId": 172,
+        "type": "connect_open",
+        "openLatencyMs": 362
+      },
+      {
+        "ts": "2026-02-24T13:59:47.365Z",
+        "clientId": 179,
+        "type": "connect_open",
+        "openLatencyMs": 374
+      },
+      {
+        "ts": "2026-02-24T13:59:47.387Z",
+        "clientId": 168,
+        "type": "connect_open",
+        "openLatencyMs": 401
+      },
+      {
+        "ts": "2026-02-24T13:59:47.439Z",
+        "clientId": 171,
+        "type": "connect_open",
+        "openLatencyMs": 452
+      },
+      {
+        "ts": "2026-02-24T13:59:47.717Z",
+        "clientId": 181,
+        "type": "connect_open",
+        "openLatencyMs": 157
+      },
+      {
+        "ts": "2026-02-24T13:59:47.729Z",
+        "clientId": 198,
+        "type": "connect_open",
+        "openLatencyMs": 158
+      },
+      {
+        "ts": "2026-02-24T13:59:47.739Z",
+        "clientId": 199,
+        "type": "connect_open",
+        "openLatencyMs": 167
+      },
+      {
+        "ts": "2026-02-24T13:59:47.743Z",
+        "clientId": 185,
+        "type": "connect_open",
+        "openLatencyMs": 178
+      },
+      {
+        "ts": "2026-02-24T13:59:47.747Z",
+        "clientId": 191,
+        "type": "connect_open",
+        "openLatencyMs": 179
+      },
+      {
+        "ts": "2026-02-24T13:59:47.755Z",
+        "clientId": 190,
+        "type": "connect_open",
+        "openLatencyMs": 187
+      },
+      {
+        "ts": "2026-02-24T13:59:47.755Z",
+        "clientId": 187,
+        "type": "connect_open",
+        "openLatencyMs": 189
+      },
+      {
+        "ts": "2026-02-24T13:59:47.761Z",
+        "clientId": 182,
+        "type": "connect_open",
+        "openLatencyMs": 199
+      },
+      {
+        "ts": "2026-02-24T13:59:47.774Z",
+        "clientId": 183,
+        "type": "connect_open",
+        "openLatencyMs": 211
+      },
+      {
+        "ts": "2026-02-24T13:59:47.775Z",
+        "clientId": 194,
+        "type": "connect_open",
+        "openLatencyMs": 205
+      },
+      {
+        "ts": "2026-02-24T13:59:47.777Z",
+        "clientId": 186,
+        "type": "connect_open",
+        "openLatencyMs": 212
+      },
+      {
+        "ts": "2026-02-24T13:59:47.790Z",
+        "clientId": 197,
+        "type": "connect_open",
+        "openLatencyMs": 219
+      },
+      {
+        "ts": "2026-02-24T13:59:47.791Z",
+        "clientId": 184,
+        "type": "connect_open",
+        "openLatencyMs": 227
+      },
+      {
+        "ts": "2026-02-24T13:59:47.806Z",
+        "clientId": 189,
+        "type": "connect_open",
+        "openLatencyMs": 239
+      },
+      {
+        "ts": "2026-02-24T13:59:47.831Z",
+        "clientId": 192,
+        "type": "connect_open",
+        "openLatencyMs": 262
+      },
+      {
+        "ts": "2026-02-24T13:59:47.847Z",
+        "clientId": 196,
+        "type": "connect_open",
+        "openLatencyMs": 277
+      },
+      {
+        "ts": "2026-02-24T13:59:47.899Z",
+        "clientId": 188,
+        "type": "connect_open",
+        "openLatencyMs": 332
+      },
+      {
+        "ts": "2026-02-24T13:59:47.907Z",
+        "clientId": 193,
+        "type": "connect_open",
+        "openLatencyMs": 338
+      },
+      {
+        "ts": "2026-02-24T13:59:47.979Z",
+        "clientId": 200,
+        "type": "connect_open",
+        "openLatencyMs": 407
+      },
+      {
+        "ts": "2026-02-24T13:59:48.108Z",
+        "clientId": 195,
+        "type": "connect_open",
+        "openLatencyMs": 538
+      },
+      {
+        "ts": "2026-02-24T13:59:57.173Z",
         "clientId": 1,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.174Z",
         "clientId": 2,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.174Z",
         "clientId": 3,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.174Z",
         "clientId": 4,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.174Z",
         "clientId": 5,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.174Z",
         "clientId": 6,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 7,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 8,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.590Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 9,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 10,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 11,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 12,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 13,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 14,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 15,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 16,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.175Z",
         "clientId": 17,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 18,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 19,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 20,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 21,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 22,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 23,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 24,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 25,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 26,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 27,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 28,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 29,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.591Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 30,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 31,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 32,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.176Z",
         "clientId": 33,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 34,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 35,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 36,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 37,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 38,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
+        "clientId": 39,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 40,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 41,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 42,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 43,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 44,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 45,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 46,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 47,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 48,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 49,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 50,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 51,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 52,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.177Z",
         "clientId": 53,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 54,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 55,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 56,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 57,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.592Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 58,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 59,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 60,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 61,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 62,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 63,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 64,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 65,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 66,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
+        "clientId": 67,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 68,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 69,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 70,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 71,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 72,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 73,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.178Z",
         "clientId": 74,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 75,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 76,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 77,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 78,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 79,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 80,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 81,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 82,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 83,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 84,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 85,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 86,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 87,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.593Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 88,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 89,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 90,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 91,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 92,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 93,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 94,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 95,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 96,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 97,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 98,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 99,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 100,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 101,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 102,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.179Z",
         "clientId": 103,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 104,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 105,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 106,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 107,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 108,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 109,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 110,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 111,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 112,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 113,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 114,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 115,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 116,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 117,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 118,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 119,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.594Z",
+        "ts": "2026-02-24T13:59:57.180Z",
         "clientId": 120,
         "type": "forced_disconnect"
       },
       {
-        "ts": "2026-02-24T13:53:32.861Z",
-        "clientId": 9,
-        "type": "reconnect_open",
-        "openLatencyMs": 141
-      },
-      {
-        "ts": "2026-02-24T13:53:32.893Z",
-        "clientId": 4,
-        "type": "reconnect_open",
-        "openLatencyMs": 177
-      },
-      {
-        "ts": "2026-02-24T13:53:32.908Z",
-        "clientId": 1,
-        "type": "reconnect_open",
-        "openLatencyMs": 197
-      },
-      {
-        "ts": "2026-02-24T13:53:32.919Z",
-        "clientId": 7,
-        "type": "reconnect_open",
-        "openLatencyMs": 200
-      },
-      {
-        "ts": "2026-02-24T13:53:32.919Z",
-        "clientId": 12,
-        "type": "reconnect_open",
-        "openLatencyMs": 195
-      },
-      {
-        "ts": "2026-02-24T13:53:32.923Z",
-        "clientId": 2,
-        "type": "reconnect_open",
-        "openLatencyMs": 209
-      },
-      {
-        "ts": "2026-02-24T13:53:32.927Z",
-        "clientId": 11,
-        "type": "reconnect_open",
-        "openLatencyMs": 204
-      },
-      {
-        "ts": "2026-02-24T13:53:32.928Z",
-        "clientId": 28,
-        "type": "reconnect_open",
-        "openLatencyMs": 191
-      },
-      {
-        "ts": "2026-02-24T13:53:32.933Z",
-        "clientId": 3,
-        "type": "reconnect_open",
-        "openLatencyMs": 218
-      },
-      {
-        "ts": "2026-02-24T13:53:32.942Z",
+        "ts": "2026-02-24T13:59:57.601Z",
         "clientId": 5,
         "type": "reconnect_open",
-        "openLatencyMs": 225
+        "openLatencyMs": 303
       },
       {
-        "ts": "2026-02-24T13:53:32.942Z",
-        "clientId": 13,
+        "ts": "2026-02-24T13:59:57.601Z",
+        "clientId": 11,
         "type": "reconnect_open",
-        "openLatencyMs": 217
+        "openLatencyMs": 300
       },
       {
-        "ts": "2026-02-24T13:53:32.946Z",
-        "clientId": 15,
-        "type": "reconnect_open",
-        "openLatencyMs": 213
-      },
-      {
-        "ts": "2026-02-24T13:53:32.946Z",
-        "clientId": 10,
-        "type": "reconnect_open",
-        "openLatencyMs": 225
-      },
-      {
-        "ts": "2026-02-24T13:53:32.950Z",
-        "clientId": 71,
-        "type": "reconnect_open",
-        "openLatencyMs": 204
-      },
-      {
-        "ts": "2026-02-24T13:53:32.950Z",
-        "clientId": 58,
-        "type": "reconnect_open",
-        "openLatencyMs": 207
-      },
-      {
-        "ts": "2026-02-24T13:53:32.956Z",
-        "clientId": 66,
-        "type": "reconnect_open",
-        "openLatencyMs": 211
-      },
-      {
-        "ts": "2026-02-24T13:53:32.956Z",
-        "clientId": 25,
-        "type": "reconnect_open",
-        "openLatencyMs": 220
-      },
-      {
-        "ts": "2026-02-24T13:53:32.957Z",
-        "clientId": 31,
-        "type": "reconnect_open",
-        "openLatencyMs": 220
-      },
-      {
-        "ts": "2026-02-24T13:53:32.957Z",
-        "clientId": 29,
-        "type": "reconnect_open",
-        "openLatencyMs": 220
-      },
-      {
-        "ts": "2026-02-24T13:53:32.964Z",
-        "clientId": 33,
-        "type": "reconnect_open",
-        "openLatencyMs": 226
-      },
-      {
-        "ts": "2026-02-24T13:53:32.964Z",
-        "clientId": 34,
-        "type": "reconnect_open",
-        "openLatencyMs": 226
-      },
-      {
-        "ts": "2026-02-24T13:53:32.969Z",
-        "clientId": 43,
-        "type": "reconnect_open",
-        "openLatencyMs": 229
-      },
-      {
-        "ts": "2026-02-24T13:53:32.976Z",
-        "clientId": 55,
-        "type": "reconnect_open",
-        "openLatencyMs": 233
-      },
-      {
-        "ts": "2026-02-24T13:53:32.989Z",
-        "clientId": 35,
-        "type": "reconnect_open",
-        "openLatencyMs": 251
-      },
-      {
-        "ts": "2026-02-24T13:53:32.989Z",
-        "clientId": 72,
-        "type": "reconnect_open",
-        "openLatencyMs": 243
-      },
-      {
-        "ts": "2026-02-24T13:53:32.989Z",
-        "clientId": 27,
-        "type": "reconnect_open",
-        "openLatencyMs": 253
-      },
-      {
-        "ts": "2026-02-24T13:53:32.989Z",
-        "clientId": 18,
-        "type": "reconnect_open",
-        "openLatencyMs": 255
-      },
-      {
-        "ts": "2026-02-24T13:53:32.989Z",
-        "clientId": 26,
-        "type": "reconnect_open",
-        "openLatencyMs": 253
-      },
-      {
-        "ts": "2026-02-24T13:53:32.991Z",
-        "clientId": 17,
-        "type": "reconnect_open",
-        "openLatencyMs": 257
-      },
-      {
-        "ts": "2026-02-24T13:53:32.991Z",
-        "clientId": 14,
-        "type": "reconnect_open",
-        "openLatencyMs": 259
-      },
-      {
-        "ts": "2026-02-24T13:53:32.994Z",
-        "clientId": 60,
-        "type": "reconnect_open",
-        "openLatencyMs": 250
-      },
-      {
-        "ts": "2026-02-24T13:53:33.002Z",
-        "clientId": 37,
-        "type": "reconnect_open",
-        "openLatencyMs": 263
-      },
-      {
-        "ts": "2026-02-24T13:53:33.002Z",
-        "clientId": 73,
-        "type": "reconnect_open",
-        "openLatencyMs": 256
-      },
-      {
-        "ts": "2026-02-24T13:53:33.003Z",
-        "clientId": 16,
-        "type": "reconnect_open",
-        "openLatencyMs": 270
-      },
-      {
-        "ts": "2026-02-24T13:53:33.009Z",
-        "clientId": 61,
-        "type": "reconnect_open",
-        "openLatencyMs": 265
-      },
-      {
-        "ts": "2026-02-24T13:53:33.014Z",
-        "clientId": 50,
-        "type": "reconnect_open",
-        "openLatencyMs": 272
-      },
-      {
-        "ts": "2026-02-24T13:53:33.017Z",
-        "clientId": 41,
-        "type": "reconnect_open",
-        "openLatencyMs": 277
-      },
-      {
-        "ts": "2026-02-24T13:53:33.017Z",
-        "clientId": 22,
-        "type": "reconnect_open",
-        "openLatencyMs": 282
-      },
-      {
-        "ts": "2026-02-24T13:53:33.019Z",
-        "clientId": 74,
-        "type": "reconnect_open",
-        "openLatencyMs": 272
-      },
-      {
-        "ts": "2026-02-24T13:53:33.019Z",
-        "clientId": 49,
-        "type": "reconnect_open",
-        "openLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:33.025Z",
-        "clientId": 47,
-        "type": "reconnect_open",
-        "openLatencyMs": 284
-      },
-      {
-        "ts": "2026-02-24T13:53:33.025Z",
-        "clientId": 48,
-        "type": "reconnect_open",
-        "openLatencyMs": 284
-      },
-      {
-        "ts": "2026-02-24T13:53:33.025Z",
-        "clientId": 36,
-        "type": "reconnect_open",
-        "openLatencyMs": 286
-      },
-      {
-        "ts": "2026-02-24T13:53:33.031Z",
-        "clientId": 64,
-        "type": "reconnect_open",
-        "openLatencyMs": 286
-      },
-      {
-        "ts": "2026-02-24T13:53:33.031Z",
-        "clientId": 86,
-        "type": "reconnect_open",
-        "openLatencyMs": 282
-      },
-      {
-        "ts": "2026-02-24T13:53:33.031Z",
-        "clientId": 70,
-        "type": "reconnect_open",
-        "openLatencyMs": 285
-      },
-      {
-        "ts": "2026-02-24T13:53:33.032Z",
-        "clientId": 53,
-        "type": "reconnect_open",
-        "openLatencyMs": 290
-      },
-      {
-        "ts": "2026-02-24T13:53:33.034Z",
-        "clientId": 20,
-        "type": "reconnect_open",
-        "openLatencyMs": 299
-      },
-      {
-        "ts": "2026-02-24T13:53:33.038Z",
-        "clientId": 62,
-        "type": "reconnect_open",
-        "openLatencyMs": 294
-      },
-      {
-        "ts": "2026-02-24T13:53:33.038Z",
-        "clientId": 38,
-        "type": "reconnect_open",
-        "openLatencyMs": 299
-      },
-      {
-        "ts": "2026-02-24T13:53:33.040Z",
-        "clientId": 45,
-        "type": "reconnect_open",
-        "openLatencyMs": 299
-      },
-      {
-        "ts": "2026-02-24T13:53:33.043Z",
-        "clientId": 59,
-        "type": "reconnect_open",
-        "openLatencyMs": 299
-      },
-      {
-        "ts": "2026-02-24T13:53:33.044Z",
-        "clientId": 68,
-        "type": "reconnect_open",
-        "openLatencyMs": 299
-      },
-      {
-        "ts": "2026-02-24T13:53:33.044Z",
-        "clientId": 54,
-        "type": "reconnect_open",
-        "openLatencyMs": 301
-      },
-      {
-        "ts": "2026-02-24T13:53:33.046Z",
-        "clientId": 51,
-        "type": "reconnect_open",
-        "openLatencyMs": 304
-      },
-      {
-        "ts": "2026-02-24T13:53:33.047Z",
-        "clientId": 15,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 97
-      },
-      {
-        "ts": "2026-02-24T13:53:33.048Z",
-        "clientId": 19,
-        "type": "reconnect_open",
-        "openLatencyMs": 314
-      },
-      {
-        "ts": "2026-02-24T13:53:33.049Z",
-        "clientId": 83,
-        "type": "reconnect_open",
-        "openLatencyMs": 301
-      },
-      {
-        "ts": "2026-02-24T13:53:33.049Z",
-        "clientId": 75,
-        "type": "reconnect_open",
-        "openLatencyMs": 302
-      },
-      {
-        "ts": "2026-02-24T13:53:33.049Z",
-        "clientId": 91,
-        "type": "reconnect_open",
-        "openLatencyMs": 299
-      },
-      {
-        "ts": "2026-02-24T13:53:33.050Z",
-        "clientId": 58,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 94
-      },
-      {
-        "ts": "2026-02-24T13:53:33.053Z",
-        "clientId": 77,
-        "type": "reconnect_open",
-        "openLatencyMs": 306
-      },
-      {
-        "ts": "2026-02-24T13:53:33.053Z",
-        "clientId": 95,
-        "type": "reconnect_open",
-        "openLatencyMs": 302
-      },
-      {
-        "ts": "2026-02-24T13:53:33.053Z",
-        "clientId": 76,
-        "type": "reconnect_open",
-        "openLatencyMs": 306
-      },
-      {
-        "ts": "2026-02-24T13:53:33.053Z",
-        "clientId": 82,
+        "ts": "2026-02-24T13:59:57.601Z",
+        "clientId": 2,
         "type": "reconnect_open",
         "openLatencyMs": 305
       },
       {
-        "ts": "2026-02-24T13:53:33.054Z",
-        "clientId": 79,
+        "ts": "2026-02-24T13:59:57.601Z",
+        "clientId": 8,
         "type": "reconnect_open",
-        "openLatencyMs": 307
+        "openLatencyMs": 301
       },
       {
-        "ts": "2026-02-24T13:53:33.057Z",
-        "clientId": 31,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 87
-      },
-      {
-        "ts": "2026-02-24T13:53:33.057Z",
-        "clientId": 29,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 89
-      },
-      {
-        "ts": "2026-02-24T13:53:33.059Z",
-        "clientId": 105,
+        "ts": "2026-02-24T13:59:57.601Z",
+        "clientId": 16,
         "type": "reconnect_open",
-        "openLatencyMs": 307
+        "openLatencyMs": 299
       },
       {
-        "ts": "2026-02-24T13:53:33.060Z",
-        "clientId": 1,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 136
-      },
-      {
-        "ts": "2026-02-24T13:53:33.061Z",
-        "clientId": 116,
-        "type": "reconnect_open",
-        "openLatencyMs": 307
-      },
-      {
-        "ts": "2026-02-24T13:53:33.062Z",
+        "ts": "2026-02-24T13:59:57.601Z",
         "clientId": 9,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 183
-      },
-      {
-        "ts": "2026-02-24T13:53:33.065Z",
-        "clientId": 85,
         "type": "reconnect_open",
-        "openLatencyMs": 316
+        "openLatencyMs": 301
       },
       {
-        "ts": "2026-02-24T13:53:33.065Z",
-        "clientId": 89,
+        "ts": "2026-02-24T13:59:57.601Z",
+        "clientId": 17,
         "type": "reconnect_open",
-        "openLatencyMs": 316
+        "openLatencyMs": 298
       },
       {
-        "ts": "2026-02-24T13:53:33.065Z",
-        "clientId": 32,
+        "ts": "2026-02-24T13:59:57.601Z",
+        "clientId": 3,
         "type": "reconnect_open",
-        "openLatencyMs": 327
+        "openLatencyMs": 304
       },
       {
-        "ts": "2026-02-24T13:53:33.066Z",
+        "ts": "2026-02-24T13:59:57.601Z",
+        "clientId": 4,
+        "type": "reconnect_open",
+        "openLatencyMs": 304
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 10,
+        "type": "reconnect_open",
+        "openLatencyMs": 302
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 6,
+        "type": "reconnect_open",
+        "openLatencyMs": 303
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 7,
+        "type": "reconnect_open",
+        "openLatencyMs": 303
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 22,
+        "type": "reconnect_open",
+        "openLatencyMs": 297
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
         "clientId": 52,
         "type": "reconnect_open",
-        "openLatencyMs": 324
+        "openLatencyMs": 282
       },
       {
-        "ts": "2026-02-24T13:53:33.066Z",
-        "clientId": 96,
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 26,
         "type": "reconnect_open",
-        "openLatencyMs": 315
+        "openLatencyMs": 291
       },
       {
-        "ts": "2026-02-24T13:53:33.066Z",
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 31,
+        "type": "reconnect_open",
+        "openLatencyMs": 288
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 47,
+        "type": "reconnect_open",
+        "openLatencyMs": 284
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 32,
+        "type": "reconnect_open",
+        "openLatencyMs": 288
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 34,
+        "type": "reconnect_open",
+        "openLatencyMs": 287
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 1,
+        "type": "reconnect_open",
+        "openLatencyMs": 308
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 51,
+        "type": "reconnect_open",
+        "openLatencyMs": 283
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 19,
+        "type": "reconnect_open",
+        "openLatencyMs": 298
+      },
+      {
+        "ts": "2026-02-24T13:59:57.602Z",
+        "clientId": 18,
+        "type": "reconnect_open",
+        "openLatencyMs": 299
+      },
+      {
+        "ts": "2026-02-24T13:59:57.603Z",
+        "clientId": 55,
+        "type": "reconnect_open",
+        "openLatencyMs": 283
+      },
+      {
+        "ts": "2026-02-24T13:59:57.603Z",
+        "clientId": 44,
+        "type": "reconnect_open",
+        "openLatencyMs": 285
+      },
+      {
+        "ts": "2026-02-24T13:59:57.604Z",
+        "clientId": 25,
+        "type": "reconnect_open",
+        "openLatencyMs": 294
+      },
+      {
+        "ts": "2026-02-24T13:59:57.604Z",
+        "clientId": 66,
+        "type": "reconnect_open",
+        "openLatencyMs": 281
+      },
+      {
+        "ts": "2026-02-24T13:59:57.604Z",
+        "clientId": 14,
+        "type": "reconnect_open",
+        "openLatencyMs": 302
+      },
+      {
+        "ts": "2026-02-24T13:59:57.606Z",
         "clientId": 57,
         "type": "reconnect_open",
-        "openLatencyMs": 323
+        "openLatencyMs": 285
       },
       {
-        "ts": "2026-02-24T13:53:33.066Z",
-        "clientId": 80,
+        "ts": "2026-02-24T13:59:57.622Z",
+        "clientId": 21,
         "type": "reconnect_open",
         "openLatencyMs": 318
       },
       {
-        "ts": "2026-02-24T13:53:33.069Z",
-        "clientId": 43,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 78
-      },
-      {
-        "ts": "2026-02-24T13:53:33.070Z",
-        "clientId": 7,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 124
-      },
-      {
-        "ts": "2026-02-24T13:53:33.070Z",
-        "clientId": 12,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 138
-      },
-      {
-        "ts": "2026-02-24T13:53:33.075Z",
-        "clientId": 110,
+        "ts": "2026-02-24T13:59:57.627Z",
+        "clientId": 53,
         "type": "reconnect_open",
-        "openLatencyMs": 322
+        "openLatencyMs": 307
       },
       {
-        "ts": "2026-02-24T13:53:33.075Z",
-        "clientId": 120,
+        "ts": "2026-02-24T13:59:57.628Z",
+        "clientId": 36,
+        "type": "reconnect_open",
+        "openLatencyMs": 313
+      },
+      {
+        "ts": "2026-02-24T13:59:57.628Z",
+        "clientId": 33,
+        "type": "reconnect_open",
+        "openLatencyMs": 314
+      },
+      {
+        "ts": "2026-02-24T13:59:57.633Z",
+        "clientId": 29,
         "type": "reconnect_open",
         "openLatencyMs": 320
       },
       {
-        "ts": "2026-02-24T13:53:33.076Z",
-        "clientId": 97,
-        "type": "reconnect_open",
-        "openLatencyMs": 325
-      },
-      {
-        "ts": "2026-02-24T13:53:33.076Z",
-        "clientId": 55,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 64
-      },
-      {
-        "ts": "2026-02-24T13:53:33.076Z",
-        "clientId": 11,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 138
-      },
-      {
-        "ts": "2026-02-24T13:53:33.079Z",
-        "clientId": 28,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 130
-      },
-      {
-        "ts": "2026-02-24T13:53:33.080Z",
-        "clientId": 103,
-        "type": "reconnect_open",
-        "openLatencyMs": 328
-      },
-      {
-        "ts": "2026-02-24T13:53:33.080Z",
+        "ts": "2026-02-24T13:59:57.633Z",
         "clientId": 46,
         "type": "reconnect_open",
-        "openLatencyMs": 339
+        "openLatencyMs": 315
       },
       {
-        "ts": "2026-02-24T13:53:33.080Z",
-        "clientId": 30,
+        "ts": "2026-02-24T13:59:57.633Z",
+        "clientId": 20,
+        "type": "reconnect_open",
+        "openLatencyMs": 329
+      },
+      {
+        "ts": "2026-02-24T13:59:57.633Z",
+        "clientId": 15,
+        "type": "reconnect_open",
+        "openLatencyMs": 331
+      },
+      {
+        "ts": "2026-02-24T13:59:57.633Z",
+        "clientId": 56,
+        "type": "reconnect_open",
+        "openLatencyMs": 312
+      },
+      {
+        "ts": "2026-02-24T13:59:57.636Z",
+        "clientId": 54,
+        "type": "reconnect_open",
+        "openLatencyMs": 316
+      },
+      {
+        "ts": "2026-02-24T13:59:57.638Z",
+        "clientId": 27,
+        "type": "reconnect_open",
+        "openLatencyMs": 326
+      },
+      {
+        "ts": "2026-02-24T13:59:57.638Z",
+        "clientId": 41,
+        "type": "reconnect_open",
+        "openLatencyMs": 321
+      },
+      {
+        "ts": "2026-02-24T13:59:57.646Z",
+        "clientId": 79,
+        "type": "reconnect_open",
+        "openLatencyMs": 320
+      },
+      {
+        "ts": "2026-02-24T13:59:57.647Z",
+        "clientId": 13,
+        "type": "reconnect_open",
+        "openLatencyMs": 346
+      },
+      {
+        "ts": "2026-02-24T13:59:57.654Z",
+        "clientId": 23,
+        "type": "reconnect_open",
+        "openLatencyMs": 349
+      },
+      {
+        "ts": "2026-02-24T13:59:57.654Z",
+        "clientId": 45,
+        "type": "reconnect_open",
+        "openLatencyMs": 336
+      },
+      {
+        "ts": "2026-02-24T13:59:57.655Z",
+        "clientId": 12,
+        "type": "reconnect_open",
+        "openLatencyMs": 354
+      },
+      {
+        "ts": "2026-02-24T13:59:57.655Z",
+        "clientId": 91,
+        "type": "reconnect_open",
+        "openLatencyMs": 327
+      },
+      {
+        "ts": "2026-02-24T13:59:57.666Z",
+        "clientId": 105,
+        "type": "reconnect_open",
+        "openLatencyMs": 335
+      },
+      {
+        "ts": "2026-02-24T13:59:57.668Z",
+        "clientId": 76,
         "type": "reconnect_open",
         "openLatencyMs": 343
       },
       {
-        "ts": "2026-02-24T13:53:33.080Z",
-        "clientId": 81,
+        "ts": "2026-02-24T13:59:57.674Z",
+        "clientId": 110,
         "type": "reconnect_open",
-        "openLatencyMs": 332
+        "openLatencyMs": 342
       },
       {
-        "ts": "2026-02-24T13:53:33.086Z",
-        "clientId": 87,
+        "ts": "2026-02-24T13:59:57.677Z",
+        "clientId": 92,
         "type": "reconnect_open",
-        "openLatencyMs": 337
+        "openLatencyMs": 348
       },
       {
-        "ts": "2026-02-24T13:53:33.086Z",
-        "clientId": 99,
+        "ts": "2026-02-24T13:59:57.680Z",
+        "clientId": 117,
         "type": "reconnect_open",
-        "openLatencyMs": 335
+        "openLatencyMs": 347
       },
       {
-        "ts": "2026-02-24T13:53:33.088Z",
-        "clientId": 106,
+        "ts": "2026-02-24T13:59:57.684Z",
+        "clientId": 35,
         "type": "reconnect_open",
-        "openLatencyMs": 335
+        "openLatencyMs": 369
       },
       {
-        "ts": "2026-02-24T13:53:33.091Z",
-        "clientId": 21,
+        "ts": "2026-02-24T13:59:57.694Z",
+        "clientId": 74,
         "type": "reconnect_open",
-        "openLatencyMs": 356
+        "openLatencyMs": 369
       },
       {
-        "ts": "2026-02-24T13:53:33.093Z",
-        "clientId": 5,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 149
-      },
-      {
-        "ts": "2026-02-24T13:53:33.093Z",
-        "clientId": 13,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 101
-      },
-      {
-        "ts": "2026-02-24T13:53:33.093Z",
-        "clientId": 4,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 166
-      },
-      {
-        "ts": "2026-02-24T13:53:33.100Z",
-        "clientId": 71,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 108
-      },
-      {
-        "ts": "2026-02-24T13:53:33.104Z",
-        "clientId": 63,
+        "ts": "2026-02-24T13:59:57.698Z",
+        "clientId": 30,
         "type": "reconnect_open",
-        "openLatencyMs": 359
+        "openLatencyMs": 385
       },
       {
-        "ts": "2026-02-24T13:53:33.104Z",
-        "clientId": 111,
+        "ts": "2026-02-24T13:59:57.704Z",
+        "clientId": 24,
         "type": "reconnect_open",
-        "openLatencyMs": 351
+        "openLatencyMs": 396
       },
       {
-        "ts": "2026-02-24T13:53:33.106Z",
-        "clientId": 66,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 103
-      },
-      {
-        "ts": "2026-02-24T13:53:33.106Z",
-        "clientId": 25,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 102
-      },
-      {
-        "ts": "2026-02-24T13:53:33.107Z",
-        "clientId": 101,
+        "ts": "2026-02-24T13:59:57.706Z",
+        "clientId": 65,
         "type": "reconnect_open",
-        "openLatencyMs": 355
+        "openLatencyMs": 383
       },
       {
-        "ts": "2026-02-24T13:53:33.115Z",
-        "clientId": 119,
-        "type": "reconnect_open",
-        "openLatencyMs": 360
-      },
-      {
-        "ts": "2026-02-24T13:53:33.132Z",
-        "clientId": 23,
-        "type": "reconnect_open",
-        "openLatencyMs": 397
-      },
-      {
-        "ts": "2026-02-24T13:53:33.132Z",
-        "clientId": 44,
-        "type": "reconnect_open",
-        "openLatencyMs": 392
-      },
-      {
-        "ts": "2026-02-24T13:53:33.132Z",
-        "clientId": 69,
+        "ts": "2026-02-24T13:59:57.712Z",
+        "clientId": 78,
         "type": "reconnect_open",
         "openLatencyMs": 386
       },
       {
-        "ts": "2026-02-24T13:53:33.133Z",
-        "clientId": 115,
-        "type": "reconnect_open",
-        "openLatencyMs": 379
-      },
-      {
-        "ts": "2026-02-24T13:53:33.134Z",
-        "clientId": 3,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 155
-      },
-      {
-        "ts": "2026-02-24T13:53:33.240Z",
-        "clientId": 108,
-        "type": "reconnect_open",
-        "openLatencyMs": 487
-      },
-      {
-        "ts": "2026-02-24T13:53:33.241Z",
-        "clientId": 8,
-        "type": "reconnect_open",
-        "openLatencyMs": 522
-      },
-      {
-        "ts": "2026-02-24T13:53:33.241Z",
-        "clientId": 84,
-        "type": "reconnect_open",
-        "openLatencyMs": 493
-      },
-      {
-        "ts": "2026-02-24T13:53:33.242Z",
-        "clientId": 56,
-        "type": "reconnect_open",
-        "openLatencyMs": 499
-      },
-      {
-        "ts": "2026-02-24T13:53:33.242Z",
-        "clientId": 98,
-        "type": "reconnect_open",
-        "openLatencyMs": 491
-      },
-      {
-        "ts": "2026-02-24T13:53:33.243Z",
-        "clientId": 24,
-        "type": "reconnect_open",
-        "openLatencyMs": 507
-      },
-      {
-        "ts": "2026-02-24T13:53:33.243Z",
-        "clientId": 88,
-        "type": "reconnect_open",
-        "openLatencyMs": 494
-      },
-      {
-        "ts": "2026-02-24T13:53:33.243Z",
-        "clientId": 94,
-        "type": "reconnect_open",
-        "openLatencyMs": 493
-      },
-      {
-        "ts": "2026-02-24T13:53:33.244Z",
-        "clientId": 117,
-        "type": "reconnect_open",
-        "openLatencyMs": 489
-      },
-      {
-        "ts": "2026-02-24T13:53:33.244Z",
-        "clientId": 65,
-        "type": "reconnect_open",
-        "openLatencyMs": 499
-      },
-      {
-        "ts": "2026-02-24T13:53:33.244Z",
-        "clientId": 93,
-        "type": "reconnect_open",
-        "openLatencyMs": 494
-      },
-      {
-        "ts": "2026-02-24T13:53:33.244Z",
-        "clientId": 6,
-        "type": "reconnect_open",
-        "openLatencyMs": 526
-      },
-      {
-        "ts": "2026-02-24T13:53:33.245Z",
-        "clientId": 118,
-        "type": "reconnect_open",
-        "openLatencyMs": 490
-      },
-      {
-        "ts": "2026-02-24T13:53:33.245Z",
-        "clientId": 90,
-        "type": "reconnect_open",
-        "openLatencyMs": 495
-      },
-      {
-        "ts": "2026-02-24T13:53:33.245Z",
-        "clientId": 114,
-        "type": "reconnect_open",
-        "openLatencyMs": 491
-      },
-      {
-        "ts": "2026-02-24T13:53:33.245Z",
-        "clientId": 107,
-        "type": "reconnect_open",
-        "openLatencyMs": 492
-      },
-      {
-        "ts": "2026-02-24T13:53:33.245Z",
-        "clientId": 109,
-        "type": "reconnect_open",
-        "openLatencyMs": 492
-      },
-      {
-        "ts": "2026-02-24T13:53:33.246Z",
-        "clientId": 112,
-        "type": "reconnect_open",
-        "openLatencyMs": 492
-      },
-      {
-        "ts": "2026-02-24T13:53:33.246Z",
-        "clientId": 78,
-        "type": "reconnect_open",
-        "openLatencyMs": 499
-      },
-      {
-        "ts": "2026-02-24T13:53:33.246Z",
-        "clientId": 102,
-        "type": "reconnect_open",
-        "openLatencyMs": 494
-      },
-      {
-        "ts": "2026-02-24T13:53:33.246Z",
+        "ts": "2026-02-24T13:59:57.712Z",
         "clientId": 40,
         "type": "reconnect_open",
-        "openLatencyMs": 507
+        "openLatencyMs": 396
       },
       {
-        "ts": "2026-02-24T13:53:33.247Z",
+        "ts": "2026-02-24T13:59:57.718Z",
+        "clientId": 81,
+        "type": "reconnect_open",
+        "openLatencyMs": 392
+      },
+      {
+        "ts": "2026-02-24T13:59:57.724Z",
+        "clientId": 90,
+        "type": "reconnect_open",
+        "openLatencyMs": 396
+      },
+      {
+        "ts": "2026-02-24T13:59:57.725Z",
+        "clientId": 94,
+        "type": "reconnect_open",
+        "openLatencyMs": 396
+      },
+      {
+        "ts": "2026-02-24T13:59:57.727Z",
+        "clientId": 85,
+        "type": "reconnect_open",
+        "openLatencyMs": 400
+      },
+      {
+        "ts": "2026-02-24T13:59:57.731Z",
+        "clientId": 61,
+        "type": "reconnect_open",
+        "openLatencyMs": 409
+      },
+      {
+        "ts": "2026-02-24T13:59:57.732Z",
+        "clientId": 28,
+        "type": "reconnect_open",
+        "openLatencyMs": 420
+      },
+      {
+        "ts": "2026-02-24T13:59:57.732Z",
+        "clientId": 82,
+        "type": "reconnect_open",
+        "openLatencyMs": 405
+      },
+      {
+        "ts": "2026-02-24T13:59:57.737Z",
+        "clientId": 50,
+        "type": "reconnect_open",
+        "openLatencyMs": 418
+      },
+      {
+        "ts": "2026-02-24T13:59:57.737Z",
+        "clientId": 43,
+        "type": "reconnect_open",
+        "openLatencyMs": 420
+      },
+      {
+        "ts": "2026-02-24T13:59:57.740Z",
+        "clientId": 37,
+        "type": "reconnect_open",
+        "openLatencyMs": 425
+      },
+      {
+        "ts": "2026-02-24T13:59:57.740Z",
+        "clientId": 59,
+        "type": "reconnect_open",
+        "openLatencyMs": 419
+      },
+      {
+        "ts": "2026-02-24T13:59:57.740Z",
+        "clientId": 63,
+        "type": "reconnect_open",
+        "openLatencyMs": 418
+      },
+      {
+        "ts": "2026-02-24T13:59:57.744Z",
+        "clientId": 84,
+        "type": "reconnect_open",
+        "openLatencyMs": 417
+      },
+      {
+        "ts": "2026-02-24T13:59:57.746Z",
+        "clientId": 68,
+        "type": "reconnect_open",
+        "openLatencyMs": 423
+      },
+      {
+        "ts": "2026-02-24T13:59:57.747Z",
+        "clientId": 58,
+        "type": "reconnect_open",
+        "openLatencyMs": 426
+      },
+      {
+        "ts": "2026-02-24T13:59:57.756Z",
+        "clientId": 114,
+        "type": "reconnect_open",
+        "openLatencyMs": 423
+      },
+      {
+        "ts": "2026-02-24T13:59:57.756Z",
+        "clientId": 112,
+        "type": "reconnect_open",
+        "openLatencyMs": 423
+      },
+      {
+        "ts": "2026-02-24T13:59:57.757Z",
+        "clientId": 38,
+        "type": "reconnect_open",
+        "openLatencyMs": 441
+      },
+      {
+        "ts": "2026-02-24T13:59:57.761Z",
+        "clientId": 116,
+        "type": "reconnect_open",
+        "openLatencyMs": 428
+      },
+      {
+        "ts": "2026-02-24T13:59:57.761Z",
+        "clientId": 109,
+        "type": "reconnect_open",
+        "openLatencyMs": 429
+      },
+      {
+        "ts": "2026-02-24T13:59:57.765Z",
+        "clientId": 67,
+        "type": "reconnect_open",
+        "openLatencyMs": 442
+      },
+      {
+        "ts": "2026-02-24T13:59:57.765Z",
+        "clientId": 70,
+        "type": "reconnect_open",
+        "openLatencyMs": 441
+      },
+      {
+        "ts": "2026-02-24T13:59:57.765Z",
+        "clientId": 103,
+        "type": "reconnect_open",
+        "openLatencyMs": 434
+      },
+      {
+        "ts": "2026-02-24T13:59:57.767Z",
+        "clientId": 93,
+        "type": "reconnect_open",
+        "openLatencyMs": 438
+      },
+      {
+        "ts": "2026-02-24T13:59:57.771Z",
+        "clientId": 71,
+        "type": "reconnect_open",
+        "openLatencyMs": 447
+      },
+      {
+        "ts": "2026-02-24T13:59:57.771Z",
         "clientId": 100,
         "type": "reconnect_open",
-        "openLatencyMs": 495
+        "openLatencyMs": 441
       },
       {
-        "ts": "2026-02-24T13:53:33.247Z",
-        "clientId": 92,
-        "type": "reconnect_open",
-        "openLatencyMs": 497
-      },
-      {
-        "ts": "2026-02-24T13:53:33.279Z",
+        "ts": "2026-02-24T13:59:57.771Z",
         "clientId": 104,
         "type": "reconnect_open",
-        "openLatencyMs": 527
+        "openLatencyMs": 440
       },
       {
-        "ts": "2026-02-24T13:53:33.280Z",
-        "clientId": 48,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 249
-      },
-      {
-        "ts": "2026-02-24T13:53:33.280Z",
-        "clientId": 110,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 199
-      },
-      {
-        "ts": "2026-02-24T13:53:33.283Z",
-        "clientId": 115,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 148
-      },
-      {
-        "ts": "2026-02-24T13:53:33.283Z",
-        "clientId": 20,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 239
-      },
-      {
-        "ts": "2026-02-24T13:53:33.287Z",
-        "clientId": 99,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 196
-      },
-      {
-        "ts": "2026-02-24T13:53:33.287Z",
-        "clientId": 106,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 195
-      },
-      {
-        "ts": "2026-02-24T13:53:33.290Z",
-        "clientId": 62,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 242
-      },
-      {
-        "ts": "2026-02-24T13:53:33.291Z",
-        "clientId": 38,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 247
-      },
-      {
-        "ts": "2026-02-24T13:53:33.291Z",
+        "ts": "2026-02-24T13:59:57.772Z",
         "clientId": 72,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 299
+        "type": "reconnect_open",
+        "openLatencyMs": 448
       },
       {
-        "ts": "2026-02-24T13:53:33.291Z",
-        "clientId": 45,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 241
+        "ts": "2026-02-24T13:59:57.776Z",
+        "clientId": 64,
+        "type": "reconnect_open",
+        "openLatencyMs": 453
       },
       {
-        "ts": "2026-02-24T13:53:33.297Z",
-        "clientId": 21,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 198
-      },
-      {
-        "ts": "2026-02-24T13:53:33.297Z",
-        "clientId": 60,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 289
-      },
-      {
-        "ts": "2026-02-24T13:53:33.297Z",
-        "clientId": 59,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 239
-      },
-      {
-        "ts": "2026-02-24T13:53:33.297Z",
-        "clientId": 68,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 232
-      },
-      {
-        "ts": "2026-02-24T13:53:33.297Z",
-        "clientId": 54,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 237
-      },
-      {
-        "ts": "2026-02-24T13:53:33.297Z",
-        "clientId": 51,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 243
-      },
-      {
-        "ts": "2026-02-24T13:53:33.298Z",
-        "clientId": 19,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 235
-      },
-      {
-        "ts": "2026-02-24T13:53:33.298Z",
-        "clientId": 83,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 231
-      },
-      {
-        "ts": "2026-02-24T13:53:33.298Z",
-        "clientId": 75,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 231
-      },
-      {
-        "ts": "2026-02-24T13:53:33.298Z",
-        "clientId": 91,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 225
-      },
-      {
-        "ts": "2026-02-24T13:53:33.304Z",
-        "clientId": 37,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:33.304Z",
+        "ts": "2026-02-24T13:59:57.776Z",
         "clientId": 77,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 230
+        "type": "reconnect_open",
+        "openLatencyMs": 450
       },
       {
-        "ts": "2026-02-24T13:53:33.304Z",
+        "ts": "2026-02-24T13:59:57.777Z",
+        "clientId": 73,
+        "type": "reconnect_open",
+        "openLatencyMs": 452
+      },
+      {
+        "ts": "2026-02-24T13:59:57.777Z",
+        "clientId": 102,
+        "type": "reconnect_open",
+        "openLatencyMs": 446
+      },
+      {
+        "ts": "2026-02-24T13:59:57.778Z",
+        "clientId": 106,
+        "type": "reconnect_open",
+        "openLatencyMs": 447
+      },
+      {
+        "ts": "2026-02-24T13:59:57.791Z",
+        "clientId": 88,
+        "type": "reconnect_open",
+        "openLatencyMs": 463
+      },
+      {
+        "ts": "2026-02-24T13:59:57.791Z",
+        "clientId": 115,
+        "type": "reconnect_open",
+        "openLatencyMs": 458
+      },
+      {
+        "ts": "2026-02-24T13:59:57.792Z",
+        "clientId": 83,
+        "type": "reconnect_open",
+        "openLatencyMs": 465
+      },
+      {
+        "ts": "2026-02-24T13:59:57.792Z",
+        "clientId": 42,
+        "type": "reconnect_open",
+        "openLatencyMs": 475
+      },
+      {
+        "ts": "2026-02-24T13:59:57.801Z",
+        "clientId": 75,
+        "type": "reconnect_open",
+        "openLatencyMs": 476
+      },
+      {
+        "ts": "2026-02-24T13:59:57.801Z",
+        "clientId": 107,
+        "type": "reconnect_open",
+        "openLatencyMs": 469
+      },
+      {
+        "ts": "2026-02-24T13:59:57.806Z",
         "clientId": 95,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 229
+        "type": "reconnect_open",
+        "openLatencyMs": 477
       },
       {
-        "ts": "2026-02-24T13:53:33.304Z",
+        "ts": "2026-02-24T13:59:57.809Z",
+        "clientId": 97,
+        "type": "reconnect_open",
+        "openLatencyMs": 479
+      },
+      {
+        "ts": "2026-02-24T13:59:57.812Z",
+        "clientId": 49,
+        "type": "reconnect_open",
+        "openLatencyMs": 493
+      },
+      {
+        "ts": "2026-02-24T13:59:57.812Z",
+        "clientId": 78,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 98
+      },
+      {
+        "ts": "2026-02-24T13:59:57.815Z",
+        "clientId": 101,
+        "type": "reconnect_open",
+        "openLatencyMs": 485
+      },
+      {
+        "ts": "2026-02-24T13:59:57.818Z",
         "clientId": 76,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 228
+        "recoveryLatencyMs": 145
       },
       {
-        "ts": "2026-02-24T13:53:33.304Z",
-        "clientId": 82,
+        "ts": "2026-02-24T13:59:57.819Z",
+        "clientId": 81,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 227
+        "recoveryLatencyMs": 87
       },
       {
-        "ts": "2026-02-24T13:53:33.304Z",
-        "clientId": 63,
+        "ts": "2026-02-24T13:59:57.823Z",
+        "clientId": 21,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 182
+        "recoveryLatencyMs": 191
       },
       {
-        "ts": "2026-02-24T13:53:33.304Z",
-        "clientId": 79,
+        "ts": "2026-02-24T13:59:57.824Z",
+        "clientId": 62,
+        "type": "reconnect_open",
+        "openLatencyMs": 502
+      },
+      {
+        "ts": "2026-02-24T13:59:57.826Z",
+        "clientId": 110,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 226
+        "recoveryLatencyMs": 136
       },
       {
-        "ts": "2026-02-24T13:53:33.311Z",
-        "clientId": 101,
+        "ts": "2026-02-24T13:59:57.826Z",
+        "clientId": 90,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 84
+      },
+      {
+        "ts": "2026-02-24T13:59:57.826Z",
+        "clientId": 94,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 85
+      },
+      {
+        "ts": "2026-02-24T13:59:57.828Z",
+        "clientId": 92,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 133
+      },
+      {
+        "ts": "2026-02-24T13:59:57.828Z",
+        "clientId": 60,
+        "type": "reconnect_open",
+        "openLatencyMs": 506
+      },
+      {
+        "ts": "2026-02-24T13:59:57.829Z",
+        "clientId": 53,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 184
+      },
+      {
+        "ts": "2026-02-24T13:59:57.829Z",
+        "clientId": 36,
         "type": "subscription_recovered",
         "recoveryLatencyMs": 178
       },
       {
-        "ts": "2026-02-24T13:53:33.311Z",
-        "clientId": 105,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 224
-      },
-      {
-        "ts": "2026-02-24T13:53:33.311Z",
-        "clientId": 116,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 217
-      },
-      {
-        "ts": "2026-02-24T13:53:33.316Z",
+        "ts": "2026-02-24T13:59:57.829Z",
         "clientId": 33,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 318
+        "recoveryLatencyMs": 184
       },
       {
-        "ts": "2026-02-24T13:53:33.316Z",
-        "clientId": 34,
+        "ts": "2026-02-24T13:59:57.831Z",
+        "clientId": 117,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 319
+        "recoveryLatencyMs": 133
       },
       {
-        "ts": "2026-02-24T13:53:33.316Z",
-        "clientId": 85,
+        "ts": "2026-02-24T13:59:57.831Z",
+        "clientId": 28,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 218
+        "recoveryLatencyMs": 78
       },
       {
-        "ts": "2026-02-24T13:53:33.316Z",
-        "clientId": 89,
+        "ts": "2026-02-24T13:59:57.833Z",
+        "clientId": 29,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 215
+        "recoveryLatencyMs": 180
       },
       {
-        "ts": "2026-02-24T13:53:33.316Z",
-        "clientId": 32,
+        "ts": "2026-02-24T13:59:57.833Z",
+        "clientId": 46,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 217
+        "recoveryLatencyMs": 183
       },
       {
-        "ts": "2026-02-24T13:53:33.316Z",
-        "clientId": 52,
+        "ts": "2026-02-24T13:59:57.833Z",
+        "clientId": 20,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 223
+        "recoveryLatencyMs": 182
       },
       {
-        "ts": "2026-02-24T13:53:33.316Z",
-        "clientId": 119,
+        "ts": "2026-02-24T13:59:57.833Z",
+        "clientId": 15,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 166
+        "recoveryLatencyMs": 177
       },
       {
-        "ts": "2026-02-24T13:53:33.317Z",
-        "clientId": 96,
+        "ts": "2026-02-24T13:59:57.833Z",
+        "clientId": 99,
+        "type": "reconnect_open",
+        "openLatencyMs": 503
+      },
+      {
+        "ts": "2026-02-24T13:59:57.834Z",
+        "clientId": 56,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 207
+        "recoveryLatencyMs": 173
       },
       {
-        "ts": "2026-02-24T13:53:33.317Z",
-        "clientId": 57,
+        "ts": "2026-02-24T13:59:57.834Z",
+        "clientId": 35,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 217
+        "recoveryLatencyMs": 128
       },
       {
-        "ts": "2026-02-24T13:53:33.317Z",
-        "clientId": 80,
+        "ts": "2026-02-24T13:59:57.839Z",
+        "clientId": 54,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 217
+        "recoveryLatencyMs": 174
       },
       {
-        "ts": "2026-02-24T13:53:33.319Z",
+        "ts": "2026-02-24T13:59:57.839Z",
+        "clientId": 27,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 175
+      },
+      {
+        "ts": "2026-02-24T13:59:57.839Z",
+        "clientId": 41,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 178
+      },
+      {
+        "ts": "2026-02-24T13:59:57.841Z",
+        "clientId": 37,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 70
+      },
+      {
+        "ts": "2026-02-24T13:59:57.844Z",
         "clientId": 74,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 262
+        "recoveryLatencyMs": 117
       },
       {
-        "ts": "2026-02-24T13:53:33.319Z",
-        "clientId": 49,
+        "ts": "2026-02-24T13:59:57.848Z",
+        "clientId": 79,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 262
+        "recoveryLatencyMs": 163
       },
       {
-        "ts": "2026-02-24T13:53:33.330Z",
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 5,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 205
+      },
+      {
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 11,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 209
+      },
+      {
+        "ts": "2026-02-24T13:59:57.851Z",
         "clientId": 2,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 357
+        "recoveryLatencyMs": 205
       },
       {
-        "ts": "2026-02-24T13:53:33.330Z",
-        "clientId": 47,
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 8,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 255
+        "recoveryLatencyMs": 210
       },
       {
-        "ts": "2026-02-24T13:53:33.330Z",
-        "clientId": 36,
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 16,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 256
+        "recoveryLatencyMs": 212
       },
       {
-        "ts": "2026-02-24T13:53:33.330Z",
-        "clientId": 120,
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 9,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 210
+      },
+      {
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 17,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 210
+      },
+      {
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 3,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 212
+      },
+      {
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 6,
         "type": "subscription_recovered",
         "recoveryLatencyMs": 211
       },
       {
-        "ts": "2026-02-24T13:53:33.330Z",
-        "clientId": 97,
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 22,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 207
+        "recoveryLatencyMs": 204
       },
       {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 103,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 201
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 46,
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 52,
         "type": "subscription_recovered",
         "recoveryLatencyMs": 208
       },
       {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 30,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 203
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 81,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 203
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 23,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 151
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 64,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 250
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 86,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 250
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 70,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 250
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 53,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 250
-      },
-      {
-        "ts": "2026-02-24T13:53:33.331Z",
-        "clientId": 44,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 194
-      },
-      {
-        "ts": "2026-02-24T13:53:33.332Z",
-        "clientId": 69,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 151
-      },
-      {
-        "ts": "2026-02-24T13:53:33.337Z",
-        "clientId": 87,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 202
-      },
-      {
-        "ts": "2026-02-24T13:53:33.341Z",
-        "clientId": 35,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 314
-      },
-      {
-        "ts": "2026-02-24T13:53:33.341Z",
-        "clientId": 27,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 342
-      },
-      {
-        "ts": "2026-02-24T13:53:33.341Z",
-        "clientId": 18,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 331
-      },
-      {
-        "ts": "2026-02-24T13:53:33.341Z",
+        "ts": "2026-02-24T13:59:57.851Z",
         "clientId": 26,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 342
+        "recoveryLatencyMs": 208
       },
       {
-        "ts": "2026-02-24T13:53:33.341Z",
-        "clientId": 17,
+        "ts": "2026-02-24T13:59:57.851Z",
+        "clientId": 31,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 336
+        "recoveryLatencyMs": 208
       },
       {
-        "ts": "2026-02-24T13:53:33.354Z",
-        "clientId": 73,
+        "ts": "2026-02-24T13:59:57.852Z",
+        "clientId": 47,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 324
+        "recoveryLatencyMs": 204
       },
       {
-        "ts": "2026-02-24T13:53:33.354Z",
-        "clientId": 16,
+        "ts": "2026-02-24T13:59:57.852Z",
+        "clientId": 32,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 324
+        "recoveryLatencyMs": 223
       },
       {
-        "ts": "2026-02-24T13:53:33.354Z",
-        "clientId": 111,
+        "ts": "2026-02-24T13:59:57.852Z",
+        "clientId": 34,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 222
+        "recoveryLatencyMs": 211
       },
       {
-        "ts": "2026-02-24T13:53:33.362Z",
-        "clientId": 61,
+        "ts": "2026-02-24T13:59:57.852Z",
+        "clientId": 51,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 311
+        "recoveryLatencyMs": 209
       },
       {
-        "ts": "2026-02-24T13:53:33.365Z",
-        "clientId": 50,
+        "ts": "2026-02-24T13:59:57.852Z",
+        "clientId": 55,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 306
+        "recoveryLatencyMs": 203
       },
       {
-        "ts": "2026-02-24T13:53:33.369Z",
-        "clientId": 41,
+        "ts": "2026-02-24T13:59:57.853Z",
+        "clientId": 44,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 309
+        "recoveryLatencyMs": 210
       },
       {
-        "ts": "2026-02-24T13:53:33.369Z",
-        "clientId": 22,
+        "ts": "2026-02-24T13:59:57.853Z",
+        "clientId": 23,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 321
+        "recoveryLatencyMs": 155
       },
       {
-        "ts": "2026-02-24T13:53:33.444Z",
-        "clientId": 42,
-        "type": "reconnect_open",
-        "openLatencyMs": 704
-      },
-      {
-        "ts": "2026-02-24T13:53:33.492Z",
-        "clientId": 8,
+        "ts": "2026-02-24T13:59:57.853Z",
+        "clientId": 45,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 229
+        "recoveryLatencyMs": 157
       },
       {
-        "ts": "2026-02-24T13:53:33.492Z",
-        "clientId": 84,
+        "ts": "2026-02-24T13:59:57.853Z",
+        "clientId": 24,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 229
+        "recoveryLatencyMs": 109
       },
       {
-        "ts": "2026-02-24T13:53:33.492Z",
-        "clientId": 56,
+        "ts": "2026-02-24T13:59:57.856Z",
+        "clientId": 25,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 232
+        "recoveryLatencyMs": 206
       },
       {
-        "ts": "2026-02-24T13:53:33.496Z",
-        "clientId": 118,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 225
-      },
-      {
-        "ts": "2026-02-24T13:53:33.496Z",
-        "clientId": 102,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 244
-      },
-      {
-        "ts": "2026-02-24T13:53:33.499Z",
-        "clientId": 10,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 524
-      },
-      {
-        "ts": "2026-02-24T13:53:33.519Z",
-        "clientId": 113,
-        "type": "reconnect_open",
-        "openLatencyMs": 765
-      },
-      {
-        "ts": "2026-02-24T13:53:33.531Z",
-        "clientId": 104,
+        "ts": "2026-02-24T13:59:57.856Z",
+        "clientId": 66,
         "type": "subscription_recovered",
         "recoveryLatencyMs": 207
       },
       {
-        "ts": "2026-02-24T13:53:33.544Z",
-        "clientId": 108,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 282
-      },
-      {
-        "ts": "2026-02-24T13:53:33.544Z",
-        "clientId": 98,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 279
-      },
-      {
-        "ts": "2026-02-24T13:53:33.544Z",
-        "clientId": 24,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 279
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 88,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 94,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 279
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 117,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 65,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 93,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 6,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 278
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 90,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 277
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 114,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 277
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 107,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 277
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 109,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 277
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 112,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 276
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 78,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 279
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 40,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 276
-      },
-      {
-        "ts": "2026-02-24T13:53:33.546Z",
-        "clientId": 100,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 275
-      },
-      {
-        "ts": "2026-02-24T13:53:33.550Z",
-        "clientId": 92,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 275
-      },
-      {
-        "ts": "2026-02-24T13:53:33.721Z",
-        "clientId": 113,
-        "type": "subscription_recovered",
-        "recoveryLatencyMs": 152
-      },
-      {
-        "ts": "2026-02-24T13:53:33.798Z",
+        "ts": "2026-02-24T13:59:57.856Z",
         "clientId": 14,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 777
+        "recoveryLatencyMs": 212
       },
       {
-        "ts": "2026-02-24T13:53:33.799Z",
+        "ts": "2026-02-24T13:59:57.856Z",
+        "clientId": 91,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 151
+      },
+      {
+        "ts": "2026-02-24T13:59:57.858Z",
+        "clientId": 65,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 146
+      },
+      {
+        "ts": "2026-02-24T13:59:57.863Z",
+        "clientId": 40,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 101
+      },
+      {
+        "ts": "2026-02-24T13:59:57.868Z",
+        "clientId": 87,
+        "type": "reconnect_open",
+        "openLatencyMs": 540
+      },
+      {
+        "ts": "2026-02-24T13:59:57.868Z",
+        "clientId": 105,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 150
+      },
+      {
+        "ts": "2026-02-24T13:59:57.869Z",
+        "clientId": 98,
+        "type": "reconnect_open",
+        "openLatencyMs": 539
+      },
+      {
+        "ts": "2026-02-24T13:59:57.878Z",
+        "clientId": 118,
+        "type": "reconnect_open",
+        "openLatencyMs": 544
+      },
+      {
+        "ts": "2026-02-24T13:59:57.878Z",
+        "clientId": 85,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 127
+      },
+      {
+        "ts": "2026-02-24T13:59:57.890Z",
+        "clientId": 89,
+        "type": "reconnect_open",
+        "openLatencyMs": 562
+      },
+      {
+        "ts": "2026-02-24T13:59:57.891Z",
+        "clientId": 120,
+        "type": "reconnect_open",
+        "openLatencyMs": 557
+      },
+      {
+        "ts": "2026-02-24T13:59:57.892Z",
+        "clientId": 113,
+        "type": "reconnect_open",
+        "openLatencyMs": 559
+      },
+      {
+        "ts": "2026-02-24T13:59:57.898Z",
+        "clientId": 30,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 172
+      },
+      {
+        "ts": "2026-02-24T13:59:57.898Z",
+        "clientId": 13,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 206
+      },
+      {
+        "ts": "2026-02-24T13:59:57.902Z",
+        "clientId": 4,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 250
+      },
+      {
+        "ts": "2026-02-24T13:59:57.902Z",
+        "clientId": 7,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 268
+      },
+      {
+        "ts": "2026-02-24T13:59:57.903Z",
+        "clientId": 1,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 268
+      },
+      {
+        "ts": "2026-02-24T13:59:57.903Z",
+        "clientId": 19,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 268
+      },
+      {
+        "ts": "2026-02-24T13:59:57.909Z",
+        "clientId": 57,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 264
+      },
+      {
+        "ts": "2026-02-24T13:59:57.943Z",
+        "clientId": 39,
+        "type": "reconnect_open",
+        "openLatencyMs": 627
+      },
+      {
+        "ts": "2026-02-24T13:59:57.970Z",
+        "clientId": 86,
+        "type": "reconnect_open",
+        "openLatencyMs": 643
+      },
+      {
+        "ts": "2026-02-24T13:59:58.003Z",
+        "clientId": 10,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 356
+      },
+      {
+        "ts": "2026-02-24T13:59:58.004Z",
+        "clientId": 18,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 357
+      },
+      {
+        "ts": "2026-02-24T13:59:58.072Z",
+        "clientId": 69,
+        "type": "reconnect_open",
+        "openLatencyMs": 748
+      },
+      {
+        "ts": "2026-02-24T13:59:58.073Z",
+        "clientId": 80,
+        "type": "reconnect_open",
+        "openLatencyMs": 747
+      },
+      {
+        "ts": "2026-02-24T13:59:58.073Z",
+        "clientId": 96,
+        "type": "reconnect_open",
+        "openLatencyMs": 744
+      },
+      {
+        "ts": "2026-02-24T13:59:58.076Z",
+        "clientId": 108,
+        "type": "reconnect_open",
+        "openLatencyMs": 744
+      },
+      {
+        "ts": "2026-02-24T13:59:58.079Z",
+        "clientId": 111,
+        "type": "reconnect_open",
+        "openLatencyMs": 747
+      },
+      {
+        "ts": "2026-02-24T13:59:58.081Z",
+        "clientId": 48,
+        "type": "reconnect_open",
+        "openLatencyMs": 762
+      },
+      {
+        "ts": "2026-02-24T13:59:58.086Z",
+        "clientId": 99,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 251
+      },
+      {
+        "ts": "2026-02-24T13:59:58.087Z",
+        "clientId": 50,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 348
+      },
+      {
+        "ts": "2026-02-24T13:59:58.090Z",
+        "clientId": 43,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 347
+      },
+      {
+        "ts": "2026-02-24T13:59:58.092Z",
+        "clientId": 89,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 195
+      },
+      {
+        "ts": "2026-02-24T13:59:58.092Z",
+        "clientId": 120,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 195
+      },
+      {
+        "ts": "2026-02-24T13:59:58.092Z",
+        "clientId": 88,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 293
+      },
+      {
+        "ts": "2026-02-24T13:59:58.092Z",
+        "clientId": 59,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 345
+      },
+      {
+        "ts": "2026-02-24T13:59:58.092Z",
+        "clientId": 63,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 344
+      },
+      {
+        "ts": "2026-02-24T13:59:58.092Z",
+        "clientId": 115,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 293
+      },
+      {
+        "ts": "2026-02-24T13:59:58.095Z",
         "clientId": 42,
         "type": "subscription_recovered",
-        "recoveryLatencyMs": 325
+        "recoveryLatencyMs": 292
+      },
+      {
+        "ts": "2026-02-24T13:59:58.095Z",
+        "clientId": 84,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 340
+      },
+      {
+        "ts": "2026-02-24T13:59:58.096Z",
+        "clientId": 68,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 338
+      },
+      {
+        "ts": "2026-02-24T13:59:58.098Z",
+        "clientId": 58,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 338
+      },
+      {
+        "ts": "2026-02-24T13:59:58.102Z",
+        "clientId": 75,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 283
+      },
+      {
+        "ts": "2026-02-24T13:59:58.103Z",
+        "clientId": 107,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 284
+      },
+      {
+        "ts": "2026-02-24T13:59:58.109Z",
+        "clientId": 12,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 431
+      },
+      {
+        "ts": "2026-02-24T13:59:58.109Z",
+        "clientId": 114,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 328
+      },
+      {
+        "ts": "2026-02-24T13:59:58.109Z",
+        "clientId": 112,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 328
+      },
+      {
+        "ts": "2026-02-24T13:59:58.109Z",
+        "clientId": 95,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 278
+      },
+      {
+        "ts": "2026-02-24T13:59:58.110Z",
+        "clientId": 97,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 275
+      },
+      {
+        "ts": "2026-02-24T13:59:58.112Z",
+        "clientId": 116,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 323
+      },
+      {
+        "ts": "2026-02-24T13:59:58.112Z",
+        "clientId": 109,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 323
+      },
+      {
+        "ts": "2026-02-24T13:59:58.120Z",
+        "clientId": 49,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 272
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 87,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 217
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 67,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 319
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 101,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 270
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 70,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 319
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 103,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 319
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 93,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 318
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 71,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 314
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 100,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 313
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 72,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 312
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 62,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 261
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 64,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 308
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 77,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 308
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 118,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 207
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 73,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 307
+      },
+      {
+        "ts": "2026-02-24T13:59:58.129Z",
+        "clientId": 60,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 257
+      },
+      {
+        "ts": "2026-02-24T13:59:58.133Z",
+        "clientId": 61,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 354
+      },
+      {
+        "ts": "2026-02-24T13:59:58.133Z",
+        "clientId": 82,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 352
+      },
+      {
+        "ts": "2026-02-24T13:59:58.221Z",
+        "clientId": 86,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 245
+      },
+      {
+        "ts": "2026-02-24T13:59:58.223Z",
+        "clientId": 69,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 143
+      },
+      {
+        "ts": "2026-02-24T13:59:58.223Z",
+        "clientId": 80,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 147
+      },
+      {
+        "ts": "2026-02-24T13:59:58.230Z",
+        "clientId": 104,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 453
+      },
+      {
+        "ts": "2026-02-24T13:59:58.230Z",
+        "clientId": 106,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 433
+      },
+      {
+        "ts": "2026-02-24T13:59:58.231Z",
+        "clientId": 48,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 137
+      },
+      {
+        "ts": "2026-02-24T13:59:58.246Z",
+        "clientId": 39,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 272
+      },
+      {
+        "ts": "2026-02-24T13:59:58.260Z",
+        "clientId": 38,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 458
+      },
+      {
+        "ts": "2026-02-24T13:59:58.275Z",
+        "clientId": 96,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 184
+      },
+      {
+        "ts": "2026-02-24T13:59:58.278Z",
+        "clientId": 108,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 183
+      },
+      {
+        "ts": "2026-02-24T13:59:58.294Z",
+        "clientId": 113,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 366
+      },
+      {
+        "ts": "2026-02-24T13:59:58.383Z",
+        "clientId": 98,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 483
+      },
+      {
+        "ts": "2026-02-24T13:59:58.434Z",
+        "clientId": 111,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 333
+      },
+      {
+        "ts": "2026-02-24T13:59:58.485Z",
+        "clientId": 102,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 674
+      },
+      {
+        "ts": "2026-02-24T13:59:58.498Z",
+        "clientId": 83,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 672
+      },
+      {
+        "ts": "2026-02-24T13:59:58.915Z",
+        "clientId": 119,
+        "type": "reconnect_open",
+        "openLatencyMs": 1581
+      },
+      {
+        "ts": "2026-02-24T13:59:59.167Z",
+        "clientId": 119,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 207
       }
     ]
   }

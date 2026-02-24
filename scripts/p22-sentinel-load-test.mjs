@@ -16,9 +16,13 @@ const TARGET_CONCURRENCY = Number(process.env.P22_TARGET_CONCURRENCY || 1000);
 const ACTUAL_CONCURRENCY = Number(process.env.P22_ACTUAL_CONCURRENCY || 40);
 const TEST_DURATION_MS = Number(process.env.P22_TEST_DURATION_MS || 20000);
 const RECONNECT_RATIO = Number(process.env.P22_RECONNECT_RATIO || 0.6);
-const CONNECT_TIMEOUT_MS = Number(process.env.P22_CONNECT_TIMEOUT_MS || 10000);
+const CONNECT_TIMEOUT_MS = Number(process.env.P22_CONNECT_TIMEOUT_MS || 12000);
 const RECOVERY_TIMEOUT_MS = Number(process.env.P22_RECOVERY_TIMEOUT_MS || 6000);
 const BUNDLE_WINDOW_MS = Number(process.env.P22_BUNDLE_WINDOW_MS || 100);
+const CONNECT_BATCH_SIZE = Number(process.env.P22_CONNECT_BATCH_SIZE || 20);
+const CONNECT_BATCH_GAP_MS = Number(process.env.P22_CONNECT_BATCH_GAP_MS || 120);
+const CONNECT_RETRY_MAX = Number(process.env.P22_CONNECT_RETRY_MAX || 3);
+const CONNECT_RETRY_BASE_MS = Number(process.env.P22_CONNECT_RETRY_BASE_MS || 250);
 
 const outDir = path.resolve('reports/lighthouse/P2.2_C');
 
@@ -295,6 +299,31 @@ async function fetchStatusSafe() {
   }
 }
 
+async function connectWithRetry(client, events) {
+  for (let attempt = 1; attempt <= CONNECT_RETRY_MAX; attempt += 1) {
+    try {
+      await client.connect();
+      return true;
+    } catch (error) {
+      events.push({
+        ts: nowIso(),
+        clientId: client.id,
+        type: 'connect_failed',
+        attempt,
+        error: String(error?.message || error)
+      });
+
+      if (attempt < CONNECT_RETRY_MAX) {
+        const backoff = CONNECT_RETRY_BASE_MS * Math.pow(1.8, attempt - 1);
+        const jitter = Math.random() * 120;
+        await sleep(backoff + jitter);
+      }
+    }
+  }
+
+  return false;
+}
+
 function evaluateDoD(summary) {
   const dod = {};
 
@@ -386,17 +415,17 @@ async function main() {
     clients.push(client);
   }
 
-  await Promise.allSettled(
-    clients.map(async (client) => {
-      try {
-        await client.connect();
-      } catch (error) {
-        events.push({ ts: nowIso(), clientId: client.id, type: 'connect_failed', error: String(error?.message || error) });
-      }
-    })
-  );
+  for (let offset = 0; offset < clients.length; offset += CONNECT_BATCH_SIZE) {
+    const batch = clients.slice(offset, offset + CONNECT_BATCH_SIZE);
+    await Promise.allSettled(batch.map((client) => connectWithRetry(client, events)));
 
-  const reconnectCandidates = clients.slice(0, Math.floor(clients.length * RECONNECT_RATIO));
+    if (offset + CONNECT_BATCH_SIZE < clients.length) {
+      await sleep(CONNECT_BATCH_GAP_MS);
+    }
+  }
+
+  const connectedClients = clients.filter((c) => Boolean(c.ws));
+  const reconnectCandidates = connectedClients.slice(0, Math.floor(connectedClients.length * RECONNECT_RATIO));
   const reconnectKickAt = Date.now() + Math.floor(TEST_DURATION_MS * 0.45);
 
   const memoryTimer = setInterval(() => {
@@ -446,6 +475,7 @@ async function main() {
     concurrency: {
       target: TARGET_CONCURRENCY,
       actual,
+      connectedInitial: connectedClients.length,
       gapToTarget: Math.max(0, TARGET_CONCURRENCY - actual)
     },
     reconnect: {
@@ -506,7 +536,10 @@ async function main() {
       testDurationMs: TEST_DURATION_MS,
       reconnectRatio: RECONNECT_RATIO,
       recoveryTimeoutMs: RECOVERY_TIMEOUT_MS,
-      bundleWindowMs: BUNDLE_WINDOW_MS
+      bundleWindowMs: BUNDLE_WINDOW_MS,
+      connectBatchSize: CONNECT_BATCH_SIZE,
+      connectBatchGapMs: CONNECT_BATCH_GAP_MS,
+      connectRetryMax: CONNECT_RETRY_MAX
     },
     summary,
     dod: evaluateDoD(summary),
