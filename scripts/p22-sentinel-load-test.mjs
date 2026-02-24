@@ -258,10 +258,34 @@ class ClientRunner {
 
     await sleep(120);
 
-    try {
-      await this.connect({ reconnect: true });
-    } catch (error) {
-      this.events.push({ ts: nowIso(), clientId: this.id, type: 'reconnect_failed', error: String(error?.message || error) });
+    let reconnectConnected = false;
+    let reconnectError = null;
+
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      try {
+        await this.connect({ reconnect: true });
+        reconnectConnected = true;
+        if (attempt > 1) {
+          this.events.push({ ts: nowIso(), clientId: this.id, type: 'reconnect_retry_success', attempt });
+        }
+        break;
+      } catch (error) {
+        reconnectError = error;
+        this.events.push({
+          ts: nowIso(),
+          clientId: this.id,
+          type: 'reconnect_retry_failed',
+          attempt,
+          error: String(error?.message || error)
+        });
+        if (attempt < 3) {
+          await sleep(220 + Math.random() * 180);
+        }
+      }
+    }
+
+    if (!reconnectConnected) {
+      this.events.push({ ts: nowIso(), clientId: this.id, type: 'reconnect_failed', error: String(reconnectError?.message || reconnectError) });
       return;
     }
 
