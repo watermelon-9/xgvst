@@ -1,0 +1,122 @@
+{
+  "generatedAt": "2026-02-25T02:04:15.123362",
+  "version": "R17V1",
+  "matrix": {
+    "batchSizes": [
+      60,
+      80,
+      100
+    ],
+    "gaps": [
+      20,
+      40,
+      80
+    ]
+  },
+  "results": [
+    {
+      "batchSize": 60,
+      "gapMs": 20,
+      "reconnectP50": 337,
+      "reconnectP95": 475,
+      "recoveryP50": 465,
+      "recoveryP95": 608,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 60,
+      "gapMs": 40,
+      "reconnectP50": 264,
+      "reconnectP95": 368,
+      "recoveryP50": 395,
+      "recoveryP95": 504,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 60,
+      "gapMs": 80,
+      "reconnectP50": 312,
+      "reconnectP95": 413,
+      "recoveryP50": 437,
+      "recoveryP95": 548,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 80,
+      "gapMs": 20,
+      "reconnectP50": 310,
+      "reconnectP95": 477,
+      "recoveryP50": 458,
+      "recoveryP95": 621,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 80,
+      "gapMs": 40,
+      "reconnectP50": 346,
+      "reconnectP95": 480,
+      "recoveryP50": 479,
+      "recoveryP95": 626,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 80,
+      "gapMs": 80,
+      "reconnectP50": 217,
+      "reconnectP95": 332,
+      "recoveryP50": 349,
+      "recoveryP95": 478,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 100,
+      "gapMs": 20,
+      "reconnectP50": 312,
+      "reconnectP95": 402,
+      "recoveryP50": 438,
+      "recoveryP95": 559,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 100,
+      "gapMs": 40,
+      "reconnectP50": 282,
+      "reconnectP95": 396,
+      "recoveryP50": 413,
+      "recoveryP95": 540,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "batchSize": 100,
+      "gapMs": 80,
+      "reconnectP50": 283,
+      "reconnectP95": 417,
+      "recoveryP50": 428,
+      "recoveryP95": 566,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    }
+  ],
+  "bestByRecovery": {
+    "batchSize": 80,
+    "gapMs": 80,
+    "reconnectP50": 217,
+    "reconnectP95": 332,
+    "recoveryP50": 349,
+    "recoveryP95": 478,
+    "reconnectSuccessPct": 100,
+    "recoverySuccessPct": 100
+  },
+  "dod4": {
+    "strictPass": false,
+    "specialPass": false
+  }
+}
