@@ -1,8 +1,13 @@
 <main class="page">
 	<section class="container">
-		<h1 class="title">XGVST</h1>
+		<div class="brand-hero">
+			<img class="brand-logo" src="/brand/xgvst-logo.png" alt="XGVST logo" />
+			<div>
+				<h1 class="title">XGVST</h1>
+				<p class="subtitle">Master Volatility. Master Markets.</p>
+			</div>
+		</div>
 		<p class="subtitle">
-			Master Volatility. Master Markets.
 			<span class="status-badge">样式已启用</span>
 			<span class="trend-tag trend-up">up</span>
 			<span class="trend-tag trend-down">down</span>

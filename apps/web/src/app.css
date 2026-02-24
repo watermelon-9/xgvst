@@ -56,6 +56,19 @@ a {
 	width: min(100%, 900px);
 }
 
+.brand-hero {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.brand-logo {
+	width: 44px;
+	height: 44px;
+	border-radius: 0.5rem;
+	object-fit: cover;
+}
+
 .title {
 	margin: 0;
 	font-size: clamp(1.5rem, 2.2vw, 2rem);
