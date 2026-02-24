@@ -55,7 +55,6 @@ type QuoteSocketMessage =
 			type: 'resync_ack';
 			pending?: boolean;
 			symbols?: string[];
-			immediateData?: unknown[];
 	  }
 	| {
 			type: 'resynced' | 'subscribed' | 'unsubscribed';
@@ -94,8 +93,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isResyncAckMessage(
 	value: QuoteSocketMessage
-): value is { type: 'resync_ack'; pending?: boolean; symbols?: string[]; immediateData?: unknown[] } {
-	return value.type === 'resync_ack';
+): value is { type: 'resync_ack'; pending?: boolean; symbols: string[] } {
+	return value.type === 'resync_ack' && 'symbols' in value && Array.isArray(value.symbols);
 }
 
 function normalizeTick(value: unknown, transport: QuoteTick['transport']): QuoteTick | null {
@@ -307,11 +306,6 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		emitStats();
 	};
 
-	const dispatchTickAndRecover = (tick: QuoteTick) => {
-		markRecoveredBySymbol(tick.symbol);
-		emitTick(tick);
-	};
-
 	const requestResync = (symbols: string[]) => {
 		const next = normalizeSymbols(symbols);
 		lastResyncRequestSymbols = next;
@@ -449,22 +443,9 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			}
 
 			if (isResyncAckMessage(payload)) {
-				const ackSymbols = normalizeSymbols(payload.symbols ?? []);
+				const ackSymbols = normalizeSymbols(payload.symbols);
 				const recoveringSymbols = ackSymbols.length ? ackSymbols : lastResyncRequestSymbols;
-				if (payload.pending === false && recoveringSymbols.length === 0) {
-					updateRecoveryState([]);
-				} else {
-					updateRecoveryState(recoveringSymbols);
-				}
-
-				if (Array.isArray(payload.immediateData) && payload.immediateData.length > 0) {
-					for (const rawTick of payload.immediateData) {
-						const tick = normalizeTick(rawTick, 'ws-json-fallback');
-						if (tick) {
-							dispatchTickAndRecover(tick);
-						}
-					}
-				}
+				updateRecoveryState(recoveringSymbols);
 				return;
 			}
 
@@ -481,7 +462,8 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 				if (allowJsonTickFallback) {
 					const tick = normalizeTick(payload.data, 'ws-json-fallback');
 					if (tick) {
-						dispatchTickAndRecover(tick);
+						markRecoveredBySymbol(tick.symbol);
+						emitTick(tick);
 					}
 				}
 			}
@@ -500,7 +482,8 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			}
 			emitStats();
 			if (decoded) {
-				dispatchTickAndRecover(decoded.tick);
+				markRecoveredBySymbol(decoded.tick.symbol);
+				emitTick(decoded.tick);
 			}
 		}
 	};
