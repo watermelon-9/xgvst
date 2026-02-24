@@ -445,7 +445,7 @@ export class QuoteDurableObject implements DurableObject {
 
       const targetSymbols = requestedSymbols.length ? requestedSymbols : [...client.symbols];
       const snapshotPlan = this.buildSnapshotPlan(client, targetSymbols, 0);
-      this.scheduleSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
+      this.deferSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
 
       ws.send(
         JSON.stringify({
@@ -502,11 +502,11 @@ export class QuoteDurableObject implements DurableObject {
         })
       );
 
-      this.deferSlowTask(async () => {
-        await this.syncUpstreamSubscriptions();
-        this.sendBundleDictionaryIfNeeded(ws, client);
-        this.scheduleSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
+      void this.syncUpstreamSubscriptions().catch(() => {
+        // 上游订阅同步失败不影响 resync ack 主链路
       });
+      this.sendBundleDictionaryIfNeeded(ws, client);
+      this.deferSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
       return;
     }
 
@@ -603,7 +603,11 @@ export class QuoteDurableObject implements DurableObject {
       }
     }
 
-    const safeImmediateLimit = Math.max(0, immediateLimit);
+    const normalizedImmediateLimit = Math.max(0, Math.round(immediateLimit));
+    const boostedImmediateLimit =
+      normalizedImmediateLimit > 0 ? Math.max(normalizedImmediateLimit, Math.ceil(normalizedImmediateLimit * 1.3)) : 0;
+    const safeImmediateLimit = Math.min(memoryTicks.length, boostedImmediateLimit);
+
     const immediateData = safeImmediateLimit > 0 ? memoryTicks.slice(0, safeImmediateLimit) : [];
     const memoryRemainder = safeImmediateLimit > 0 ? memoryTicks.slice(safeImmediateLimit) : memoryTicks;
 
@@ -615,7 +619,7 @@ export class QuoteDurableObject implements DurableObject {
     };
   }
 
-  private scheduleSnapshotRemainder(
+  private deferSnapshotRemainder(
     ws: WebSocket,
     client: ClientState,
     memoryTicks: QuoteTickSnapshot[],
@@ -623,22 +627,47 @@ export class QuoteDurableObject implements DurableObject {
   ) {
     this.deferSlowTask(async () => {
       if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+      await this.sendSnapshotRemainder(ws, client, memoryTicks, missingSymbols);
+    });
+  }
 
-      if (memoryTicks.length) {
-        await this.sendSnapshotTicks(ws, client, memoryTicks);
-      }
+  private async sendSnapshotRemainder(
+    ws: WebSocket,
+    client: ClientState,
+    memoryTicks: QuoteTickSnapshot[],
+    missingSymbols: string[]
+  ) {
+    if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
-      if (!missingSymbols.length || !this.env.QUOTE_KV) return;
+    if (memoryTicks.length) {
+      await this.sendSnapshotTicks(ws, client, memoryTicks);
+    }
+
+    if (!missingSymbols.length) return;
+    await this.sendMissingSymbols(ws, client, missingSymbols);
+  }
+
+  private async sendMissingSymbols(ws: WebSocket, client: ClientState, missingSymbols: string[]): Promise<void> {
+    if (!missingSymbols.length || !this.env.QUOTE_KV) return;
+    if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+
+    const kvTicks: QuoteTickSnapshot[] = [];
+
+    for (let index = 0; index < missingSymbols.length; index += this.snapshotBatchSymbols) {
       if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
-      const kvResults = await Promise.all(missingSymbols.map((symbol) => this.readSnapshotFromKv(symbol)));
-      const kvTicks = kvResults
-        .filter((tick): tick is QuoteTickSnapshot => Boolean(tick))
-        .filter((tick) => client.symbols.has(tick.symbol));
+      const symbolsChunk = missingSymbols.slice(index, index + this.snapshotBatchSymbols);
+      const kvResults = await Promise.all(symbolsChunk.map((symbol) => this.readSnapshotFromKv(symbol)));
 
-      if (!kvTicks.length) return;
-      await this.sendSnapshotTicks(ws, client, kvTicks);
-    });
+      for (const tick of kvResults) {
+        if (!tick) continue;
+        if (!client.symbols.has(tick.symbol)) continue;
+        kvTicks.push(tick);
+      }
+    }
+
+    if (!kvTicks.length) return;
+    await this.sendSnapshotTicks(ws, client, kvTicks);
   }
 
   private getSocketBufferedAmount(ws: WebSocket): number {
@@ -651,12 +680,42 @@ export class QuoteDurableObject implements DurableObject {
       ? bufferedAmount / this.snapshotBackpressureBytes
       : 0;
 
-    if (pressureRatio >= 1.6) return Math.min(40, this.snapshotBackpressureYieldMs * 4);
-    if (pressureRatio >= 1.1) return Math.min(24, this.snapshotBackpressureYieldMs * 2);
+    if (pressureRatio >= 1.5) return Math.min(48, this.snapshotBackpressureYieldMs * 6);
+    if (pressureRatio >= 1.1) return Math.min(30, this.snapshotBackpressureYieldMs * 4);
+    if (pressureRatio >= 0.8) return Math.min(18, this.snapshotBackpressureYieldMs * 2);
 
-    if (batchIndex <= 1) return 1;
-    if (batchIndex <= 3) return 4;
-    return 8;
+    if (batchIndex <= 1) return 0;
+    if (batchIndex <= 4) return 1;
+    return 2;
+  }
+
+  private computeSnapshotDynamicBatchSize(
+    bufferedAmount: number,
+    remaining: number,
+    batchIndex: number,
+    transport: TransportMode
+  ): number {
+    const base = this.snapshotBatchSymbols;
+    const pressureRatio = this.snapshotBackpressureBytes
+      ? bufferedAmount / this.snapshotBackpressureBytes
+      : 0;
+
+    let next = base;
+    if (pressureRatio <= 0.2) {
+      next = Math.min(transport === 'bundle' ? 96 : 72, Math.ceil(base * 2));
+    } else if (pressureRatio <= 0.5) {
+      next = Math.min(transport === 'bundle' ? 72 : 56, Math.ceil(base * 1.5));
+    } else if (pressureRatio >= 1.2) {
+      next = Math.max(6, Math.floor(base * 0.5));
+    } else if (pressureRatio >= 0.9) {
+      next = Math.max(8, Math.floor(base * 0.75));
+    }
+
+    if (batchIndex >= 4 && pressureRatio < 0.8) {
+      next = Math.max(8, Math.floor(next * 0.85));
+    }
+
+    return Math.max(4, Math.min(remaining, next));
   }
 
   private async waitForSnapshotBackpressure(ws: WebSocket): Promise<void> {
@@ -679,13 +738,23 @@ export class QuoteDurableObject implements DurableObject {
 
     try {
       let batchIndex = 0;
+      let index = 0;
 
       if (client.transport === 'bundle') {
-        for (let index = 0; index < normalizedTicks.length; index += this.snapshotBatchSymbols) {
+        while (index < normalizedTicks.length) {
           if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
           await this.waitForSnapshotBackpressure(ws);
 
-          const chunk = normalizedTicks.slice(index, index + this.snapshotBatchSymbols);
+          const bufferedAmount = this.getSocketBufferedAmount(ws);
+          const chunkSize = this.computeSnapshotDynamicBatchSize(
+            bufferedAmount,
+            normalizedTicks.length - index,
+            batchIndex,
+            client.transport
+          );
+          const chunk = normalizedTicks.slice(index, index + chunkSize);
+          index += chunk.length;
+
           const frame = await this.encodeBundleFrame(chunk, client, client.compression, true);
           if (!frame.byteLength) continue;
           if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
@@ -696,13 +765,12 @@ export class QuoteDurableObject implements DurableObject {
           if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
           this.stats.sentBytes += frame.byteLength;
 
-          const hasMore = index + this.snapshotBatchSymbols < normalizedTicks.length;
-          if (!hasMore) continue;
+          if (index >= normalizedTicks.length) continue;
 
-          if (batchIndex === 0) {
+          const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
+          if (delayMs <= 0) {
             await Promise.resolve();
           } else {
-            const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
             await sleep(delayMs);
           }
           batchIndex += 1;
@@ -710,23 +778,31 @@ export class QuoteDurableObject implements DurableObject {
         return;
       }
 
-      for (let index = 0; index < normalizedTicks.length; index += this.snapshotBatchSymbols) {
+      while (index < normalizedTicks.length) {
         if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
         await this.waitForSnapshotBackpressure(ws);
 
-        const chunk = normalizedTicks.slice(index, index + this.snapshotBatchSymbols);
+        const bufferedAmount = this.getSocketBufferedAmount(ws);
+        const chunkSize = this.computeSnapshotDynamicBatchSize(
+          bufferedAmount,
+          normalizedTicks.length - index,
+          batchIndex,
+          client.transport
+        );
+        const chunk = normalizedTicks.slice(index, index + chunkSize);
+        index += chunk.length;
+
         for (const tick of chunk) {
           if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
           this.sendLegacyTick(ws, client, tick);
         }
 
-        const hasMore = index + this.snapshotBatchSymbols < normalizedTicks.length;
-        if (!hasMore) continue;
+        if (index >= normalizedTicks.length) continue;
 
-        if (batchIndex === 0) {
+        const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
+        if (delayMs <= 0) {
           await Promise.resolve();
         } else {
-          const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
           await sleep(delayMs);
         }
         batchIndex += 1;

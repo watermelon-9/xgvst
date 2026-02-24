@@ -1,0 +1,207 @@
+{
+  "generatedAt": "2026-02-24T17:05:46.627Z",
+  "config": {
+    "WS_URL": "ws://127.0.0.1:8787/ws/quote?session=p22-r17-retest-user1567",
+    "STATUS_URL": "http://127.0.0.1:8787/api/source/status",
+    "DO_URL": "http://127.0.0.1:8787/api/do/metrics?session=p22-r17-retest-user1567",
+    "concurrency": 1000,
+    "reconnectCandidates": 600,
+    "reconnectRatio": 0.6,
+    "transport": "bundle",
+    "compression": "gzip"
+  },
+  "summary": {
+    "connected": 1000,
+    "reconnect": {
+      "attempted": 600,
+      "success": 600,
+      "successRatePct": 100,
+      "p50OpenMs": 280,
+      "p95OpenMs": 394
+    },
+    "recovery": {
+      "attempted": 600,
+      "success": 600,
+      "successRatePct": 100,
+      "p50Ms": 427,
+      "p95Ms": 536
+    },
+    "connectOpen": {
+      "p50Ms": 43,
+      "p95Ms": 69
+    },
+    "memory": {
+      "peakRssBytes": 219889664,
+      "peakHeapUsedBytes": 77255248,
+      "samples": 1
+    }
+  },
+  "api": {
+    "statusBefore": {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 20,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "availableSources": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "wsFrameStats": {
+          "sentBinaryFrames": 0,
+          "sentProtobufFrames": 0,
+          "sentFallbackFrames": 0
+        },
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false,
+        "debugForcedSource": null
+      }
+    },
+    "doBefore": {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 6,
+      "body": {
+        "ok": true,
+        "sessionKey": "sess:p22-r17-retest-user1567",
+        "payload": {
+          "ok": true,
+          "do": "quote",
+          "stats": {
+            "clients": 0,
+            "subscriptions": 0,
+            "pendingSymbols": 0,
+            "flushCount": 0,
+            "sentBinaryFrames": 0,
+            "sentProtobufFrames": 0,
+            "sentBundleFrames": 0,
+            "sentCompressedFrames": 0,
+            "sentFallbackFrames": 0,
+            "sentBytes": 0,
+            "droppedFrames": 0,
+            "lastFlushAt": null,
+            "source": {
+              "activeSource": null,
+              "priorityOrder": [
+                "alltick",
+                "sina",
+                "eastmoney",
+                "tencent"
+              ],
+              "subscribedSymbols": [],
+              "failoverCount": 0,
+              "reconnecting": false,
+              "debugForcedSource": null
+            },
+            "limits": {
+              "heartbeatSweepMs": 30000,
+              "heartbeatTimeoutMs": 60000,
+              "batchFlushMs": 100,
+              "snapshotBatchSymbols": 24,
+              "snapshotImmediateSymbols": 8,
+              "snapshotBackpressureBytes": 524288,
+              "snapshotBackpressureYieldMs": 8,
+              "priceDeltaMilli": 15,
+              "changeDeltaBp": 8,
+              "forceSnapshotMs": 10000
+            }
+          }
+        }
+      }
+    },
+    "doAfter": {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 5,
+      "body": {
+        "ok": true,
+        "sessionKey": "sess:p22-r17-retest-user1567",
+        "payload": {
+          "ok": true,
+          "do": "quote",
+          "stats": {
+            "clients": 0,
+            "subscriptions": 0,
+            "pendingSymbols": 0,
+            "flushCount": 12,
+            "sentBinaryFrames": 5725,
+            "sentProtobufFrames": 0,
+            "sentBundleFrames": 5725,
+            "sentCompressedFrames": 5725,
+            "sentFallbackFrames": 0,
+            "sentBytes": 279714,
+            "droppedFrames": 0,
+            "lastFlushAt": "2026-02-24T17:05:46.208Z",
+            "source": {
+              "activeSource": "alltick",
+              "priorityOrder": [
+                "alltick",
+                "sina",
+                "eastmoney",
+                "tencent"
+              ],
+              "subscribedSymbols": [],
+              "failoverCount": 0,
+              "reconnecting": false,
+              "debugForcedSource": null
+            },
+            "limits": {
+              "heartbeatSweepMs": 30000,
+              "heartbeatTimeoutMs": 60000,
+              "batchFlushMs": 100,
+              "snapshotBatchSymbols": 24,
+              "snapshotImmediateSymbols": 8,
+              "snapshotBackpressureBytes": 524288,
+              "snapshotBackpressureYieldMs": 8,
+              "priceDeltaMilli": 15,
+              "changeDeltaBp": 8,
+              "forceSnapshotMs": 10000
+            }
+          }
+        }
+      }
+    },
+    "statusAfter": {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 10,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "availableSources": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "wsFrameStats": {
+          "sentBinaryFrames": 0,
+          "sentProtobufFrames": 0,
+          "sentFallbackFrames": 0
+        },
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false,
+        "debugForcedSource": null
+      }
+    }
+  }
+}

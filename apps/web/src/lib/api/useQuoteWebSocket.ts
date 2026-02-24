@@ -449,14 +449,6 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			}
 
 			if (isResyncAckMessage(payload)) {
-				const ackSymbols = normalizeSymbols(payload.symbols ?? []);
-				const recoveringSymbols = ackSymbols.length ? ackSymbols : lastResyncRequestSymbols;
-				if (payload.pending === false && recoveringSymbols.length === 0) {
-					updateRecoveryState([]);
-				} else {
-					updateRecoveryState(recoveringSymbols);
-				}
-
 				if (Array.isArray(payload.immediateData) && payload.immediateData.length > 0) {
 					for (const rawTick of payload.immediateData) {
 						const tick = normalizeTick(rawTick, 'ws-json-fallback');
@@ -464,6 +456,14 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 							dispatchTickAndRecover(tick);
 						}
 					}
+				}
+
+				const ackSymbols = normalizeSymbols(payload.symbols ?? []);
+				const recoveringSymbols = ackSymbols.length ? ackSymbols : lastResyncRequestSymbols;
+				if (payload.pending === false && recoveringSymbols.length === 0) {
+					updateRecoveryState([]);
+				} else {
+					updateRecoveryState(recoveringSymbols);
 				}
 				return;
 			}
