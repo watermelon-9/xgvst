@@ -44,7 +44,10 @@
 
 <header class="app-header">
 	<a class="brand-link" href="/" aria-label="返回首页">
-		<div class="brand-emblem" aria-hidden="true">XG</div>
+		<div class="brand-emblem" aria-hidden="true">
+			<span class="glyph-x"></span>
+			<span class="glyph-g">G</span>
+		</div>
 		<div class="brand-copy">
 			<div class="brand-main">XGVST</div>
 			<div class="brand-sub">Master Volatility. Master Markets.</div>

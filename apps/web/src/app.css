@@ -60,14 +60,51 @@ body {
 	width: 3rem;
 	height: 3rem;
 	border-radius: 0.7rem;
-	display: grid;
-	place-items: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.22rem;
+	background: #0b1324;
+	border: 1px solid rgba(148, 163, 184, 0.28);
+	box-shadow: 0 0 16px rgba(16, 185, 129, 0.2);
+}
+
+.glyph-x {
+	position: relative;
+	width: 0.9rem;
+	height: 0.95rem;
+	display: inline-block;
+}
+
+.glyph-x::before,
+.glyph-x::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 0.24rem;
+	background: linear-gradient(90deg, #10b981, #34d399);
+	border-radius: 999px;
+	transform-origin: center;
+}
+
+.glyph-x::before {
+	transform: translateY(0.15rem) rotate(44deg) skewX(-12deg);
+}
+
+.glyph-x::after {
+	transform: translateY(0.55rem) rotate(-44deg) skewX(12deg);
+}
+
+.glyph-g {
+	font-size: 1.05rem;
 	font-weight: 900;
-	letter-spacing: -0.04em;
-	font-size: 1.1rem;
-	background: linear-gradient(135deg, #a855f7, #c084fc 45%, #22d3ee);
+	font-style: italic;
+	line-height: 1;
+	letter-spacing: -0.05em;
 	color: #ffffff;
-	box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+	transform: skewX(-8deg);
 }
 
 .brand-copy {
