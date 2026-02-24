@@ -1,0 +1,79 @@
+{
+  "generatedAt": "2026-02-24T19:32:25.620Z",
+  "baseUrl": "http://127.0.0.1:8791",
+  "mode": "login-latency",
+  "p50Ms": 2.663,
+  "p95Ms": 32.749,
+  "samples": [
+    {
+      "iteration": 0,
+      "userId": "p24-baseline-login-0",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 32.749
+    },
+    {
+      "iteration": 1,
+      "userId": "p24-baseline-login-1",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 3.301
+    },
+    {
+      "iteration": 2,
+      "userId": "p24-baseline-login-2",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 3.025
+    },
+    {
+      "iteration": 3,
+      "userId": "p24-baseline-login-3",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 3.633
+    },
+    {
+      "iteration": 4,
+      "userId": "p24-baseline-login-4",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 2.509
+    },
+    {
+      "iteration": 5,
+      "userId": "p24-baseline-login-5",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 3.02
+    },
+    {
+      "iteration": 6,
+      "userId": "p24-baseline-login-6",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 2.663
+    },
+    {
+      "iteration": 7,
+      "userId": "p24-baseline-login-7",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 2.026
+    },
+    {
+      "iteration": 8,
+      "userId": "p24-baseline-login-8",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 2.631
+    },
+    {
+      "iteration": 9,
+      "userId": "p24-baseline-login-9",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 2.059
+    }
+  ]
+}

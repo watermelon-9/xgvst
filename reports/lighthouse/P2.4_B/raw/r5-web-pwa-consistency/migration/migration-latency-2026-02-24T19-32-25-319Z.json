@@ -1,0 +1,97 @@
+{
+  "generatedAt": "2026-02-24T19:32:25.620Z",
+  "baseUrl": "http://127.0.0.1:8791",
+  "mode": "migration-single-user-latency",
+  "symbolCountPerUser": 200,
+  "p50Ms": 17.04,
+  "p95Ms": 18.186,
+  "perUserLatencyMs": [
+    {
+      "userId": "p24-baseline-migrate-0",
+      "latencyMs": 17.04,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-1",
+      "latencyMs": 15.565,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-2",
+      "latencyMs": 18.186,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-3",
+      "latencyMs": 13.212,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-4",
+      "latencyMs": 17.56,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    }
+  ],
+  "samples": [
+    {
+      "iteration": 0,
+      "userId": "p24-baseline-migrate-0",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 17.04,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 1,
+      "userId": "p24-baseline-migrate-1",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 15.565,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 2,
+      "userId": "p24-baseline-migrate-2",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 18.186,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 3,
+      "userId": "p24-baseline-migrate-3",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 13.212,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 4,
+      "userId": "p24-baseline-migrate-4",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 17.56,
+      "expectedCount": 200,
+      "importedCount": 200
+    }
+  ]
+}

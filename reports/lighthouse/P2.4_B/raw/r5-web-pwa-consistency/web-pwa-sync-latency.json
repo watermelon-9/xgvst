@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-02-24T19:34:51.386Z",
+  "baseUrl": "http://127.0.0.1:8791",
+  "scenario": "web-write-to-pwa-visible-latency",
+  "iterations": 12,
+  "pollMs": 100,
+  "timeoutMs": 5000,
+  "success": 12,
+  "successRate": 1,
+  "p50Ms": 14.231,
+  "p95Ms": 33.689,
+  "maxMs": 33.689,
+  "samples": [
+    {
+      "iteration": 0,
+      "userId": "r5-webpwa-0",
+      "marker": "910000",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 10.485,
+      "pollCount": 1
+    },
+    {
+      "iteration": 1,
+      "userId": "r5-webpwa-1",
+      "marker": "910001",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 18.249,
+      "pollCount": 1
+    },
+    {
+      "iteration": 2,
+      "userId": "r5-webpwa-2",
+      "marker": "910002",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 4.674,
+      "pollCount": 1
+    },
+    {
+      "iteration": 3,
+      "userId": "r5-webpwa-3",
+      "marker": "910003",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 9.471,
+      "pollCount": 1
+    },
+    {
+      "iteration": 4,
+      "userId": "r5-webpwa-4",
+      "marker": "910004",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 30.134,
+      "pollCount": 1
+    },
+    {
+      "iteration": 5,
+      "userId": "r5-webpwa-5",
+      "marker": "910005",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 26.461,
+      "pollCount": 1
+    },
+    {
+      "iteration": 6,
+      "userId": "r5-webpwa-6",
+      "marker": "910006",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 33.689,
+      "pollCount": 1
+    },
+    {
+      "iteration": 7,
+      "userId": "r5-webpwa-7",
+      "marker": "910007",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 19.202,
+      "pollCount": 1
+    },
+    {
+      "iteration": 8,
+      "userId": "r5-webpwa-8",
+      "marker": "910008",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 10.306,
+      "pollCount": 1
+    },
+    {
+      "iteration": 9,
+      "userId": "r5-webpwa-9",
+      "marker": "910009",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 7.204,
+      "pollCount": 1
+    },
+    {
+      "iteration": 10,
+      "userId": "r5-webpwa-10",
+      "marker": "910010",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 14.231,
+      "pollCount": 1
+    },
+    {
+      "iteration": 11,
+      "userId": "r5-webpwa-11",
+      "marker": "910011",
+      "writeOk": true,
+      "writeStatus": 200,
+      "readStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 17.99,
+      "pollCount": 1
+    }
+  ]
+}
