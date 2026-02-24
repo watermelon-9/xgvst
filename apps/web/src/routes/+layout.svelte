@@ -46,15 +46,13 @@
 	<a class="brand-link" href="/" aria-label="返回首页">
 		<div class="brand-emblem" aria-hidden="true">
 			<svg class="xg-mark" viewBox="0 0 64 64" role="img" aria-label="XG logo">
-				<path
-					fill="#33d5b4"
-					d="M8 14h13l13 18-13 18H8l13-18L8 14zm10.8 8.8h4.8L29 32l-5.4 9.2h-4.8L24.2 32l-5.4-9.2z"
-				/>
+				<path fill="#37d7bf" d="M11 16h12l10 16-10 16H11l10-16z" />
+				<path fill="#21bda7" d="M20 24h5l5 8-5 8h-5l5-8z" />
 				<path
 					fill="#f8fafc"
-					d="M49.5 19.2c-4.9-4.9-12.9-4.9-17.9 0l-5.1 5.1 5.9 5.9 5.1-5.1c1.7-1.7 4.4-1.7 6.1 0 1.7 1.7 1.7 4.4 0 6.1l-7.5 7.5c-1.7 1.7-4.4 1.7-6.1 0l-2.1-2.1-5.9 5.9 2.1 2.1c4.9 4.9 12.9 4.9 17.9 0l7.5-7.5c5-5 5-13 0-17.9z"
+					d="M40 18c7.7 0 14 6.3 14 14s-6.3 14-14 14c-4.1 0-7.8-1.8-10.4-4.6l6-4.3A6 6 0 1 0 40 26h-3.3l4.9-8H40z"
 				/>
-				<rect x="35" y="30" width="12" height="5" rx="2.5" fill="#f8fafc" transform="rotate(-45 41 32.5)" />
+				<rect x="34.6" y="30.4" width="12.8" height="5.4" rx="2.7" fill="#f8fafc" transform="rotate(-39 41 33.1)" />
 			</svg>
 		</div>
 		<div class="brand-copy">

@@ -57,19 +57,21 @@ body {
 }
 
 .brand-emblem {
-	width: 3.1rem;
-	height: 3.1rem;
-	border-radius: 0.15rem;
+	width: 3.3rem;
+	height: 3.3rem;
+	padding: 0.34rem;
+	border-radius: 0.34rem;
 	display: grid;
 	place-items: center;
-	background: #0a1427;
-	border: 1px solid rgba(148, 163, 184, 0.28);
+	background: #081328;
+	border: 1px solid rgba(56, 189, 248, 0.28);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 	overflow: hidden;
 }
 
 .xg-mark {
-	width: 2.55rem;
-	height: 2.55rem;
+	width: 100%;
+	height: 100%;
 	display: block;
 }
 
@@ -319,9 +321,9 @@ a {
 	}
 
 	.brand-emblem {
-		width: 2.3rem;
-		height: 2.3rem;
-		font-size: 0.9rem;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0.25rem;
 	}
 
 	.brand-main {
