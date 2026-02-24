@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-02-25T01:24:06.647476",
+  "baseline": "R17",
+  "variable": "CONNECT_BATCH_GAP_MS",
+  "fixed": {
+    "CONNECT_BATCH_SIZE": 80,
+    "CONCURRENCY": 1000,
+    "RECONNECT_RATIO": 0.6
+  },
+  "results": [
+    {
+      "gapMs": 20,
+      "reconnectP50": 318,
+      "reconnectP95": 416,
+      "recoveryP50": 444,
+      "recoveryP95": 556,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "gapMs": 40,
+      "reconnectP50": 213,
+      "reconnectP95": 308,
+      "recoveryP50": 353,
+      "recoveryP95": 448,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "gapMs": 80,
+      "reconnectP50": 274,
+      "reconnectP95": 481,
+      "recoveryP50": 409,
+      "recoveryP95": 611,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "gapMs": 120,
+      "reconnectP50": 261,
+      "reconnectP95": 365,
+      "recoveryP50": 395,
+      "recoveryP95": 508,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    },
+    {
+      "gapMs": 160,
+      "reconnectP50": 304,
+      "reconnectP95": 420,
+      "recoveryP50": 439,
+      "recoveryP95": 550,
+      "reconnectSuccessPct": 100,
+      "recoverySuccessPct": 100
+    }
+  ],
+  "bestByRecoveryP95": {
+    "gapMs": 40,
+    "reconnectP50": 213,
+    "reconnectP95": 308,
+    "recoveryP50": 353,
+    "recoveryP95": 448,
+    "reconnectSuccessPct": 100,
+    "recoverySuccessPct": 100
+  },
+  "dod4StrictPass": false,
+  "dod4SpecialPass": false
+}
