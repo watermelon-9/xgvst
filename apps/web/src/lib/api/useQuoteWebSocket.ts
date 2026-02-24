@@ -52,6 +52,11 @@ type QuoteSocketMessage =
 			type: 'connected';
 	  }
 	| {
+			type: 'resync_ack';
+			pending?: boolean;
+			symbols?: string[];
+	  }
+	| {
 			type: 'resynced' | 'subscribed' | 'unsubscribed';
 			symbols?: string[];
 	  }
@@ -86,14 +91,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null;
 }
 
-function isMessageWithSymbols(
+function isResyncAckMessage(
 	value: QuoteSocketMessage
-): value is { type: 'resynced' | 'subscribed' | 'unsubscribed'; symbols: string[] } {
-	return (
-		(value.type === 'resynced' || value.type === 'subscribed' || value.type === 'unsubscribed') &&
-		'symbols' in value &&
-		Array.isArray(value.symbols)
-	);
+): value is { type: 'resync_ack'; pending?: boolean; symbols: string[] } {
+	return value.type === 'resync_ack' && 'symbols' in value && Array.isArray(value.symbols);
 }
 
 function normalizeTick(value: unknown, transport: QuoteTick['transport']): QuoteTick | null {
@@ -240,6 +241,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const statsHandlers = new Set<(stats: QuoteSocketStats) => void>();
 
 	const pendingRecoverySymbols = new Set<string>();
+	let lastResyncRequestSymbols: string[] = [];
 
 	const stats: QuoteSocketStats = {
 		status: 'idle',
@@ -306,12 +308,12 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 
 	const requestResync = (symbols: string[]) => {
 		const next = normalizeSymbols(symbols);
+		lastResyncRequestSymbols = next;
 		if (!next.length) {
 			updateRecoveryState([]);
 			return;
 		}
 
-		updateRecoveryState(next);
 		send({ type: 'resync', symbols: next, clientSentAtMs: Date.now() });
 	};
 
@@ -440,8 +442,16 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 				return;
 			}
 
-			if (isMessageWithSymbols(payload)) {
-				updateRecoveryState(payload.symbols);
+			if (isResyncAckMessage(payload)) {
+				const ackSymbols = normalizeSymbols(payload.symbols);
+				const recoveringSymbols = ackSymbols.length ? ackSymbols : lastResyncRequestSymbols;
+				updateRecoveryState(recoveringSymbols);
+				return;
+			}
+
+			if (payload.type === 'resynced' && !stats.recovering && lastResyncRequestSymbols.length) {
+				// 兼容旧服务端：没有 ack 时，仍用最近一次 resync 请求进入 recovering
+				updateRecoveryState(lastResyncRequestSymbols);
 				return;
 			}
 
