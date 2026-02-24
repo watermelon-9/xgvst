@@ -1,0 +1,11 @@
+{
+  "url": "https://xgvst-workers.viehh642.workers.dev/api/quote/mock",
+  "runs": 30,
+  "okRuns": 29,
+  "minMs": 121.93,
+  "maxMs": 236.087,
+  "p50Ms": 164.41,
+  "p95Ms": 200.486,
+  "thresholdMs": 50,
+  "pass": false
+}
