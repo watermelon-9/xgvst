@@ -1,14 +1,39 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fetchUniverse } from '$lib/api';
+	import { fetchUniverse, useQuoteWebSocket, type QuoteTick } from '$lib/api';
 	import { marketState, getTopBoardName } from '$lib/runes/market-state.svelte';
 
-	onMount(async () => {
-		const data = await fetchUniverse();
-		marketState.boards = data.boards;
-		marketState.watchlist = data.watchlist;
-		marketState.activeBoardCode = data.boards[0]?.code ?? '';
-		marketState.activeSymbol = data.watchlist[0]?.symbol ?? '';
+	const sampleSymbols = ['000001', '600519'];
+	const quoteSocket = useQuoteWebSocket();
+
+	let latestTick = $state<QuoteTick | null>(null);
+	let latestSource = $state<string>('—');
+	let latestTickBySymbol = $state<Record<string, QuoteTick | undefined>>({});
+
+	onMount(() => {
+		const detach = quoteSocket.onTick((tick) => {
+			if (!sampleSymbols.includes(tick.symbol)) return;
+			latestTick = tick;
+			latestSource = tick.source;
+			latestTickBySymbol[tick.symbol] = tick;
+		});
+
+		void (async () => {
+			const data = await fetchUniverse();
+			marketState.boards = data.boards;
+			marketState.watchlist = data.watchlist;
+			marketState.activeBoardCode = data.boards[0]?.code ?? '';
+			marketState.activeSymbol = data.watchlist[0]?.symbol ?? '';
+		})();
+
+		quoteSocket.connect();
+		quoteSocket.subscribe(sampleSymbols);
+
+		return () => {
+			detach();
+			quoteSocket.unsubscribe(sampleSymbols);
+			quoteSocket.close();
+		};
 	});
 </script>
 
@@ -61,10 +86,37 @@
 					{/each}
 				</div>
 			</div>
+
+			<div class="panel">
+				<h2>实时 Tick（WS）</h2>
+				<div class="list">
+					{#each sampleSymbols as symbol}
+						<div class="row-link">
+							<div class="row-between">
+								<div>
+									<div>{symbol}</div>
+									<div class="muted">{latestTickBySymbol[symbol]?.source ?? 'waiting...'}</div>
+								</div>
+								<div class="align-right">
+									<div>{latestTickBySymbol[symbol]?.price ?? '--'}</div>
+									<div
+										class={
+											(latestTickBySymbol[symbol]?.changePct ?? 0) >= 0 ? 'up muted' : 'down muted'
+										}
+									>
+										{latestTickBySymbol[symbol]?.changePct ?? '--'}
+									</div>
+								</div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
 		</section>
 
 		<footer class="footer">
-			当前版块：{getTopBoardName() || '未选择'} ｜ 当前个股：{marketState.activeSymbol || '未选择'}
+			当前版块：{getTopBoardName() || '未选择'} ｜ 当前个股：{marketState.activeSymbol || '未选择'} ｜
+			最新 WS Tick：{latestTick?.symbol ?? '--'} @{latestSource}
 		</footer>
 	</div>
 </main>
