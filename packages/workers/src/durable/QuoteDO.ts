@@ -51,8 +51,6 @@ type QuoteTickSnapshot = {
 const DEFAULT_HEARTBEAT_SWEEP_MS = 30_000;
 const DEFAULT_HEARTBEAT_TIMEOUT_MS = 60_000;
 const DEFAULT_BATCH_FLUSH_MS = 100;
-const DEFAULT_SNAPSHOT_BATCH_INTERVAL_MS = 50;
-const DEFAULT_SNAPSHOT_BATCH_SYMBOLS = 24;
 // 提升 bundle delta 阈值，减少对前端几乎无感的抖动帧
 const DEFAULT_PRICE_DELTA_MILLI = 15;
 const DEFAULT_CHANGE_DELTA_BP = 8;
@@ -120,12 +118,6 @@ function normalizeSymbolSet(symbols: Set<string>): string {
 function toFrameArrayBuffer(buffer: ArrayBuffer | Uint8Array): ArrayBuffer {
   if (buffer instanceof Uint8Array) return toArrayBuffer(buffer);
   return buffer;
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 }
 
 function buildBundleEnvelope(codec: number, payload: Uint8Array | ArrayBuffer): ArrayBuffer {
@@ -424,6 +416,8 @@ export class QuoteDurableObject implements DurableObject {
     }
 
     if (parsed.type === 'resync') {
+      const tResyncRecvMs = Date.now();
+
       if (parsed.transport) client.transport = normalizeTransport(parsed.transport);
       if (parsed.compression) {
         client.compression = normalizeCompression(parsed.compression);
@@ -444,28 +438,32 @@ export class QuoteDurableObject implements DurableObject {
       }
 
       this.refreshClientDictionary(client);
+      this.deferSlowTask(() => this.syncUpstreamSubscriptions());
+      const tUpstreamReadyMs = Date.now();
+
+      this.sendBundleDictionaryIfNeeded(ws, client);
+      const snapshotResult = this.sendImmediateSnapshot(ws, client, nextSymbols);
+      const tMemorySnapshotSentMs = Date.now();
+      this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
 
       ws.send(
         JSON.stringify({
           ok: true,
-          type: 'resync_ack',
-          pending: true,
-          symbols: nextSymbols,
+          type: 'resynced',
+          symbols: snapshotResult.pendingSymbols,
           transport: client.transport,
           compression: client.compression,
           dictVersion: client.dictVersion,
-          clientSentAtMs: typeof parsed.clientSentAtMs === 'number' ? parsed.clientSentAtMs : null
+          perf: {
+            clientSentAtMs: typeof parsed.clientSentAtMs === 'number' ? parsed.clientSentAtMs : null,
+            doResyncReceivedAtMs: tResyncRecvMs,
+            doUpstreamReadyAtMs: tUpstreamReadyMs,
+            doMemorySnapshotSentAtMs: tMemorySnapshotSentMs,
+            memoryHits: snapshotResult.memoryHits,
+            pendingKvFallback: snapshotResult.pendingSymbols.length
+          }
         })
       );
-
-      this.sendBundleDictionaryIfNeeded(ws, client);
-
-      const snapshotResult = this.sendImmediateSnapshot(ws, client, nextSymbols);
-      this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
-
-      this.deferSlowTask(async () => {
-        await this.syncUpstreamSubscriptions();
-      });
       return;
     }
 
@@ -557,27 +555,10 @@ export class QuoteDurableObject implements DurableObject {
       return { pendingSymbols: [], memoryHits: 0 };
     }
 
-    let fastPathHits = 0;
-    const remainingSymbols = [...targetSymbols];
-
-    for (const symbol of targetSymbols) {
-      const snapshot = this.latestTickBySymbol.get(symbol);
-      if (!snapshot) continue;
-
-      if (this.sendRecoveryFastPathTick(ws, client, snapshot)) {
-        fastPathHits = 1;
-        const index = remainingSymbols.indexOf(symbol);
-        if (index >= 0) {
-          remainingSymbols.splice(index, 1);
-        }
-      }
-      break;
-    }
-
     const memoryTicks: QuoteTickSnapshot[] = [];
     const missingSymbols: string[] = [];
 
-    for (const symbol of remainingSymbols) {
+    for (const symbol of targetSymbols) {
       const snapshot = this.latestTickBySymbol.get(symbol);
       if (snapshot) {
         memoryTicks.push(snapshot);
@@ -586,31 +567,14 @@ export class QuoteDurableObject implements DurableObject {
       }
     }
 
-    if (memoryTicks.length) {
-      const sortedMemoryTicks = memoryTicks.sort((a, b) => a.symbol.localeCompare(b.symbol));
+    const sortedMemoryTicks = memoryTicks.sort((a, b) => a.symbol.localeCompare(b.symbol));
+    if (sortedMemoryTicks.length) {
       this.deferSlowTask(async () => {
         await this.sendSnapshotTicks(ws, client, sortedMemoryTicks);
       });
     }
 
-    return { pendingSymbols: missingSymbols, memoryHits: memoryTicks.length + fastPathHits };
-  }
-
-  private sendRecoveryFastPathTick(ws: WebSocket, client: ClientState, tick: QuoteTickSnapshot): boolean {
-    if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return false;
-
-    try {
-      // 恢复首帧走轻量通道：优先单 symbol protobuf，避免 bundle+压缩首包开销
-      this.sendLegacyTick(ws, client, tick);
-      return true;
-    } catch {
-      this.stats.droppedFrames += 1;
-      if (this.isSocketOpen(ws)) {
-        ws.close(1011, 'recovery fast-path send failed');
-      }
-      this.cleanupClient(ws);
-      return false;
-    }
+    return { pendingSymbols: missingSymbols, memoryHits: sortedMemoryTicks.length };
   }
 
   private scheduleKvFallbackSnapshot(ws: WebSocket, client: ClientState, symbols: string[]) {
@@ -636,35 +600,21 @@ export class QuoteDurableObject implements DurableObject {
 
     try {
       if (client.transport === 'bundle') {
-        for (let index = 0; index < ticks.length; index += DEFAULT_SNAPSHOT_BATCH_SYMBOLS) {
-          const chunk = ticks.slice(index, index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS);
-          const frame = await this.encodeBundleFrame(chunk, client, client.compression, true);
-          if (!frame.byteLength) continue;
-          if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+        const frame = await this.encodeBundleFrame(ticks, client, client.compression, true);
+        if (!frame.byteLength) return;
+        if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
-          ws.send(frame);
-          this.stats.sentBinaryFrames += 1;
-          this.stats.sentBundleFrames += 1;
-          if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
-          this.stats.sentBytes += frame.byteLength;
-
-          if (index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS < ticks.length) {
-            await sleep(DEFAULT_SNAPSHOT_BATCH_INTERVAL_MS);
-          }
-        }
+        ws.send(frame);
+        this.stats.sentBinaryFrames += 1;
+        this.stats.sentBundleFrames += 1;
+        if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
+        this.stats.sentBytes += frame.byteLength;
         return;
       }
 
-      for (let index = 0; index < ticks.length; index += DEFAULT_SNAPSHOT_BATCH_SYMBOLS) {
-        const chunk = ticks.slice(index, index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS);
-        for (const tick of chunk) {
-          if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
-          this.sendLegacyTick(ws, client, tick);
-        }
-
-        if (index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS < ticks.length) {
-          await sleep(DEFAULT_SNAPSHOT_BATCH_INTERVAL_MS);
-        }
+      for (const tick of ticks) {
+        if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+        this.sendLegacyTick(ws, client, tick);
       }
     } catch {
       this.stats.droppedFrames += 1;
