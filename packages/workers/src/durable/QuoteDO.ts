@@ -267,7 +267,7 @@ export class QuoteDurableObject implements DurableObject {
 
     await this.sourceManager.start((tick) => {
       this.latestTickBySymbol.set(tick.symbol, tick);
-      void this.persistSnapshot(tick);
+      this.persistSnapshot(tick);
 
       if (!this.symbolSubscribers.has(tick.symbol)) return;
       this.pendingBySymbol.set(tick.symbol, tick);
@@ -391,11 +391,11 @@ export class QuoteDurableObject implements DurableObject {
       }
       this.refreshClientDictionary(client);
 
-      await this.syncUpstreamSubscriptions();
+      this.deferSlowTask(() => this.syncUpstreamSubscriptions());
       this.sendBundleDictionaryIfNeeded(ws, client);
 
       const targetSymbols = requestedSymbols.length ? requestedSymbols : [...client.symbols];
-      const snapshotResult = await this.sendImmediateSnapshot(ws, client, targetSymbols);
+      const snapshotResult = this.sendImmediateSnapshot(ws, client, targetSymbols);
       this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
 
       ws.send(
@@ -438,11 +438,11 @@ export class QuoteDurableObject implements DurableObject {
       }
 
       this.refreshClientDictionary(client);
-      await this.syncUpstreamSubscriptions();
+      this.deferSlowTask(() => this.syncUpstreamSubscriptions());
       const tUpstreamReadyMs = Date.now();
 
       this.sendBundleDictionaryIfNeeded(ws, client);
-      const snapshotResult = await this.sendImmediateSnapshot(ws, client, nextSymbols);
+      const snapshotResult = this.sendImmediateSnapshot(ws, client, nextSymbols);
       const tMemorySnapshotSentMs = Date.now();
       this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
 
@@ -473,7 +473,7 @@ export class QuoteDurableObject implements DurableObject {
       }
       this.refreshClientDictionary(client);
 
-      await this.syncUpstreamSubscriptions();
+      this.deferSlowTask(() => this.syncUpstreamSubscriptions());
       ws.send(
         JSON.stringify({
           ok: true,
@@ -501,20 +501,37 @@ export class QuoteDurableObject implements DurableObject {
     return [...unique];
   }
 
+  private isSocketOpen(ws: WebSocket): boolean {
+    return ws.readyState === 1;
+  }
+
+  private deferSlowTask(run: () => Promise<unknown>) {
+    const task = run().catch(() => {
+      // 异步慢任务失败不应影响主链路
+    });
+
+    if (typeof this.state.waitUntil === 'function') {
+      this.state.waitUntil(task);
+      return;
+    }
+
+    queueMicrotask(() => {
+      void task;
+    });
+  }
+
   private snapshotKvKey(symbol: string) {
     return `${KV_SNAPSHOT_PREFIX}${symbol}`;
   }
 
-  private async persistSnapshot(tick: QuoteTickSnapshot) {
+  private persistSnapshot(tick: QuoteTickSnapshot) {
     this.latestTickBySymbol.set(tick.symbol, tick);
 
     if (!this.env.QUOTE_KV) return;
 
-    try {
+    this.deferSlowTask(async () => {
       await this.env.QUOTE_KV.put(this.snapshotKvKey(tick.symbol), JSON.stringify(tick));
-    } catch {
-      // KV 写失败不影响主链路（DoD4）
-    }
+    });
   }
 
   private async readSnapshotFromKv(symbol: string): Promise<QuoteTickSnapshot | null> {
@@ -528,11 +545,11 @@ export class QuoteDurableObject implements DurableObject {
     }
   }
 
-  private async sendImmediateSnapshot(
+  private sendImmediateSnapshot(
     ws: WebSocket,
     client: ClientState,
     symbols: string[]
-  ): Promise<{ pendingSymbols: string[]; memoryHits: number }> {
+  ): { pendingSymbols: string[]; memoryHits: number } {
     const targetSymbols = this.normalizeSymbols(symbols).filter((symbol) => client.symbols.has(symbol));
     if (!targetSymbols.length) {
       return { pendingSymbols: [], memoryHits: 0 };
@@ -552,20 +569,9 @@ export class QuoteDurableObject implements DurableObject {
 
     const sortedMemoryTicks = memoryTicks.sort((a, b) => a.symbol.localeCompare(b.symbol));
     if (sortedMemoryTicks.length) {
-      if (client.transport === 'bundle') {
-        const frame = await this.encodeBundleFrame(sortedMemoryTicks, client, client.compression, true);
-        if (frame.byteLength) {
-          ws.send(frame);
-          this.stats.sentBinaryFrames += 1;
-          this.stats.sentBundleFrames += 1;
-          if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
-          this.stats.sentBytes += frame.byteLength;
-        }
-      } else {
-        for (const tick of sortedMemoryTicks) {
-          this.sendLegacyTick(ws, client, tick);
-        }
-      }
+      this.deferSlowTask(async () => {
+        await this.sendSnapshotTicks(ws, client, sortedMemoryTicks);
+      });
     }
 
     return { pendingSymbols: missingSymbols, memoryHits: sortedMemoryTicks.length };
@@ -574,7 +580,9 @@ export class QuoteDurableObject implements DurableObject {
   private scheduleKvFallbackSnapshot(ws: WebSocket, client: ClientState, symbols: string[]) {
     if (!symbols.length || !this.env.QUOTE_KV) return;
 
-    void (async () => {
+    this.deferSlowTask(async () => {
+      if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+
       const kvResults = await Promise.all(symbols.map((symbol) => this.readSnapshotFromKv(symbol)));
       const kvTicks = kvResults
         .filter((tick): tick is QuoteTickSnapshot => Boolean(tick))
@@ -582,27 +590,39 @@ export class QuoteDurableObject implements DurableObject {
         .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
       if (!kvTicks.length) return;
+      await this.sendSnapshotTicks(ws, client, kvTicks);
+    });
+  }
 
-      try {
-        if (client.transport === 'bundle') {
-          const frame = await this.encodeBundleFrame(kvTicks, client, client.compression, true);
-          if (!frame.byteLength) return;
+  private async sendSnapshotTicks(ws: WebSocket, client: ClientState, ticks: QuoteTickSnapshot[]) {
+    if (!ticks.length) return;
+    if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
-          ws.send(frame);
-          this.stats.sentBinaryFrames += 1;
-          this.stats.sentBundleFrames += 1;
-          if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
-          this.stats.sentBytes += frame.byteLength;
-          return;
-        }
+    try {
+      if (client.transport === 'bundle') {
+        const frame = await this.encodeBundleFrame(ticks, client, client.compression, true);
+        if (!frame.byteLength) return;
+        if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
-        for (const tick of kvTicks) {
-          this.sendLegacyTick(ws, client, tick);
-        }
-      } catch {
-        this.stats.droppedFrames += 1;
+        ws.send(frame);
+        this.stats.sentBinaryFrames += 1;
+        this.stats.sentBundleFrames += 1;
+        if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
+        this.stats.sentBytes += frame.byteLength;
+        return;
       }
-    })();
+
+      for (const tick of ticks) {
+        if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+        this.sendLegacyTick(ws, client, tick);
+      }
+    } catch {
+      this.stats.droppedFrames += 1;
+      if (this.isSocketOpen(ws)) {
+        ws.close(1011, 'snapshot send failed');
+      }
+      this.cleanupClient(ws);
+    }
   }
 
   private sendLegacyTick(ws: WebSocket, client: ClientState, tick: QuoteTick) {
@@ -745,7 +765,7 @@ export class QuoteDurableObject implements DurableObject {
     this.stats.clients = this.clients.size;
     this.stats.pendingSymbols = this.pendingBySymbol.size;
 
-    void this.syncUpstreamSubscriptions();
+    this.deferSlowTask(() => this.syncUpstreamSubscriptions());
   }
 
   private async flushBatch() {
