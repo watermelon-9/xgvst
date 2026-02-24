@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
+CREATE INDEX IF NOT EXISTS idx_users_updated_at ON users(updated_at DESC);
 
 CREATE TABLE IF NOT EXISTS self_selects (
   user_id TEXT NOT NULL,

@@ -1,0 +1,90 @@
+{
+  "ts": "2026-02-24T19:01:27.848Z",
+  "baseUrl": "http://127.0.0.1:8787",
+  "user": "p24-smoke@example.com",
+  "steps": [
+    [
+      "unauthorized-check",
+      {
+        "status": 401,
+        "ok": false,
+        "json": {
+          "ok": false,
+          "error": "unauthorized: missing or invalid access jwt"
+        }
+      }
+    ],
+    [
+      "authorized-put",
+      {
+        "status": 200,
+        "ok": true,
+        "json": {
+          "ok": true,
+          "userId": "p24-smoke@example.com",
+          "symbols": [
+            "000001",
+            "600519"
+          ],
+          "diff": {
+            "added": [
+              "000001",
+              "600519"
+            ],
+            "removed": []
+          }
+        }
+      }
+    ],
+    [
+      "authorized-get",
+      {
+        "status": 200,
+        "ok": true,
+        "json": {
+          "ok": true,
+          "userId": "p24-smoke@example.com",
+          "symbols": [
+            "000001",
+            "600519"
+          ],
+          "items": [
+            {
+              "symbol": "000001",
+              "createdAt": "2026-02-24T19:01:27.830Z",
+              "updatedAt": "2026-02-24T19:01:27.830Z"
+            },
+            {
+              "symbol": "600519",
+              "createdAt": "2026-02-24T19:01:27.830Z",
+              "updatedAt": "2026-02-24T19:01:27.830Z"
+            }
+          ]
+        }
+      }
+    ],
+    [
+      "authorized-history",
+      {
+        "status": 200,
+        "ok": true,
+        "json": {
+          "ok": true,
+          "userId": "p24-smoke@example.com",
+          "history": [
+            {
+              "symbol": "000001",
+              "action": "replace_add",
+              "ts": "2026-02-24T19:01:27.837Z"
+            },
+            {
+              "symbol": "600519",
+              "action": "replace_add",
+              "ts": "2026-02-24T19:01:27.837Z"
+            }
+          ]
+        }
+      }
+    ]
+  ]
+}

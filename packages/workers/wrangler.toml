@@ -15,6 +15,10 @@ routes = [
 [vars]
 CORS_ALLOW_ORIGINS = ""
 QUOTE_SNAPSHOT_TTL_SECONDS = "300"
+ACCESS_AUTH_REQUIRED = "1"
+ACCESS_TRUST_CF_HEADERS = "0"
+ACCESS_JWT_ISS = ""
+ACCESS_JWT_AUD = ""
 
 [[kv_namespaces]]
 binding = "QUOTE_KV"

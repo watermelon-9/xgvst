@@ -4,10 +4,12 @@ import { protobufCodec } from './proto/codec';
 import { SourceManager } from './sources/SourceManager';
 import type { QuoteTick } from './sources/QuoteSource';
 import { StorageTelemetry } from './observability/storageTelemetry';
+import { accessJwtMiddleware, type AccessIdentity } from './auth/accessJwt';
 
 type Bindings = Env;
+type AppVariables = { auth?: AccessIdentity };
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: Bindings; Variables: AppVariables }>();
 const storageTelemetry = new StorageTelemetry('workers-index');
 
 type DebugBindings = Bindings & { DEBUG_SOURCE_TOKEN?: string };
@@ -356,6 +358,11 @@ app.use('*', async (c, next) => {
   }
 });
 
+app.use('/api/self-selects', accessJwtMiddleware);
+app.use('/api/self-selects/*', accessJwtMiddleware);
+app.use('/api/v2/self-selects', accessJwtMiddleware);
+app.use('/api/v2/self-selects/*', accessJwtMiddleware);
+
 app.get('/health', async (c) => {
   const pool = getQuotePool(c.env);
   await pool.start();
@@ -547,7 +554,13 @@ function normalizeSelfSelectSymbols(input: unknown): string[] {
   return [...set];
 }
 
-function resolveUserId(c: { req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined } }) {
+function resolveUserId(c: {
+  req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined };
+  get: (key: 'auth') => AccessIdentity | undefined;
+}) {
+  const auth = c.get('auth');
+  if (auth?.userId?.trim()) return auth.userId.trim();
+
   const fromQuery = c.req.query('userId');
   if (fromQuery?.trim()) return fromQuery.trim();
 
@@ -573,11 +586,16 @@ async function writeSelfSelectHistory(db: D1Database, userId: string, action: st
   await storageTelemetry.observe('d1', 'self_select.history.batch_insert', () => db.batch(statements));
 }
 
-app.get('/api/self-selects', async (c) => {
+const missingUserIdError = 'missing user id (Access JWT/user header/query)';
+
+const listSelfSelectsHandler = async (c: {
+  env: Bindings;
+  req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined };
+  get: (key: 'auth') => AccessIdentity | undefined;
+  json: (obj: unknown, status?: number) => Response;
+}) => {
   const userId = resolveUserId(c);
-  if (!userId) {
-    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
-  }
+  if (!userId) return c.json({ ok: false, error: missingUserIdError }, 400);
 
   const rows = await storageTelemetry.observe('d1', 'self_select.list', () =>
     c.env.QUOTE_DB.prepare(
@@ -588,13 +606,20 @@ app.get('/api/self-selects', async (c) => {
   );
 
   return c.json({ ok: true, userId, symbols: rows.results.map((row) => row.symbol), items: rows.results });
-});
+};
 
-app.put('/api/self-selects', async (c) => {
+const replaceSelfSelectsHandler = async (c: {
+  env: Bindings;
+  req: {
+    query: (key: string) => string | undefined;
+    header: (name: string) => string | undefined;
+    json: () => Promise<unknown>;
+  };
+  get: (key: 'auth') => AccessIdentity | undefined;
+  json: (obj: unknown, status?: number) => Response;
+}) => {
   const userId = resolveUserId(c);
-  if (!userId) {
-    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
-  }
+  if (!userId) return c.json({ ok: false, error: missingUserIdError }, 400);
 
   const payload = (await c.req.json().catch(() => ({}))) as { symbols?: unknown };
   const symbols = normalizeSelfSelectSymbols(payload.symbols);
@@ -639,13 +664,20 @@ app.put('/api/self-selects', async (c) => {
       removed
     }
   });
-});
+};
 
-app.post('/api/self-selects', async (c) => {
+const addSelfSelectHandler = async (c: {
+  env: Bindings;
+  req: {
+    query: (key: string) => string | undefined;
+    header: (name: string) => string | undefined;
+    json: () => Promise<unknown>;
+  };
+  get: (key: 'auth') => AccessIdentity | undefined;
+  json: (obj: unknown, status?: number) => Response;
+}) => {
   const userId = resolveUserId(c);
-  if (!userId) {
-    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
-  }
+  if (!userId) return c.json({ ok: false, error: missingUserIdError }, 400);
 
   const payload = (await c.req.json().catch(() => ({}))) as { symbol?: string };
   const symbol = payload.symbol?.trim();
@@ -669,13 +701,16 @@ app.post('/api/self-selects', async (c) => {
   await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'add', [symbol]);
 
   return c.json({ ok: true, userId, symbol });
-});
+};
 
-app.delete('/api/self-selects/:symbol', async (c) => {
+const removeSelfSelectHandler = async (c: {
+  env: Bindings;
+  req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined; param: (name: string) => string };
+  get: (key: 'auth') => AccessIdentity | undefined;
+  json: (obj: unknown, status?: number) => Response;
+}) => {
   const userId = resolveUserId(c);
-  if (!userId) {
-    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
-  }
+  if (!userId) return c.json({ ok: false, error: missingUserIdError }, 400);
 
   const symbol = c.req.param('symbol')?.trim();
   if (!symbol) {
@@ -688,13 +723,16 @@ app.delete('/api/self-selects/:symbol', async (c) => {
   await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'remove', [symbol]);
 
   return c.json({ ok: true, userId, symbol });
-});
+};
 
-app.get('/api/self-selects/history', async (c) => {
+const selfSelectHistoryHandler = async (c: {
+  env: Bindings;
+  req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined };
+  get: (key: 'auth') => AccessIdentity | undefined;
+  json: (obj: unknown, status?: number) => Response;
+}) => {
   const userId = resolveUserId(c);
-  if (!userId) {
-    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
-  }
+  if (!userId) return c.json({ ok: false, error: missingUserIdError }, 400);
 
   const limit = Math.max(1, Math.min(200, Number(c.req.query('limit') ?? 50) || 50));
 
@@ -707,7 +745,18 @@ app.get('/api/self-selects/history', async (c) => {
   );
 
   return c.json({ ok: true, userId, history: rows.results });
-});
+};
+
+function registerSelfSelectRoutes(prefix: '/api/self-selects' | '/api/v2/self-selects') {
+  app.get(prefix, listSelfSelectsHandler as never);
+  app.put(prefix, replaceSelfSelectsHandler as never);
+  app.post(prefix, addSelfSelectHandler as never);
+  app.delete(`${prefix}/:symbol`, removeSelfSelectHandler as never);
+  app.get(`${prefix}/history`, selfSelectHistoryHandler as never);
+}
+
+registerSelfSelectRoutes('/api/self-selects');
+registerSelfSelectRoutes('/api/v2/self-selects');
 
 function resolveQuoteSessionKey(c: { req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined } }) {
   const fromQuery = c.req.query('session');

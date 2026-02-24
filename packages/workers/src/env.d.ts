@@ -15,6 +15,27 @@ declare global {
     CORS_ALLOW_ORIGINS?: string;
     QUOTE_SNAPSHOT_TTL_SECONDS?: string;
 
+    /**
+     * Access/JWT guardrail for user-scoped APIs.
+     * ACCESS_AUTH_REQUIRED=1(default): requests to protected APIs must carry valid identity.
+     * ACCESS_AUTH_REQUIRED=0: local/dev bypass.
+     */
+    ACCESS_AUTH_REQUIRED?: string;
+
+    /**
+     * Optional trust mode for Cloudflare Access injected header:
+     * cf-access-authenticated-user-email
+     * Only enable when endpoint is behind Cloudflare Access.
+     */
+    ACCESS_TRUST_CF_HEADERS?: string;
+
+    /** Optional local-simulation HS256 shared secret for JWT verify. */
+    ACCESS_JWT_HS256_SECRET?: string;
+    /** Optional strict issuer check. */
+    ACCESS_JWT_ISS?: string;
+    /** Optional strict audience check. */
+    ACCESS_JWT_AUD?: string;
+
     /** Source auth secrets: MUST be injected via `wrangler secret put <NAME>`. */
     ALLTICK_TOKEN?: string;
     SINA_COOKIE?: string;
