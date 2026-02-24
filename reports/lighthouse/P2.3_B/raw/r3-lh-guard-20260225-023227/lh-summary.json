@@ -1,0 +1,126 @@
+{
+  "generatedAt": "2026-02-24T18:33:53.676Z",
+  "outDir": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227",
+  "baseline": {
+    "mobile": {
+      "home": 100,
+      "market": 99
+    },
+    "desktop": {
+      "home": 100,
+      "market": null
+    }
+  },
+  "results": {
+    "mobile": {
+      "home": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-mobile-home-run1.json",
+            "score": 100,
+            "fcpMs": 753,
+            "lcpMs": 903,
+            "tbtMs": 0
+          },
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-mobile-home-run2.json",
+            "score": 100,
+            "fcpMs": 753,
+            "lcpMs": 903,
+            "tbtMs": 0
+          }
+        ],
+        "scores": [
+          100,
+          100
+        ],
+        "median": 100,
+        "baseline": 100,
+        "delta": 0,
+        "regressionOver3": false
+      },
+      "market": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-mobile-market-run1.json",
+            "score": 99,
+            "fcpMs": 1438,
+            "lcpMs": 1690,
+            "tbtMs": 0
+          },
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-mobile-market-run2.json",
+            "score": 99,
+            "fcpMs": 1432,
+            "lcpMs": 1686,
+            "tbtMs": 0
+          }
+        ],
+        "scores": [
+          99,
+          99
+        ],
+        "median": 99,
+        "baseline": 99,
+        "delta": 0,
+        "regressionOver3": false
+      }
+    },
+    "desktop": {
+      "home": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-desktop-home-run1.json",
+            "score": 100,
+            "fcpMs": 203,
+            "lcpMs": 243,
+            "tbtMs": 0
+          },
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-desktop-home-run2.json",
+            "score": 100,
+            "fcpMs": 203,
+            "lcpMs": 203,
+            "tbtMs": 0
+          }
+        ],
+        "scores": [
+          100,
+          100
+        ],
+        "median": 100,
+        "baseline": 100,
+        "delta": 0,
+        "regressionOver3": false
+      },
+      "market": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-desktop-market-run1.json",
+            "score": 100,
+            "fcpMs": 373,
+            "lcpMs": 441,
+            "tbtMs": 0
+          },
+          {
+            "file": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-desktop-market-run2.json",
+            "score": 100,
+            "fcpMs": 382,
+            "lcpMs": 450,
+            "tbtMs": 0
+          }
+        ],
+        "scores": [
+          100,
+          100
+        ],
+        "median": 100,
+        "baseline": null,
+        "delta": null,
+        "regressionOver3": false
+      }
+    }
+  },
+  "regressions": [],
+  "needFix": false
+}
