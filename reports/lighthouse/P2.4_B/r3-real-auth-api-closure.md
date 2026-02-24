@@ -40,8 +40,10 @@
 ## 第三段｜真实链路证据（截图 + 日志 + 快照）
 
 ### A. API 可达与数据种子（真实 auth API）
-- D1 迁移日志：`01-d1-migrate.log`
-- workers 运行日志：`02-workers-dev.log`
+- D1 迁移日志：`20-d1-migrate.txt`
+- workers 关键请求日志：`21-workers-dev-keylogs.txt`
+- 前端 dev 日志：`22-web-dev.txt`
+- 类型检查日志：`23-pnpm-check.txt`
 - v2 写入/读取（200）：
   - `15-put-self-selects-v2.headers`
   - `16-put-self-selects-v2.body.json`

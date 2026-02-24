@@ -1,0 +1,20 @@
+
+> web@0.0.1 dev /Users/mac/.openclaw/workspace/xgvst/apps/web
+> vite dev --host 127.0.0.1 --port 4173
+
+
+  VITE v7.3.1  ready in 990 ms
+
+  ➜  Local:   http://127.0.0.1:4173/
+3:18:04 AM [vite] (client) hmr update /src/routes/market/+page.svelte
+3:18:04 AM [vite] (ssr) page reload src/lib/auth/useAuth.svelte.ts
+3:18:13 AM [vite] (client) hmr update /src/routes/market/+page.svelte
+3:18:13 AM [vite] (ssr) page reload src/lib/auth/useAuth.svelte.ts
+3:19:00 AM [vite] (client) hmr update /src/routes/market/+page.svelte
+3:19:00 AM [vite] (ssr) page reload src/lib/auth/useAuth.svelte.ts
+3:19:04 AM [vite] (client) hmr update /src/routes/market/+page.svelte
+3:19:04 AM [vite] (ssr) page reload src/lib/auth/useAuth.svelte.ts
+3:19:09 AM [vite] (client) hmr update /src/routes/market/+page.svelte
+3:19:09 AM [vite] (ssr) page reload src/lib/auth/useAuth.svelte.ts
+3:19:14 AM [vite] (client) hmr update /src/routes/market/+page.svelte
+3:19:14 AM [vite] (ssr) page reload src/lib/auth/useAuth.svelte.ts

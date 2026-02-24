@@ -1,0 +1,84 @@
+[p23] applying local D1 migration: 0001_p23_proto_d1.sql
+
+ ⛅️ wrangler 4.67.0 (update available 4.68.1)
+─────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+🌀 Executing on local database xgvst_quote (9db19911-21e7-4245-8c94-6571aa7a35fb) from .wrangler/state/v3/d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 9 commands executed successfully.
+[
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  },
+  {
+    "results": [],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  }
+]
+[p23] local migration completed.
+[p23] to apply remote manually (recommended after backup):
+  cd /Users/mac/.openclaw/workspace/xgvst/packages/workers
+  corepack pnpm exec wrangler d1 export xgvst_quote --remote --output ./backups/xgvst_quote-20260225-031643.sql
+  corepack pnpm exec wrangler d1 execute xgvst_quote --remote --file=migrations/0001_p23_proto_d1.sql
+[p23] quick index check (local):
+  corepack pnpm exec wrangler d1 execute xgvst_quote --local --command "PRAGMA index_list('users');"
+  corepack pnpm exec wrangler d1 execute xgvst_quote --local --command "PRAGMA index_list('self_selects');"
