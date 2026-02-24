@@ -1,0 +1,30 @@
+{
+  "prod_home_score": 82,
+  "prod_home_tbt": 583,
+  "prod_bootup_top": [
+    {
+      "url": "https://xgvst.com/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+      "total": 1268
+    },
+    {
+      "url": "https://xgvst.com/",
+      "total": 232
+    },
+    {
+      "url": "Unattributable",
+      "total": 61
+    }
+  ],
+  "local_home_score": 100,
+  "local_home_tbt": 0,
+  "local_bootup_top": [
+    {
+      "url": "http://127.0.0.1:4173/",
+      "total": 112
+    },
+    {
+      "url": "Unattributable",
+      "total": 111
+    }
+  ]
+}

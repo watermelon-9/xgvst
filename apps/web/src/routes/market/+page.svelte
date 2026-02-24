@@ -8,17 +8,38 @@
 		'WS frame(binary/protobuf) → useQuoteWebSocket.subscribe(当前个股+自选) → quoteStore → 页面渲染';
 
 	onMount(() => {
-		const unmountQuoteStore = mountQuoteStore();
+		let disposed = false;
+		let unmountQuoteStore: () => void = () => {};
 
-		void (async () => {
+		const startRealtimePipeline = async () => {
+			if (disposed) return;
+
+			unmountQuoteStore = mountQuoteStore();
 			const data = await fetchUniverse();
+			if (disposed) return;
+
 			marketState.boards = data.boards;
 			marketState.watchlist = data.watchlist;
 			marketState.activeBoardCode = data.boards[0]?.code ?? '';
 			marketState.activeSymbol = data.watchlist[0]?.symbol ?? '';
-		})();
+		};
+
+		const idleHandle =
+			typeof window.requestIdleCallback === 'function'
+				? window.requestIdleCallback(() => {
+					void startRealtimePipeline();
+				})
+				: window.setTimeout(() => {
+					void startRealtimePipeline();
+				}, 120);
 
 		return () => {
+			disposed = true;
+			if (typeof window.cancelIdleCallback === 'function') {
+				window.cancelIdleCallback(idleHandle);
+			} else {
+				window.clearTimeout(idleHandle);
+			}
 			unmountQuoteStore();
 		};
 	});

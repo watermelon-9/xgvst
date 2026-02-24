@@ -1,0 +1,46 @@
+{
+  "home_before": {
+    "score": 100,
+    "fcp": 760,
+    "lcp": 760,
+    "tbt": 0,
+    "si": 760,
+    "tti": 760,
+    "cls": 0,
+    "mainthread": 232,
+    "bootup": 33
+  },
+  "home_after": {
+    "score": 100,
+    "fcp": 753,
+    "lcp": 753,
+    "tbt": 0,
+    "si": 753,
+    "tti": 753,
+    "cls": 0,
+    "mainthread": 225,
+    "bootup": 28
+  },
+  "market_before": {
+    "score": 99,
+    "fcp": 1440,
+    "lcp": 1723,
+    "tbt": 0,
+    "si": 1440,
+    "tti": 1723,
+    "cls": 0,
+    "mainthread": 435,
+    "bootup": 146
+  },
+  "market_after": {
+    "score": 100,
+    "fcp": 1263,
+    "lcp": 1263,
+    "tbt": 0,
+    "si": 1263,
+    "tti": 1263,
+    "cls": 0,
+    "mainthread": 239,
+    "bootup": 25
+  }
+}

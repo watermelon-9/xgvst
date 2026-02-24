@@ -39,6 +39,8 @@
 		content="XGVST — Master Volatility. Master Markets. 提供市场总览、行情追踪与个股分析。"
 	/>
 	<meta name="theme-color" content="#111827" />
+	<link rel="dns-prefetch" href="//xgvst-workers.viehh642.workers.dev" />
+	<link rel="preconnect" href="https://xgvst-workers.viehh642.workers.dev" crossorigin="anonymous" />
 	<title>XGVST — Master Volatility. Master Markets.</title>
 </svelte:head>
 
