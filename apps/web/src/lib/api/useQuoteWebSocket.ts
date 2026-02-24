@@ -7,6 +7,20 @@ export type QuoteTick = {
 	transport: 'ws-binary' | 'ws-protobuf' | 'ws-json-fallback';
 };
 
+export type WsConnectionStatus =
+	| 'idle'
+	| 'connecting'
+	| 'open'
+	| 'reconnecting'
+	| 'closed'
+	| 'error';
+
+export type QuoteSocketStats = {
+	status: WsConnectionStatus;
+	reconnectCount: number;
+	lastReconnectDurationMs: number | null;
+};
+
 type QuoteSocketCommand =
 	| {
 			type: 'subscribe';
@@ -41,6 +55,7 @@ export type UseQuoteWebSocketOptions = {
 	url?: string;
 	heartbeatIntervalMs?: number;
 	allowJsonTickFallback?: boolean;
+	reconnectDelayMs?: number;
 };
 
 const textDecoder = new TextDecoder();
@@ -222,12 +237,41 @@ async function decodeBinaryTick(data: ArrayBuffer | Blob): Promise<QuoteTick | n
 export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const url = options.url ?? '/ws/quote';
 	const heartbeatIntervalMs = options.heartbeatIntervalMs ?? 15000;
-	const allowJsonTickFallback = options.allowJsonTickFallback ?? true;
+	const allowJsonTickFallback = options.allowJsonTickFallback ?? false;
+	const reconnectDelayMs = options.reconnectDelayMs ?? 1200;
 
 	let socket: WebSocket | null = null;
 	let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+	let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+	let reconnectStartedAt: number | null = null;
+	let manualClose = false;
+
 	const subscribedSymbols = new Set<string>();
 	const tickHandlers = new Set<(tick: QuoteTick) => void>();
+	const statsHandlers = new Set<(stats: QuoteSocketStats) => void>();
+
+	const stats: QuoteSocketStats = {
+		status: 'idle',
+		reconnectCount: 0,
+		lastReconnectDurationMs: null
+	};
+
+	const emitStats = () => {
+		const snapshot: QuoteSocketStats = {
+			status: stats.status,
+			reconnectCount: stats.reconnectCount,
+			lastReconnectDurationMs: stats.lastReconnectDurationMs
+		};
+		for (const handler of statsHandlers) {
+			handler(snapshot);
+		}
+	};
+
+	const updateStatus = (next: WsConnectionStatus) => {
+		if (stats.status === next) return;
+		stats.status = next;
+		emitStats();
+	};
 
 	const send = (payload: QuoteSocketCommand) => {
 		if (!socket || socket.readyState !== WebSocket.OPEN) return;
@@ -256,6 +300,25 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		if (!heartbeatTimer) return;
 		clearInterval(heartbeatTimer);
 		heartbeatTimer = null;
+	};
+
+	const clearReconnectTimer = () => {
+		if (!reconnectTimer) return;
+		clearTimeout(reconnectTimer);
+		reconnectTimer = null;
+	};
+
+	const scheduleReconnect = () => {
+		if (manualClose) return;
+		if (reconnectTimer) return;
+		if (reconnectStartedAt === null) {
+			reconnectStartedAt = Date.now();
+		}
+		updateStatus('reconnecting');
+		reconnectTimer = setTimeout(() => {
+			reconnectTimer = null;
+			connect();
+		}, reconnectDelayMs);
 	};
 
 	const onMessage = async (event: MessageEvent) => {
@@ -297,14 +360,34 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const attachSocket = (ws: WebSocket) => {
 		ws.binaryType = 'arraybuffer';
 		ws.addEventListener('open', () => {
+			clearReconnectTimer();
+			if (reconnectStartedAt !== null) {
+				stats.reconnectCount += 1;
+				stats.lastReconnectDurationMs = Date.now() - reconnectStartedAt;
+				reconnectStartedAt = null;
+				emitStats();
+			}
+			updateStatus('open');
 			flushSubscriptions();
 			startHeartbeat();
 		});
 		ws.addEventListener('message', (event) => {
 			void onMessage(event);
 		});
-		ws.addEventListener('close', stopHeartbeat);
-		ws.addEventListener('error', stopHeartbeat);
+		ws.addEventListener('error', () => {
+			stopHeartbeat();
+			updateStatus('error');
+			scheduleReconnect();
+		});
+		ws.addEventListener('close', () => {
+			stopHeartbeat();
+			socket = null;
+			if (manualClose) {
+				updateStatus('closed');
+				return;
+			}
+			scheduleReconnect();
+		});
 	};
 
 	const connect = () => {
@@ -312,6 +395,8 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			return socket;
 		}
 
+		manualClose = false;
+		updateStatus(reconnectStartedAt === null ? 'connecting' : 'reconnecting');
 		socket = new WebSocket(url);
 		attachSocket(socket);
 		return socket;
@@ -332,11 +417,15 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	};
 
 	const close = () => {
+		manualClose = true;
 		stopHeartbeat();
+		clearReconnectTimer();
+		reconnectStartedAt = null;
 		if (socket && socket.readyState < WebSocket.CLOSING) {
 			socket.close(1000, 'client closed');
 		}
 		socket = null;
+		updateStatus('closed');
 	};
 
 	const onTick = (handler: (tick: QuoteTick) => void) => {
@@ -346,11 +435,23 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		};
 	};
 
+	const onStats = (handler: (snapshot: QuoteSocketStats) => void) => {
+		statsHandlers.add(handler);
+		handler({ ...stats });
+		return () => {
+			statsHandlers.delete(handler);
+		};
+	};
+
+	const getStats = (): QuoteSocketStats => ({ ...stats });
+
 	return {
 		connect,
 		subscribe,
 		unsubscribe,
 		close,
-		onTick
+		onTick,
+		onStats,
+		getStats
 	};
 }

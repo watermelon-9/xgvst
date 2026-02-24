@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fetchUniverse, useQuoteWebSocket, type QuoteTick } from '$lib/api';
+	import { fetchUniverse, useQuoteWebSocket, type QuoteSocketStats, type QuoteTick } from '$lib/api';
 	import { marketState, getTopBoardName } from '$lib/runes/market-state.svelte';
 
 	const sampleSymbols = ['000001', '600519'];
-	const quoteSocket = useQuoteWebSocket();
+	const quoteSocket = useQuoteWebSocket({ allowJsonTickFallback: false });
 
 	let latestTick = $state<QuoteTick | null>(null);
 	let latestSource = $state<string>('—');
@@ -15,8 +15,13 @@
 		'ws-json-fallback': 0
 	});
 	let latestTickDataType = $state<string>('none');
+	let socketStats = $state<QuoteSocketStats>({
+		status: 'idle',
+		reconnectCount: 0,
+		lastReconnectDurationMs: null
+	});
 
-	const tickRenderChain = 'WS frame(binary/json fallback) → QuoteTick(type-guard) → latestTickBySymbol → 面板渲染';
+	const tickRenderChain = 'WS frame(binary/protobuf) → QuoteTick(type-guard) → latestTickBySymbol → 面板渲染';
 
 	function isRenderableTick(tick: QuoteTick): boolean {
 		return (
@@ -42,6 +47,10 @@
 			latestTickDataType = `${typeof tick.price}/${typeof tick.changePct}/${typeof tick.symbol}`;
 		});
 
+		const detachStats = quoteSocket.onStats((stats) => {
+			socketStats = stats;
+		});
+
 		void (async () => {
 			const data = await fetchUniverse();
 			marketState.boards = data.boards;
@@ -55,6 +64,7 @@
 
 		return () => {
 			detach();
+			detachStats();
 			quoteSocket.unsubscribe(sampleSymbols);
 			quoteSocket.close();
 		};
@@ -114,6 +124,28 @@
 			<div class="panel">
 				<h2>实时 Tick（WS）</h2>
 				<div class="list">
+					<div class="row-link">
+						<div class="row-between">
+							<div>连接状态</div>
+							<div class="muted">{socketStats.status}</div>
+						</div>
+					</div>
+					<div class="row-link">
+						<div class="row-between">
+							<div>重连次数</div>
+							<div class="muted">{socketStats.reconnectCount}</div>
+						</div>
+					</div>
+					<div class="row-link">
+						<div class="row-between">
+							<div>最近重连耗时</div>
+							<div class="muted">
+								{socketStats.lastReconnectDurationMs === null
+									? '--'
+									: `${socketStats.lastReconnectDurationMs} ms`}
+							</div>
+						</div>
+					</div>
 					{#each sampleSymbols as symbol}
 						<div class="row-link">
 							<div class="row-between">

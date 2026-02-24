@@ -1,0 +1,12 @@
+
+> xgvst@0.1.0 check /Users/mac/.openclaw/workspace/xgvst
+> corepack pnpm --filter web check
+
+
+> web@0.0.1 check /Users/mac/.openclaw/workspace/xgvst/apps/web
+> svelte-kit sync && svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: /Users/mac/.openclaw/workspace/xgvst/apps/web
+Getting Svelte diagnostics...
+
+svelte-check found 0 errors and 0 warnings
