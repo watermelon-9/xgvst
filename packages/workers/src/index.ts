@@ -1,6 +1,8 @@
 import { Hono } from 'hono';
 import { QuoteDurableObject } from './durable/QuoteDurableObject';
 import { encodeQuote } from './proto/quote';
+import { SourceManager } from './sources/SourceManager';
+import type { QuoteTick } from './sources/QuoteSource';
 
 type Bindings = {
   QUOTE_KV: KVNamespace;
@@ -8,6 +10,10 @@ type Bindings = {
   QUOTE_DO: DurableObjectNamespace;
   QUOTE_API_TOKEN?: string;
   CORS_ALLOW_ORIGINS?: string;
+  ALLTICK_TOKEN?: string;
+  SINA_COOKIE?: string;
+  EASTMONEY_TOKEN?: string;
+  TENCENT_TOKEN?: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -40,6 +46,158 @@ function buildCorsHeaders(c: { req: { header: (name: string) => string | undefin
   });
 }
 
+class QuoteConnectionPool {
+  private readonly clients = new Map<WebSocket, { symbols: Set<string>; lastPongAt: number }>();
+  private readonly sourceManager = new SourceManager();
+  private started = false;
+
+  constructor(private readonly env: Bindings) {}
+
+  async start() {
+    if (this.started) return;
+    this.started = true;
+
+    await this.sourceManager.start((tick) => {
+      this.broadcastTick(tick);
+    });
+
+    setInterval(() => {
+      this.heartbeatSweep();
+    }, 15000);
+  }
+
+  status() {
+    return {
+      clients: this.clients.size,
+      ...this.sourceManager.status()
+    };
+  }
+
+  async acceptWebSocket(): Promise<Response> {
+    const pair = new WebSocketPair();
+    const [client, server] = Object.values(pair) as [WebSocket, WebSocket];
+
+    server.accept();
+    this.clients.set(server, { symbols: new Set(), lastPongAt: Date.now() });
+
+    server.addEventListener('message', (event) => {
+      void this.onMessage(server, event.data);
+    });
+
+    server.addEventListener('close', () => {
+      this.clients.delete(server);
+      void this.syncSubscriptions();
+    });
+
+    server.send(
+      JSON.stringify({
+        ok: true,
+        type: 'connected',
+        sourceStatus: this.sourceManager.status()
+      })
+    );
+
+    return new Response(null, { status: 101, webSocket: client });
+  }
+
+  private async onMessage(ws: WebSocket, raw: unknown) {
+    const client = this.clients.get(ws);
+    if (!client) return;
+
+    if (typeof raw === 'string') {
+      if (raw === 'pong') {
+        client.lastPongAt = Date.now();
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(raw) as
+          | { type: 'subscribe'; symbols?: string[] }
+          | { type: 'unsubscribe'; symbols?: string[] }
+          | { type: 'ping' }
+          | { type: 'force_failover' };
+
+        if (parsed.type === 'ping') {
+          client.lastPongAt = Date.now();
+          ws.send(JSON.stringify({ type: 'pong', ts: Date.now() }));
+          return;
+        }
+
+        if (parsed.type === 'subscribe') {
+          for (const symbol of parsed.symbols ?? []) client.symbols.add(symbol);
+          await this.syncSubscriptions();
+          ws.send(JSON.stringify({ ok: true, type: 'subscribed', symbols: [...client.symbols] }));
+          return;
+        }
+
+        if (parsed.type === 'unsubscribe') {
+          for (const symbol of parsed.symbols ?? []) client.symbols.delete(symbol);
+          await this.syncSubscriptions();
+          ws.send(JSON.stringify({ ok: true, type: 'unsubscribed', symbols: [...client.symbols] }));
+          return;
+        }
+
+        if (parsed.type === 'force_failover') {
+          await this.sourceManager.forceFailover('ws command');
+          await this.syncSubscriptions();
+          return;
+        }
+      } catch {
+        ws.send(JSON.stringify({ ok: false, error: 'Invalid ws payload' }));
+      }
+    }
+  }
+
+  private heartbeatSweep() {
+    const now = Date.now();
+
+    for (const [ws, state] of this.clients.entries()) {
+      if (now - state.lastPongAt > 30000) {
+        ws.close(1001, 'heartbeat timeout');
+        this.clients.delete(ws);
+        continue;
+      }
+
+      try {
+        ws.send(JSON.stringify({ type: 'ping', ts: now }));
+      } catch {
+        ws.close(1011, 'ping send failed');
+        this.clients.delete(ws);
+      }
+    }
+
+    void this.syncSubscriptions();
+  }
+
+  private async syncSubscriptions() {
+    const merged = new Set<string>();
+    for (const { symbols } of this.clients.values()) {
+      for (const symbol of symbols) merged.add(symbol);
+    }
+    await this.sourceManager.setSymbols([...merged]);
+  }
+
+  private broadcastTick(tick: QuoteTick) {
+    const frame = JSON.stringify({ type: 'tick', data: tick });
+    for (const [ws, { symbols }] of this.clients.entries()) {
+      if (!symbols.has(tick.symbol)) continue;
+      try {
+        ws.send(frame);
+      } catch {
+        ws.close(1011, 'broadcast failed');
+        this.clients.delete(ws);
+      }
+    }
+  }
+}
+
+let quotePool: QuoteConnectionPool | null = null;
+
+function getQuotePool(env: Bindings) {
+  if (!quotePool) quotePool = new QuoteConnectionPool(env);
+  return quotePool;
+}
+
 app.use('*', async (c, next) => {
   const corsHeaders = buildCorsHeaders(c);
 
@@ -53,14 +211,21 @@ app.use('*', async (c, next) => {
     try {
       c.res.headers.set(key, value);
     } catch {
-      // WebSocket upgrade responses have immutable headers in workerd.
-      // Ignore to avoid breaking upgrade handshakes.
+      // ignore immutable headers on websocket upgrade responses
     }
   }
 });
 
-app.get('/health', (c) => {
-  return c.json({ ok: true, service: 'xgvst-workers', ts: new Date().toISOString() });
+app.get('/health', async (c) => {
+  const pool = getQuotePool(c.env);
+  await pool.start();
+
+  return c.json({
+    ok: true,
+    service: 'xgvst-workers',
+    ts: new Date().toISOString(),
+    wsPool: pool.status()
+  });
 });
 
 app.get('/v3/universe', (c) => {
@@ -100,14 +265,20 @@ app.get('/api/quote/mock', (c) => {
   return c.json({ ...payload, protoBase64: btoa(String.fromCharCode(...proto)) });
 });
 
+app.get('/api/source/status', async (c) => {
+  const pool = getQuotePool(c.env);
+  await pool.start();
+  return c.json({ ok: true, ...pool.status() });
+});
+
 app.get('/ws/quote', async (c) => {
   if ((c.req.header('upgrade') ?? '').toLowerCase() !== 'websocket') {
     return c.json({ ok: false, error: 'Expected websocket upgrade' }, 426);
   }
 
-  const id = c.env.QUOTE_DO.idFromName('default');
-  const stub = c.env.QUOTE_DO.get(id);
-  return stub.fetch(new Request('https://quote-do/ws', { headers: c.req.raw.headers }));
+  const pool = getQuotePool(c.env);
+  await pool.start();
+  return pool.acceptWebSocket();
 });
 
 export { QuoteDurableObject };
