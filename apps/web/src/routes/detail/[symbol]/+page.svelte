@@ -3,10 +3,14 @@
 	import { fetchUniverse } from '$lib/api';
 	import { marketState } from '$lib/runes/market-state.svelte';
 	import { quoteStore, mountQuoteStore, setQuoteSubscriptionScope } from '$lib/runes/quote-store.svelte';
+	import { useAuth } from '$lib/auth/useAuth.svelte';
 
 	let { params } = $props();
+	const auth = useAuth();
 
 	onMount(() => {
+		auth.bootstrap();
+
 		const unmountQuoteStore = mountQuoteStore();
 
 		void (async () => {
@@ -21,11 +25,18 @@
 	});
 
 	$effect(() => {
+		const watchlistSymbols = marketState.watchlist.map((item) => item.symbol);
 		marketState.activeSymbol = params.symbol;
 		setQuoteSubscriptionScope({
 			activeSymbol: params.symbol,
-			watchlistSymbols: marketState.watchlist.map((item) => item.symbol)
+			watchlistSymbols
 		});
+	});
+
+	$effect(() => {
+		const watchlistSymbols = marketState.watchlist.map((item) => item.symbol);
+		if (!watchlistSymbols.length) return;
+		void auth.syncWatchlist(watchlistSymbols);
 	});
 </script>
 

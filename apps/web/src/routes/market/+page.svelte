@@ -3,11 +3,15 @@
 	import { fetchUniverse } from '$lib/api';
 	import { marketState, getTopBoardName } from '$lib/runes/market-state.svelte';
 	import { quoteStore, mountQuoteStore, setQuoteSubscriptionScope } from '$lib/runes/quote-store.svelte';
+	import { useAuth } from '$lib/auth/useAuth.svelte';
 
 	const tickRenderChain =
 		'WS frame(binary/protobuf) → useQuoteWebSocket.resync(当前个股+自选) → quoteStore → 页面渲染';
+	const auth = useAuth();
 
 	onMount(() => {
+		auth.bootstrap();
+
 		let disposed = false;
 		let unmountQuoteStore: () => void = () => {};
 
@@ -45,10 +49,17 @@
 	});
 
 	$effect(() => {
+		const watchlistSymbols = marketState.watchlist.map((item) => item.symbol);
 		setQuoteSubscriptionScope({
 			activeSymbol: marketState.activeSymbol,
-			watchlistSymbols: marketState.watchlist.map((item) => item.symbol)
+			watchlistSymbols
 		});
+	});
+
+	$effect(() => {
+		const watchlistSymbols = marketState.watchlist.map((item) => item.symbol);
+		if (!watchlistSymbols.length) return;
+		void auth.syncWatchlist(watchlistSymbols);
 	});
 </script>
 
