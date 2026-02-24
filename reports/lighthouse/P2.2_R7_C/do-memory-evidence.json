@@ -1,0 +1,114 @@
+{
+  "generatedAt": "2026-02-24T15:17:00+08:00",
+  "task": "P2.2 R7 Sub-C Sentinel DO内存证据口径补齐",
+  "scope": {
+    "repo": "/Users/mac/.openclaw/workspace/xgvst",
+    "targetConcurrency": 1000,
+    "strictDoD5Definition": "1000并发场景下，必须提供 Durable Object 单实例内存可审计数值（如 rssBytes/heapUsedBytes）与采样链路。"
+  },
+  "loadScenario1000": {
+    "evidenceSource": "reports/lighthouse/P2.2_C/sentinel-load-evidence.json",
+    "generatedAt": "2026-02-24T14:20:35.970Z",
+    "concurrency": {
+      "target": 1000,
+      "actual": 1000,
+      "gap": 0
+    },
+    "stability": {
+      "reconnectSuccessRatePct": 100,
+      "subscriptionRecoverySuccessRatePct": 100,
+      "recoveryP50Ms": 269,
+      "recoveryP95Ms": 396
+    },
+    "proxyMemory": {
+      "source": "load-runner process.memoryUsage()",
+      "peakRssBytes": 479019008,
+      "peakRssMiB": 456.83,
+      "peakHeapUsedBytes": 134836808,
+      "peakHeapUsedMiB": 128.59,
+      "sampleCount": 63,
+      "auditNote": "仅为压测器进程内存代理口径，不等同 Durable Object 单实例内存。"
+    }
+  },
+  "doMemoryAttempt": {
+    "apiEndpoint": "https://xgvst-workers.viehh642.workers.dev/api/do/metrics",
+    "freshAuditSample": {
+      "url": "https://xgvst-workers.viehh642.workers.dev/api/do/metrics?session=r7-audit-1771943847652",
+      "ok": true,
+      "status": "success",
+      "statsKeys": [
+        "clients",
+        "subscriptions",
+        "pendingSymbols",
+        "flushCount",
+        "sentBinaryFrames",
+        "sentProtobufFrames",
+        "sentFallbackFrames",
+        "droppedFrames",
+        "lastFlushAt",
+        "source",
+        "limits"
+      ],
+      "memoryKeysFound": []
+    },
+    "codeSchemaAudit": {
+      "source": "packages/workers/src/durable/QuoteDO.ts",
+      "quoteDOStatsTypeKeys": [
+        "clients",
+        "subscriptions",
+        "pendingSymbols",
+        "flushCount",
+        "sentBinaryFrames",
+        "sentProtobufFrames",
+        "sentFallbackFrames",
+        "droppedFrames",
+        "lastFlushAt"
+      ],
+      "memoryFieldsInType": []
+    },
+    "directDoMemoryAvailable": false
+  },
+  "auditableAlternativeCaliber": {
+    "status": "available_with_gap",
+    "alternativeMetrics": [
+      {
+        "name": "LoadRunnerPeakRSS",
+        "value": 479019008,
+        "unit": "bytes",
+        "from": "reports/lighthouse/P2.2_C/sentinel-load-evidence.json.summary.memory.peakRssBytes"
+      },
+      {
+        "name": "LoadRunnerPeakHeapUsed",
+        "value": 134836808,
+        "unit": "bytes",
+        "from": "reports/lighthouse/P2.2_C/sentinel-load-evidence.json.summary.memory.peakHeapUsedBytes"
+      },
+      {
+        "name": "DOFrameDropSignal",
+        "value": 0,
+        "unit": "count",
+        "from": "reports/lighthouse/P2.2_R6_C/dod5-parallel-evidence.json.doMetrics.snapshot.payload.stats.droppedFrames"
+      }
+    ],
+    "knownLimitations": [
+      "替代口径不能推导 DO 单实例峰值内存。",
+      "当前 API 无 rss/heap/memory 字段，缺少平台级内存观测数据导出。"
+    ]
+  },
+  "strictDoD5Verdict": {
+    "pass": false,
+    "reason": "1000并发已满足，但未获得 Durable Object 单实例内存直接指标。",
+    "quantifiedGap": {
+      "concurrencyGap": 0,
+      "missingRequiredDoMemoryMetrics": 1,
+      "requiredMetricExamples": [
+        "rssBytes",
+        "heapUsedBytes"
+      ]
+    }
+  },
+  "artifacts": [
+    "reports/lighthouse/P2.2_R7_C/do-memory-evidence.json",
+    "reports/lighthouse/P2.2_R7_C/do-memory-evidence.md"
+  ]
+}
