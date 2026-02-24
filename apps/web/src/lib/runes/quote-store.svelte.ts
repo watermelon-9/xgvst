@@ -1,4 +1,9 @@
 import { useQuoteWebSocket, type QuoteSocketStats, type QuoteTick } from '$lib/api';
+import {
+	EXPECTED_QUOTE_TICK_TYPE_SIGNATURE,
+	getQuoteTickTypeSignature,
+	isQuoteTickViewConsistent
+} from '$lib/api/quoteCodec';
 
 type SubscriptionScope = {
 	activeSymbol: string;
@@ -17,6 +22,8 @@ export const quoteStore = $state({
 		'ws-json-fallback': 0
 	} as Record<QuoteTick['transport'], number>,
 	latestTickDataType: 'none',
+	latestTickTypeExpected: EXPECTED_QUOTE_TICK_TYPE_SIGNATURE,
+	latestTickTypeConsistent: true,
 	socketStats: {
 		status: 'idle',
 		reconnectCount: 0,
@@ -35,18 +42,6 @@ let attached = false;
 let consumers = 0;
 let detachTick: (() => void) | null = null;
 let detachStats: (() => void) | null = null;
-
-function isRenderableTick(tick: QuoteTick): boolean {
-	return (
-		typeof tick.symbol === 'string' &&
-		typeof tick.source === 'string' &&
-		typeof tick.ts === 'string' &&
-		typeof tick.price === 'number' &&
-		Number.isFinite(tick.price) &&
-		typeof tick.changePct === 'number' &&
-		Number.isFinite(tick.changePct)
-	);
-}
 
 function normalizeSymbols(symbols: string[]): string[] {
 	const seen = new Set<string>();
@@ -71,14 +66,16 @@ function ensureAttached() {
 	attached = true;
 
 	detachTick = quoteSocket.onTick((tick) => {
-		if (!isRenderableTick(tick)) return;
+		if (!isQuoteTickViewConsistent(tick)) return;
 		if (!quoteStore.subscribedSymbols.includes(tick.symbol)) return;
 
 		quoteStore.latestTick = tick;
 		quoteStore.latestSource = tick.source;
 		quoteStore.latestTickBySymbol[tick.symbol] = tick;
 		quoteStore.tickTransportCounter[tick.transport] += 1;
-		quoteStore.latestTickDataType = `${typeof tick.price}/${typeof tick.changePct}/${typeof tick.symbol}`;
+		quoteStore.latestTickDataType = getQuoteTickTypeSignature(tick);
+		quoteStore.latestTickTypeConsistent =
+			quoteStore.latestTickDataType === quoteStore.latestTickTypeExpected;
 	});
 
 	detachStats = quoteSocket.onStats((stats) => {

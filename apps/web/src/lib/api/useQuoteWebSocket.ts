@@ -1,13 +1,5 @@
+import { decodeQuote, type QuoteTick } from './quoteCodec';
 import { decodeQuotePayload } from './proto/quote';
-
-export type QuoteTick = {
-	symbol: string;
-	price: number;
-	changePct: number;
-	ts: string;
-	source: string;
-	transport: 'ws-binary' | 'ws-protobuf' | 'ws-json-fallback';
-};
 
 export type WsConnectionStatus =
 	| 'idle'
@@ -88,45 +80,10 @@ export type UseQuoteWebSocketOptions = {
 
 const textDecoder = new TextDecoder();
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null;
-}
-
 function isResyncAckMessage(
 	value: QuoteSocketMessage
 ): value is { type: 'resync_ack'; pending?: boolean; symbols?: string[]; immediateData?: unknown[] } {
 	return value.type === 'resync_ack';
-}
-
-function normalizeTick(value: unknown, transport: QuoteTick['transport']): QuoteTick | null {
-	if (!isRecord(value)) return null;
-
-	const symbol = value.symbol;
-	const price = value.price;
-	const changePct = value.changePct;
-	const ts = value.ts;
-	const source = value.source;
-
-	if (
-		typeof symbol !== 'string' ||
-		typeof ts !== 'string' ||
-		typeof source !== 'string' ||
-		typeof price !== 'number' ||
-		!Number.isFinite(price) ||
-		typeof changePct !== 'number' ||
-		!Number.isFinite(changePct)
-	) {
-		return null;
-	}
-
-	return {
-		symbol,
-		price,
-		changePct,
-		ts,
-		source,
-		transport
-	};
 }
 
 type DecodeBinaryResult = {
@@ -165,7 +122,7 @@ function decodeCustomBinaryFrame(bytes: Uint8Array): QuoteTick | null {
 	if (offset + sourceLength > bytes.length) return null;
 	const source = textDecoder.decode(bytes.slice(offset, offset + sourceLength));
 
-	return normalizeTick({ symbol, price, changePct, ts, source }, 'ws-binary');
+	return decodeQuote({ symbol, price, changePct, ts, source }, 'ws-binary');
 }
 
 function decodeBinaryTickFromBuffer(buffer: ArrayBuffer): DecodeBinaryResult | null {
@@ -173,17 +130,22 @@ function decodeBinaryTickFromBuffer(buffer: ArrayBuffer): DecodeBinaryResult | n
 
 	const protoPayload = decodeQuotePayload(bytes);
 	if (protoPayload) {
-		return {
-			tick: {
+		const tick = decodeQuote(
+			{
 				symbol: protoPayload.symbol,
 				price: protoPayload.price,
 				changePct: protoPayload.changePct,
 				ts: protoPayload.ts,
-				source: 'ws-protobuf',
-				transport: 'ws-protobuf'
+				source: 'ws-protobuf'
 			},
-			decodedBy: 'protobuf'
-		};
+			'ws-protobuf'
+		);
+		if (tick) {
+			return {
+				tick,
+				decodedBy: 'protobuf'
+			};
+		}
 	}
 
 	const legacy = decodeCustomBinaryFrame(bytes);
@@ -449,9 +411,13 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			}
 
 			if (isResyncAckMessage(payload)) {
-				if (Array.isArray(payload.immediateData) && payload.immediateData.length > 0) {
+				if (
+					allowJsonTickFallback &&
+					Array.isArray(payload.immediateData) &&
+					payload.immediateData.length > 0
+				) {
 					for (const rawTick of payload.immediateData) {
-						const tick = normalizeTick(rawTick, 'ws-json-fallback');
+						const tick = decodeQuote(rawTick, 'ws-json-fallback');
 						if (tick) {
 							dispatchTickAndRecover(tick);
 						}
@@ -479,7 +445,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 				emitStats();
 
 				if (allowJsonTickFallback) {
-					const tick = normalizeTick(payload.data, 'ws-json-fallback');
+					const tick = decodeQuote(payload.data, 'ws-json-fallback');
 					if (tick) {
 						dispatchTickAndRecover(tick);
 					}

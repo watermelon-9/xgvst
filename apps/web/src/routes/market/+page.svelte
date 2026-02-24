@@ -184,7 +184,8 @@
 			<br />
 			链路：{tickRenderChain}
 			<br />
-			类型校验：{quoteStore.latestTickDataType}
+			类型校验：{quoteStore.latestTickDataType}（expected: {quoteStore.latestTickTypeExpected}）
+			{quoteStore.latestTickTypeConsistent ? '✅' : '❌'}
 			<br />
 			JSON tick 残留：{quoteStore.tickTransportCounter['ws-json-fallback'] === 0
 				? '未检测到'
