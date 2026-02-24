@@ -10,6 +10,7 @@
     "lh:median": "bash scripts/lh-median-check.sh",
     "workers:dev": "corepack pnpm --filter workers dev",
     "workers:check": "corepack pnpm --filter workers check",
-    "workers:deploy": "corepack pnpm --filter workers deploy"
+    "workers:deploy": "corepack pnpm --filter workers run deploy",
+    "workers:failover-test": "node scripts/source-failover-test.mjs"
   }
 }

@@ -1,0 +1,130 @@
+{
+  "generatedAt": "2026-02-24T10:12:14.008Z",
+  "wsUrl": "wss://xgvst-workers.viehh642.workers.dev/ws/quote",
+  "statusUrl": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+  "symbol": "000001",
+  "deadlineMs": 3000,
+  "connectTimeoutMs": 8000,
+  "statusPollMs": 200,
+  "before": {
+    "ok": true,
+    "clients": 0,
+    "activeSource": "alltick",
+    "priorityOrder": [
+      "alltick",
+      "sina",
+      "eastmoney",
+      "tencent"
+    ],
+    "subscribedSymbols": [],
+    "failoverCount": 0,
+    "reconnecting": false
+  },
+  "after": {
+    "ok": true,
+    "clients": 0,
+    "activeSource": "alltick",
+    "priorityOrder": [
+      "alltick",
+      "sina",
+      "eastmoney",
+      "tencent"
+    ],
+    "subscribedSymbols": [],
+    "failoverCount": 0,
+    "reconnecting": false
+  },
+  "events": [
+    {
+      "ts": "2026-02-24T10:12:14.183Z",
+      "type": "ws_open"
+    },
+    {
+      "ts": "2026-02-24T10:12:14.183Z",
+      "type": "subscribe",
+      "symbol": "000001"
+    },
+    {
+      "ts": "2026-02-24T10:12:14.184Z",
+      "type": "connected",
+      "source": "alltick"
+    },
+    {
+      "ts": "2026-02-24T10:12:15.080Z",
+      "type": "tick",
+      "source": "alltick",
+      "symbol": "000001"
+    },
+    {
+      "ts": "2026-02-24T10:12:15.385Z",
+      "type": "force_failover_sent"
+    },
+    {
+      "ts": "2026-02-24T10:12:15.572Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    },
+    {
+      "ts": "2026-02-24T10:12:15.812Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    },
+    {
+      "ts": "2026-02-24T10:12:16.119Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    },
+    {
+      "ts": "2026-02-24T10:12:16.355Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    },
+    {
+      "ts": "2026-02-24T10:12:16.640Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    },
+    {
+      "ts": "2026-02-24T10:12:16.874Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    },
+    {
+      "ts": "2026-02-24T10:12:17.165Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    },
+    {
+      "ts": "2026-02-24T10:12:17.301Z",
+      "type": "tick",
+      "source": "sina",
+      "symbol": "000001"
+    },
+    {
+      "ts": "2026-02-24T10:12:17.399Z",
+      "type": "status_poll",
+      "activeSource": "alltick",
+      "failoverCount": 0
+    }
+  ],
+  "assertions": {
+    "switchedWithinDeadline": true,
+    "failoverCountIncreased": false,
+    "observedSourceChange": true
+  },
+  "result": {
+    "initialSource": "alltick",
+    "switchedTo": "sina",
+    "switchedMs": 1916,
+    "beforeFailoverCount": 0,
+    "afterFailoverCount": 0
+  },
+  "pass": true
+}

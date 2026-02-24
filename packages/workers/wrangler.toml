@@ -7,8 +7,13 @@ routes = [
   { pattern = "xgvst.com/ws/*", zone_name = "xgvst.com" }
 ]
 
-# Non-sensitive runtime vars can be placed in [vars] when needed.
-# Secrets must be injected via: wrangler secret put <NAME>
+# Runtime binding contract (no plaintext secrets in repo):
+# - CORS_ALLOW_ORIGINS: non-sensitive CSV allowlist (can stay in [vars])
+# - ALLTICK_TOKEN/SINA_COOKIE/EASTMONEY_TOKEN/TENCENT_TOKEN: secrets only
+#   Inject with: wrangler secret put <NAME>
+#   Example: wrangler secret put ALLTICK_TOKEN
+[vars]
+CORS_ALLOW_ORIGINS = ""
 
 [[kv_namespaces]]
 binding = "QUOTE_KV"
