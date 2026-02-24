@@ -110,6 +110,12 @@
 							</div>
 						</div>
 					</div>
+					<div class="row-link">
+						<div class="row-between">
+							<div>protobuf decode success</div>
+							<div class="muted">{quoteStore.socketStats.protobufDecodeSuccess}</div>
+						</div>
+					</div>
 					{#each quoteStore.subscribedSymbols as symbol}
 						<div class="row-link">
 							<div class="row-between">

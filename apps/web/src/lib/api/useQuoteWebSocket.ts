@@ -1,3 +1,5 @@
+import { decodeQuotePayload } from './proto/quote';
+
 export type QuoteTick = {
 	symbol: string;
 	price: number;
@@ -22,6 +24,7 @@ export type QuoteSocketStats = {
 	lastReconnectDurationMs: number | null;
 	binaryFrames: number;
 	fallbackFrames: number;
+	protobufDecodeSuccess: number;
 };
 
 type QuoteSocketCommand =
@@ -102,103 +105,10 @@ function normalizeTick(value: unknown, transport: QuoteTick['transport']): Quote
 	};
 }
 
-function readProtoVarint(bytes: Uint8Array, start: number): { value: number; next: number } | null {
-	let value = 0;
-	let shift = 0;
-	let offset = start;
-
-	while (offset < bytes.length && shift <= 28) {
-		const byte = bytes[offset];
-		value |= (byte & 0x7f) << shift;
-		offset += 1;
-
-		if ((byte & 0x80) === 0) {
-			return { value, next: offset };
-		}
-
-		shift += 7;
-	}
-
-	return null;
-}
-
-function decodeQuoteProto(bytes: Uint8Array): QuoteTick | null {
-	let offset = 0;
-	const draft: Partial<QuoteTick> = {
-		source: 'ws-protobuf',
-		transport: 'ws-protobuf'
-	};
-
-	while (offset < bytes.length) {
-		const tag = readProtoVarint(bytes, offset);
-		if (!tag) return null;
-		offset = tag.next;
-
-		const field = tag.value >>> 3;
-		const wireType = tag.value & 0x07;
-
-		if (wireType === 2) {
-			const length = readProtoVarint(bytes, offset);
-			if (!length) return null;
-			offset = length.next;
-			const end = offset + length.value;
-			if (end > bytes.length) return null;
-			const text = textDecoder.decode(bytes.slice(offset, end));
-
-			if (field === 1) {
-				draft.symbol = text;
-			} else if (field === 4) {
-				draft.ts = text;
-			}
-
-			offset = end;
-			continue;
-		}
-
-		if (wireType === 1) {
-			const end = offset + 8;
-			if (end > bytes.length) return null;
-			const view = new DataView(bytes.buffer, bytes.byteOffset + offset, 8);
-			const value = view.getFloat64(0, true);
-
-			if (field === 2) {
-				draft.price = value;
-			} else if (field === 3) {
-				draft.changePct = value;
-			}
-
-			offset = end;
-			continue;
-		}
-
-		if (wireType === 0) {
-			const varint = readProtoVarint(bytes, offset);
-			if (!varint) return null;
-			offset = varint.next;
-			continue;
-		}
-
-		if (wireType === 5) {
-			offset += 4;
-			if (offset > bytes.length) return null;
-			continue;
-		}
-
-		return null;
-	}
-
-	if (!draft.symbol || !draft.ts) return null;
-	if (typeof draft.price !== 'number' || typeof draft.changePct !== 'number') return null;
-
-	return {
-		symbol: draft.symbol,
-		price: draft.price,
-		changePct: draft.changePct,
-		ts: draft.ts,
-		source: draft.source ?? 'ws-protobuf',
-		transport: draft.transport ?? 'ws-protobuf'
-	};
-}
+type DecodeBinaryResult = {
+	tick: QuoteTick;
+	decodedBy: 'protobuf' | 'legacy-binary';
+};
 
 function decodeCustomBinaryFrame(bytes: Uint8Array): QuoteTick | null {
 	if (bytes.length < 4) return null;
@@ -234,11 +144,32 @@ function decodeCustomBinaryFrame(bytes: Uint8Array): QuoteTick | null {
 	return normalizeTick({ symbol, price, changePct, ts, source }, 'ws-binary');
 }
 
-async function decodeBinaryTick(data: ArrayBuffer | Blob): Promise<QuoteTick | null> {
+async function decodeBinaryTick(data: ArrayBuffer | Blob): Promise<DecodeBinaryResult | null> {
 	const buffer = data instanceof Blob ? await data.arrayBuffer() : data;
 	const bytes = new Uint8Array(buffer);
 
-	return decodeCustomBinaryFrame(bytes) ?? decodeQuoteProto(bytes);
+	const protoPayload = decodeQuotePayload(bytes);
+	if (protoPayload) {
+		return {
+			tick: {
+				symbol: protoPayload.symbol,
+				price: protoPayload.price,
+				changePct: protoPayload.changePct,
+				ts: protoPayload.ts,
+				source: 'ws-protobuf',
+				transport: 'ws-protobuf'
+			},
+			decodedBy: 'protobuf'
+		};
+	}
+
+	const legacy = decodeCustomBinaryFrame(bytes);
+	if (!legacy) return null;
+
+	return {
+		tick: legacy,
+		decodedBy: 'legacy-binary'
+	};
 }
 
 function normalizeSymbols(symbols: string[]): string[] {
@@ -282,7 +213,8 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		reconnectCount: 0,
 		lastReconnectDurationMs: null,
 		binaryFrames: 0,
-		fallbackFrames: 0
+		fallbackFrames: 0,
+		protobufDecodeSuccess: 0
 	};
 
 	const emitStats = () => {
@@ -291,7 +223,8 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			reconnectCount: stats.reconnectCount,
 			lastReconnectDurationMs: stats.lastReconnectDurationMs,
 			binaryFrames: stats.binaryFrames,
-			fallbackFrames: stats.fallbackFrames
+			fallbackFrames: stats.fallbackFrames,
+			protobufDecodeSuccess: stats.protobufDecodeSuccess
 		};
 		for (const handler of statsHandlers) {
 			handler(snapshot);
@@ -451,9 +384,13 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 
 		if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
 			stats.binaryFrames += 1;
+			const decoded = await decodeBinaryTick(event.data);
+			if (decoded?.decodedBy === 'protobuf') {
+				stats.protobufDecodeSuccess += 1;
+				console.info(`[ws] protobuf decode success: ${stats.protobufDecodeSuccess}`);
+			}
 			emitStats();
-			const tick = await decodeBinaryTick(event.data);
-			if (tick) emitTick(tick);
+			if (decoded) emitTick(decoded.tick);
 		}
 	};
 
