@@ -1,0 +1,155 @@
+[
+  {
+    "url": "wss://xgvst.com/ws/quote",
+    "attempts": 15,
+    "okCount": 0,
+    "p50_ms": null,
+    "p95_ms": null,
+    "samples": [
+      {
+        "ok": false,
+        "ms": 311,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 167,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 149,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 198,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 179,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 198,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 266,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 138,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 151,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 269,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 156,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 216,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 155,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 145,
+        "error": "error"
+      },
+      {
+        "ok": false,
+        "ms": 223,
+        "error": "error"
+      }
+    ]
+  },
+  {
+    "url": "wss://xgvst-workers.viehh642.workers.dev/ws/quote",
+    "attempts": 15,
+    "okCount": 15,
+    "p50_ms": 168,
+    "p95_ms": 234,
+    "samples": [
+      {
+        "ok": true,
+        "ms": 154
+      },
+      {
+        "ok": true,
+        "ms": 201
+      },
+      {
+        "ok": true,
+        "ms": 248
+      },
+      {
+        "ok": true,
+        "ms": 143
+      },
+      {
+        "ok": true,
+        "ms": 144
+      },
+      {
+        "ok": true,
+        "ms": 159
+      },
+      {
+        "ok": true,
+        "ms": 150
+      },
+      {
+        "ok": true,
+        "ms": 137
+      },
+      {
+        "ok": true,
+        "ms": 234
+      },
+      {
+        "ok": true,
+        "ms": 147
+      },
+      {
+        "ok": true,
+        "ms": 186
+      },
+      {
+        "ok": true,
+        "ms": 194
+      },
+      {
+        "ok": true,
+        "ms": 177
+      },
+      {
+        "ok": true,
+        "ms": 168
+      },
+      {
+        "ok": true,
+        "ms": 179
+      }
+    ]
+  }
+]
