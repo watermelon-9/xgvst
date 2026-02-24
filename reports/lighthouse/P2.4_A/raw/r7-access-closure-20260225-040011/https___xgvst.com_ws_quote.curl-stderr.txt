@@ -1,0 +1,64 @@
+* WARNING: failed to open cookie file "reports/lighthouse/P2.4_A/raw/r7-access-closure-20260225-040011/https___xgvst.com_ws_quote.cookies.txt"
+* Host xgvst.com:443 was resolved.
+* IPv6: (none)
+* IPv4: 198.18.0.20
+*   Trying 198.18.0.20:443...
+* Connected to xgvst.com (198.18.0.20) port 443
+* ALPN: curl offers h2,http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+} [314 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [19 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [2032 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [80 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [36 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [36 bytes data]
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=xgvst.com
+*  start date: Feb 23 12:46:11 2026 GMT
+*  expire date: May 24 12:46:10 2026 GMT
+*  subjectAltName: host "xgvst.com" matched cert's "xgvst.com"
+*  issuer: C=US; O=Let's Encrypt; CN=E7
+*  SSL certificate verify ok.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://xgvst.com/ws/quote
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: xgvst.com]
+* [HTTP/2] [1] [:path: /ws/quote]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+> GET /ws/quote HTTP/2
+> Host: xgvst.com
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/2 426 
+< date: Tue, 24 Feb 2026 20:00:12 GMT
+< content-type: application/json
+< content-length: 49
+< speculation-rules: "/cdn-cgi/speculation"
+< report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=aWurgMn5vfLecjYEPv%2FePtZtdDQMmoi2ZIDbUloHRdxVmvbuv%2FfMfI7Gr7kFU%2BTAYA5yT%2F5jllfcHj5nXKS8oQPw6RnGjJLGzA%3D%3D"}]}
+< nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+< access-control-allow-origin: *
+< vary: Origin
+< access-control-allow-headers: Content-Type, Authorization, Upgrade, X-Debug-Token
+< access-control-allow-methods: GET,POST,OPTIONS
+< access-control-max-age: 86400
+< strict-transport-security: max-age=2592000
+< server: cloudflare
+< cf-ray: 9d318c40edac03e7-HKG
+< 
+{ [49 bytes data]
+* Connection #0 to host xgvst.com left intact

@@ -1,0 +1,11 @@
+Browser check via OpenClaw browser (profile=clawd) on 2026-02-25:
+
+1) URL: https://xgvst-workers.viehh642.workers.dev/api/v2/self-selects
+Snapshot text:
+{"ok":false,"error":"unauthorized: missing or invalid access jwt"}
+
+2) URL: https://xgvst.com/api/v2/self-selects
+Snapshot key points:
+- 页面标题显示 xgvst.com
+- 页面内容为 404 / Not Found
+- 无 Cloudflare Access portal 登录控件（无 OTP/Google/Microsoft/GitHub 按钮）

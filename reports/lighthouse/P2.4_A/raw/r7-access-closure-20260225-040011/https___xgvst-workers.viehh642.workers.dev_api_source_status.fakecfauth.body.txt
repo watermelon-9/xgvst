@@ -1,0 +1,1 @@
+{"ok":true,"clients":0,"availableSources":["alltick","sina","eastmoney","tencent"],"wsFrameStats":{"sentBinaryFrames":0,"sentProtobufFrames":0,"sentFallbackFrames":0},"activeSource":"alltick","priorityOrder":["alltick","sina","eastmoney","tencent"],"subscribedSymbols":[],"failoverCount":0,"reconnecting":false,"debugForcedSource":null}

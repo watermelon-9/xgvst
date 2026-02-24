@@ -1,0 +1,62 @@
+* WARNING: failed to open cookie file "reports/lighthouse/P2.4_A/raw/r7-access-closure-20260225-040011/https___xgvst.com_api_source_status.cookies.txt"
+* Host xgvst.com:443 was resolved.
+* IPv6: (none)
+* IPv4: 198.18.0.20
+*   Trying 198.18.0.20:443...
+* Connected to xgvst.com (198.18.0.20) port 443
+* ALPN: curl offers h2,http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+} [314 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [19 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [2032 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [78 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [36 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [36 bytes data]
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=xgvst.com
+*  start date: Feb 23 12:46:11 2026 GMT
+*  expire date: May 24 12:46:10 2026 GMT
+*  subjectAltName: host "xgvst.com" matched cert's "xgvst.com"
+*  issuer: C=US; O=Let's Encrypt; CN=E7
+*  SSL certificate verify ok.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://xgvst.com/api/source/status
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: xgvst.com]
+* [HTTP/2] [1] [:path: /api/source/status]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+> GET /api/source/status HTTP/2
+> Host: xgvst.com
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/2 404 
+< date: Tue, 24 Feb 2026 20:00:12 GMT
+< content-type: text/html
+< speculation-rules: "/cdn-cgi/speculation"
+< link: <../../_app/immutable/assets/0.C2aOW3tr.css>; rel="preload"; as="style"; nopush, <../../_app/immutable/entry/start.B6nw9d_7.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/PpnTA9Eb.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/CDYnxllB.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/3mjn9mPi.js>; rel="modulepreload"; nopush, <../../_app/immutable/entry/app.D2mKb7hV.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/Dsw913Td.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/CXpZk8VE.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/CRAx2iKc.js>; rel="modulepreload"; nopush, <../../_app/immutable/nodes/0.BrGfGhkB.js>; rel="modulepreload"; nopush, <../../_app/immutable/nodes/1.CuoAfxL6.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/D6dFzwLY.js>; rel="modulepreload"; nopush, <../../_app/immutable/chunks/BIngTWEF.js>; rel="modulepreload"; nopush
+< x-sveltekit-page: true
+< report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=rs8UKAFBktqpBPjeURQCsmMmUi1jc4tA2KRasG%2B49W6La8YuRuKFopqkzRKL5%2F%2Bh0s2X%2FzG6DQnoXQzjArU1MqH%2BjIEKaxSA5A%3D%3D"}]}
+< nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+< server: cloudflare
+< strict-transport-security: max-age=2592000
+< cf-cache-status: DYNAMIC
+< cf-ray: 9d318c3d482c858b-HKG
+< alt-svc: h3=":443"; ma=86400
+< 
+{ [1360 bytes data]
+* Connection #0 to host xgvst.com left intact

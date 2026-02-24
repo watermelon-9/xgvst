@@ -1,0 +1,63 @@
+* WARNING: failed to open cookie file "reports/lighthouse/P2.4_A/raw/r7-access-closure-20260225-040011/https___xgvst-workers.viehh642.workers.dev_api_v2_self-selects.cookies.txt"
+* Host xgvst-workers.viehh642.workers.dev:443 was resolved.
+* IPv6: (none)
+* IPv4: 198.18.0.65
+*   Trying 198.18.0.65:443...
+* Connected to xgvst-workers.viehh642.workers.dev (198.18.0.65) port 443
+* ALPN: curl offers h2,http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+} [339 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [19 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [2075 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [80 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [36 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [36 bytes data]
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=viehh642.workers.dev
+*  start date: Feb 23 12:07:43 2026 GMT
+*  expire date: May 24 12:07:42 2026 GMT
+*  subjectAltName: host "xgvst-workers.viehh642.workers.dev" matched cert's "*.viehh642.workers.dev"
+*  issuer: C=US; O=Let's Encrypt; CN=E7
+*  SSL certificate verify ok.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://xgvst-workers.viehh642.workers.dev/api/v2/self-selects
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: xgvst-workers.viehh642.workers.dev]
+* [HTTP/2] [1] [:path: /api/v2/self-selects]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+> GET /api/v2/self-selects HTTP/2
+> Host: xgvst-workers.viehh642.workers.dev
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/2 401 
+< date: Tue, 24 Feb 2026 20:00:13 GMT
+< content-type: application/json; charset=utf-8
+< content-length: 66
+< access-control-allow-origin: *
+< vary: Origin
+< access-control-allow-headers: Content-Type, Authorization, Upgrade, X-Debug-Token
+< access-control-allow-methods: GET,POST,OPTIONS
+< access-control-max-age: 86400
+< report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=uNKDG1a0IRuF9E%2Bf%2FG2%2Fr4yXKMZt6rhNpPTK%2FQQJ8KJv4r%2FiTqq7LqWgOAR9Il85EXarWhylriQT%2F4Oj%2BGMLhy7qK1ZnO5PspnnrnpRm2oDrw9UH%2By83%2By8CS8gMLsLc"}]}
+< nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+< server: cloudflare
+< cf-ray: 9d318c440d4edda0-HKG
+< alt-svc: h3=":443"; ma=86400
+< 
+{ [66 bytes data]
+* Connection #0 to host xgvst-workers.viehh642.workers.dev left intact
