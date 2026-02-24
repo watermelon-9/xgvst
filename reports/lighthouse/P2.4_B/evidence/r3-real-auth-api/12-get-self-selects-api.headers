@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Content-Length: 600
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Vary: Origin
+access-control-allow-headers: Content-Type, Authorization, Upgrade, X-Debug-Token
+access-control-allow-methods: GET,POST,OPTIONS
+access-control-max-age: 86400
+

@@ -1,0 +1,12 @@
+[snapshot-ts] 2026-02-25T03:19:25+08:00
+[source] browser.snapshot (aria refs)
+
+关键快照字段（market 页面）：
+1) 当前状态: authenticated
+2) 当前用户: demo-user-r3-realapi（query）
+3) 最近自动拉取: 2026-02-24T19:19:25.815Z （remote @ http://127.0.0.1:8791/api/v2/self-selects）
+4) 合并结果（新增 symbols）: 002594, 688001
+5) 自选列表新增项: 自选 002594 / 自选 688001
+6) 当前订阅 symbols: 000001, 600519, 300750, 002594, 688001
+
+说明：该快照已体现 useAuth 从真实 auth API 拉取并完成前端合并，不再依赖仅 localStorage 模拟链路。

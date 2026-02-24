@@ -79,17 +79,23 @@ function localSelfSelectStorageKey(userId: string): string {
 	return `${AUTH_SELF_SELECT_STORAGE_PREFIX}.${userId}`;
 }
 
+function withUserId(endpoint: string, userId: string): string {
+	const url = new URL(endpoint);
+	url.searchParams.set('userId', userId);
+	return url.toString();
+}
+
 async function syncSelfSelectToServer(userId: string, symbols: string[]): Promise<SyncResult> {
 	const baseUrl = resolveApiBaseUrl();
-	const endpoints = [`${baseUrl}/v2/self-selects`, `${baseUrl}/api/self-selects`];
+	const endpoints = [`${baseUrl}/api/v2/self-selects`, `${baseUrl}/api/self-selects`];
 
 	for (const endpoint of endpoints) {
-		const response = await fetch(endpoint, {
+		const requestUrl = withUserId(endpoint, userId);
+		const response = await fetch(requestUrl, {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				'x-user-id': userId
+				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ symbols })
 		});
@@ -113,20 +119,20 @@ async function syncSelfSelectToServer(userId: string, symbols: string[]): Promis
 	return {
 		skipped: false,
 		ok: false,
-		error: 'sync failed: no available endpoint (/v2/self-selects, /api/self-selects)'
+		error: 'sync failed: no available endpoint (/api/v2/self-selects, /api/self-selects)'
 	};
 }
 
 async function pullSelfSelectFromServer(userId: string): Promise<PullResult> {
 	const baseUrl = resolveApiBaseUrl();
-	const endpoints = [`${baseUrl}/v2/self-selects`, `${baseUrl}/api/self-selects`];
+	const endpoints = [`${baseUrl}/api/v2/self-selects`, `${baseUrl}/api/self-selects`];
 
 	for (const endpoint of endpoints) {
-		const response = await fetch(endpoint, {
+		const requestUrl = withUserId(endpoint, userId);
+		const response = await fetch(requestUrl, {
 			method: 'GET',
 			headers: {
-				Accept: 'application/json',
-				'x-user-id': userId
+				Accept: 'application/json'
 			}
 		});
 
@@ -152,7 +158,7 @@ async function pullSelfSelectFromServer(userId: string): Promise<PullResult> {
 	return {
 		skipped: false,
 		ok: false,
-		error: 'pull failed: no available endpoint (/v2/self-selects, /api/self-selects)'
+		error: 'pull failed: no available endpoint (/api/v2/self-selects, /api/self-selects)'
 	};
 }
 
