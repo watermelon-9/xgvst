@@ -486,7 +486,11 @@ export class QuoteDurableObject implements DurableObject {
 
       this.refreshClientDictionary(client);
 
-      const snapshotPlan = this.buildSnapshotPlan(client, nextSymbols, this.snapshotImmediateSymbols);
+      const snapshotPlan = this.buildSnapshotPlan(
+        client,
+        nextSymbols,
+        this.computeResyncImmediateLimit(nextSymbols.length)
+      );
 
       ws.send(
         JSON.stringify({
@@ -544,6 +548,13 @@ export class QuoteDurableObject implements DurableObject {
     return [...unique];
   }
 
+  private computeResyncImmediateLimit(symbolCount: number): number {
+    if (symbolCount <= 0) return this.snapshotImmediateSymbols;
+
+    const boostedBySize = Math.ceil(symbolCount * 0.25);
+    return Math.min(24, Math.max(this.snapshotImmediateSymbols, boostedBySize, 12));
+  }
+
   private isSocketOpen(ws: WebSocket): boolean {
     return ws.readyState === 1;
   }
@@ -595,7 +606,7 @@ export class QuoteDurableObject implements DurableObject {
     const missingSymbols: string[] = [];
 
     for (const symbol of targetSymbols) {
-      const snapshot = this.latestTickBySymbol.get(symbol);
+      const snapshot = this.pendingBySymbol.get(symbol) ?? this.latestTickBySymbol.get(symbol);
       if (snapshot) {
         memoryTicks.push(snapshot);
       } else {
@@ -734,25 +745,40 @@ export class QuoteDurableObject implements DurableObject {
     if (!ticks.length) return;
     if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
-    const normalizedTicks = ticks.slice().sort((a, b) => a.symbol.localeCompare(b.symbol));
+    // 恢复链路避免额外排序，尽快把首帧发出
+    const orderedTicks = ticks;
 
     try {
       let batchIndex = 0;
       let index = 0;
 
       if (client.transport === 'bundle') {
-        while (index < normalizedTicks.length) {
+        const firstChunkSize = Math.min(orderedTicks.length, Math.max(8, this.snapshotImmediateSymbols));
+        if (firstChunkSize > 0) {
+          const firstChunk = orderedTicks.slice(0, firstChunkSize);
+          const frame = await this.encodeBundleFrame(firstChunk, client, client.compression, true);
+          if (frame.byteLength && this.isSocketOpen(ws) && this.clients.get(ws) === client) {
+            ws.send(frame);
+            this.stats.sentBinaryFrames += 1;
+            this.stats.sentBundleFrames += 1;
+            if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
+            this.stats.sentBytes += frame.byteLength;
+          }
+          index = firstChunkSize;
+        }
+
+        while (index < orderedTicks.length) {
           if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
           await this.waitForSnapshotBackpressure(ws);
 
           const bufferedAmount = this.getSocketBufferedAmount(ws);
           const chunkSize = this.computeSnapshotDynamicBatchSize(
             bufferedAmount,
-            normalizedTicks.length - index,
+            orderedTicks.length - index,
             batchIndex,
             client.transport
           );
-          const chunk = normalizedTicks.slice(index, index + chunkSize);
+          const chunk = orderedTicks.slice(index, index + chunkSize);
           index += chunk.length;
 
           const frame = await this.encodeBundleFrame(chunk, client, client.compression, true);
@@ -765,7 +791,7 @@ export class QuoteDurableObject implements DurableObject {
           if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
           this.stats.sentBytes += frame.byteLength;
 
-          if (index >= normalizedTicks.length) continue;
+          if (index >= orderedTicks.length) continue;
 
           const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
           if (delayMs <= 0) {
@@ -778,18 +804,18 @@ export class QuoteDurableObject implements DurableObject {
         return;
       }
 
-      while (index < normalizedTicks.length) {
+      while (index < orderedTicks.length) {
         if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
         await this.waitForSnapshotBackpressure(ws);
 
         const bufferedAmount = this.getSocketBufferedAmount(ws);
         const chunkSize = this.computeSnapshotDynamicBatchSize(
           bufferedAmount,
-          normalizedTicks.length - index,
+          orderedTicks.length - index,
           batchIndex,
           client.transport
         );
-        const chunk = normalizedTicks.slice(index, index + chunkSize);
+        const chunk = orderedTicks.slice(index, index + chunkSize);
         index += chunk.length;
 
         for (const tick of chunk) {
@@ -797,7 +823,7 @@ export class QuoteDurableObject implements DurableObject {
           this.sendLegacyTick(ws, client, tick);
         }
 
-        if (index >= normalizedTicks.length) continue;
+        if (index >= orderedTicks.length) continue;
 
         const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
         if (delayMs <= 0) {
