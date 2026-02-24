@@ -1,3 +1,6 @@
+@unocss preflights;
+@unocss default;
+
 :root {
 	font-family: Inter, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, -apple-system,
 		'Segoe UI', sans-serif;
@@ -6,6 +9,40 @@
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+
+	--xg-color-up: #ef4444;
+	--xg-color-down: #22c55e;
+	--xg-color-bg-purple: #4f46e5;
+	--xg-color-bg: #f4f6fb;
+	--xg-color-text: #111827;
+	--xg-color-subtle: rgb(17 24 39 / 72%);
+	--xg-color-surface: rgb(255 255 255 / 90%);
+	--xg-color-surface-hover: #fff;
+	--xg-color-border: rgb(79 70 229 / 16%);
+	--xg-color-header: #0f0b1f;
+	--xg-brand-violet-a: #a855f7;
+	--xg-brand-violet-b: #c084fc;
+	--xg-brand-violet-c: #e9d5ff;
+	--xg-brand-cyan: #22d3ee;
+	--xg-brand-lavender: #c4b5fd;
+	--xg-brand-chip: #f3e8ff;
+	--xg-brand-white: #fff;
+	--xg-glass-bg: rgb(255 255 255 / 12%);
+	--xg-glass-border: rgb(255 255 255 / 20%);
+	--xg-glass-blur: 20px;
+	--xg-glass-shadow: 0 10px 40px rgb(0 0 0 / 20%);
+	--xg-ui-header-border: rgb(147 51 234 / 20%);
+	--xg-ui-emblem-shadow: 0 0 20px rgb(168 85 247 / 35%);
+	--xg-ui-chip-border: rgb(255 255 255 / 14%);
+}
+
+:root[data-theme='dark'] {
+	--xg-color-bg: #111827;
+	--xg-color-text: #f9fafb;
+	--xg-color-subtle: rgb(249 250 251 / 72%);
+	--xg-color-surface: rgb(255 255 255 / 10%);
+	--xg-color-surface-hover: rgb(255 255 255 / 16%);
+	--xg-color-border: rgb(255 255 255 / 12%);
 }
 
 * {
@@ -22,6 +59,31 @@ body {
 a {
 	color: inherit;
 	text-decoration: none;
+}
+
+.glass,
+.glass-card {
+	background: var(--xg-glass-bg);
+	border: 1px solid var(--xg-glass-border);
+	backdrop-filter: blur(var(--xg-glass-blur));
+	-webkit-backdrop-filter: blur(var(--xg-glass-blur));
+	box-shadow: var(--xg-glass-shadow);
+}
+
+.glass-card {
+	border-radius: 14px;
+}
+
+.neon-text {
+	background: linear-gradient(
+		90deg,
+		var(--xg-brand-violet-a),
+		var(--xg-brand-violet-b),
+		var(--xg-brand-violet-c)
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
 }
 
 .app-header {
@@ -301,49 +363,84 @@ a {
 	color: var(--xg-color-text);
 }
 
-.hero {
-	padding: 1.25rem;
+.market-toolbar {
+	padding: 0.75rem 0.9rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.8rem;
+	margin-bottom: 0.75rem;
 }
 
-.hero-kicker {
-	margin: 0;
-	font-size: 0.78rem;
-	letter-spacing: 0.08em;
+.toolbar-left {
+	display: grid;
+	gap: 0.2rem;
+}
+
+.toolbar-title {
+	font-size: 0.95rem;
+	font-weight: 700;
+}
+
+.toolbar-sub {
+	font-size: 0.76rem;
 	color: var(--xg-color-subtle);
+}
+
+.toolbar-right {
+	display: flex;
+	gap: 0.4rem;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+
+.toolbar-chip {
+	padding: 0.22rem 0.45rem;
+	border-radius: 0.35rem;
+	border: 1px solid var(--xg-color-border);
+	font-size: 0.72rem;
+	background: var(--xg-color-surface);
 }
 
 .market-grid {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
-	margin-top: 1rem;
+	grid-template-columns: minmax(248px, 1.15fr) minmax(390px, 1.7fr) minmax(300px, 1.25fr);
+	gap: 0.75rem;
+	margin-top: 0.3rem;
 }
 
 .pane-left,
 .pane-center,
 .pane-right {
-	padding: 0.95rem;
+	padding: 0.7rem;
 }
 
 .pane-title {
-	margin: 0 0 0.7rem;
-	font-size: 0.9rem;
+	margin: 0 0 0.6rem;
+	font-size: 0.84rem;
+	font-weight: 700;
 	color: var(--xg-color-subtle);
+	letter-spacing: 0.02em;
 }
 
 .pane-content {
 	display: grid;
-	gap: 1rem;
+	gap: 0.7rem;
+}
+
+.pane-content.compact {
+	gap: 0.62rem;
 }
 
 .section-title {
 	margin: 0;
-	font-size: 0.96rem;
+	font-size: 0.83rem;
+	font-weight: 700;
 }
 
 .stack-list {
 	display: grid;
-	gap: 0.5rem;
+	gap: 0.38rem;
 }
 
 .market-row,
@@ -351,14 +448,15 @@ a {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	gap: 0.75rem;
+	gap: 0.65rem;
 	width: 100%;
-	padding: 0.6rem 0.7rem;
+	padding: 0.46rem 0.58rem;
 	background: var(--xg-color-surface);
 	color: var(--xg-color-text);
 	border: 1px solid var(--xg-color-border);
-	border-radius: 0.6rem;
+	border-radius: 0.46rem;
 	cursor: pointer;
+	font-size: 0.82rem;
 }
 
 .market-row.active,
@@ -370,37 +468,56 @@ a {
 
 .quote-table {
 	display: grid;
-	gap: 0.5rem;
+	gap: 0.35rem;
 }
 
 .quote-head {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 0.75rem;
-	padding: 0 0.1rem;
-	font-size: 0.76rem;
+	grid-template-columns: 1.45fr 0.8fr 0.75fr;
+	gap: 0.55rem;
+	padding: 0 0.08rem;
+	font-size: 0.74rem;
 	color: var(--xg-color-subtle);
 }
 
 .quote-row {
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-columns: 1.45fr 0.8fr 0.75fr;
 	display: grid;
 	text-align: left;
 }
 
+.kline-toolbar {
+	display: flex;
+	gap: 0.42rem;
+	flex-wrap: wrap;
+}
+
+.kline-btn {
+	border: 1px solid var(--xg-color-border);
+	border-radius: 0.35rem;
+	background: var(--xg-color-surface);
+	color: var(--xg-color-text);
+	font-size: 0.74rem;
+	padding: 0.2rem 0.45rem;
+}
+
+.kline-btn.active {
+	background: var(--xg-color-surface-hover);
+}
+
 .kline-shell {
-	padding: 0.8rem;
+	padding: 0.65rem;
 }
 
 .kline-symbol {
-	font-size: 1rem;
+	font-size: 0.95rem;
 	font-weight: 800;
 }
 
 .kline-grid {
-	margin-top: 0.8rem;
-	height: 220px;
-	border-radius: 0.8rem;
+	margin-top: 0.55rem;
+	height: 252px;
+	border-radius: 0.62rem;
 	border: 1px solid var(--xg-color-border);
 	background:
 		linear-gradient(to right, var(--xg-color-border) 1px, transparent 1px) 0 0 / 12.5% 100%,

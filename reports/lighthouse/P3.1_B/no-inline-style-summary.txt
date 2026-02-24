@@ -1,1 +1,1 @@
-PASS: no inline style in routes/components
+OK: no inline style in routes/components/app.css
