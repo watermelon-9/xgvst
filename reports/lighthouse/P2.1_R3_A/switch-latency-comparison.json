@@ -1,0 +1,59 @@
+{
+  "before": {
+    "metric": "source switch latency < 200ms",
+    "sampleRequirement": ">=10",
+    "sampleCount": 10,
+    "p50Ms": 1920,
+    "p95Ms": 2025,
+    "passRatePct": 0,
+    "targetMs": 200,
+    "p50GapMs": 1720,
+    "p95GapMs": 1825,
+    "passRateGapPct": 100,
+    "pass": false
+  },
+  "after": {
+    "metric": "source switch latency < 200ms",
+    "sampleRequirement": ">=10",
+    "sampleCount": 10,
+    "p50Ms": 24,
+    "p95Ms": 108,
+    "passRatePct": 100,
+    "targetMs": 200,
+    "p50GapMs": -176,
+    "p95GapMs": -92,
+    "passRateGapPct": 0,
+    "pass": true
+  },
+  "delta": {
+    "p50Ms": -1896,
+    "p95Ms": -1917,
+    "passRatePct": 100
+  },
+  "samples": {
+    "before": [
+      1919,
+      1930,
+      1920,
+      1919,
+      1919,
+      1986,
+      1920,
+      1919,
+      1922,
+      2025
+    ],
+    "after": [
+      24,
+      24,
+      24,
+      24,
+      91,
+      22,
+      108,
+      24,
+      89,
+      25
+    ]
+  }
+}

@@ -1,0 +1,886 @@
+{
+  "generatedAt": "2026-02-24T10:42:58.924Z",
+  "startedAt": "2026-02-24T10:42:29.136Z",
+  "config": {
+    "WS_URL": "wss://xgvst-workers.viehh642.workers.dev/ws/quote",
+    "STATUS_URL": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+    "SYMBOLS": [
+      "000001"
+    ],
+    "RECONNECT_SAMPLES": 20,
+    "SWITCH_SAMPLES": 10,
+    "CONNECT_TIMEOUT_MS": 8000,
+    "SWITCH_TIMEOUT_MS": 8000,
+    "SWITCH_POLL_MS": 50,
+    "RECONNECT_TARGET_MS": 3000,
+    "SWITCH_TARGET_MS": 200
+  },
+  "summary": {
+    "dod4": {
+      "metric": "websocket reconnect open latency <= 3000ms",
+      "sampleRequirement": ">=20",
+      "sampleCount": 20,
+      "p50Ms": 128,
+      "p95Ms": 186,
+      "passRatePct": 100,
+      "pass": true
+    },
+    "dod5Gap": {
+      "metric": "source switch latency < 200ms",
+      "sampleRequirement": ">=10",
+      "sampleCount": 10,
+      "p50Ms": 1920,
+      "p95Ms": 2025,
+      "passRatePct": 0,
+      "targetMs": 200,
+      "p50GapMs": 1720,
+      "p95GapMs": 1825,
+      "passRateGapPct": 100,
+      "pass": false
+    }
+  },
+  "reconnectSamples": [
+    {
+      "index": 1,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 141,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:29.137Z",
+          "type": "reconnect_sample_start",
+          "index": 1
+        },
+        {
+          "ts": "2026-02-24T10:42:29.278Z",
+          "type": "ws_open",
+          "openLatencyMs": 141
+        },
+        {
+          "ts": "2026-02-24T10:42:29.323Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:29.323Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 128,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:29.525Z",
+          "type": "reconnect_sample_start",
+          "index": 2
+        },
+        {
+          "ts": "2026-02-24T10:42:29.653Z",
+          "type": "ws_open",
+          "openLatencyMs": 128
+        },
+        {
+          "ts": "2026-02-24T10:42:29.694Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:29.694Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 102,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:29.895Z",
+          "type": "reconnect_sample_start",
+          "index": 3
+        },
+        {
+          "ts": "2026-02-24T10:42:29.997Z",
+          "type": "ws_open",
+          "openLatencyMs": 102
+        },
+        {
+          "ts": "2026-02-24T10:42:30.124Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:30.124Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 101,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:30.327Z",
+          "type": "reconnect_sample_start",
+          "index": 4
+        },
+        {
+          "ts": "2026-02-24T10:42:30.428Z",
+          "type": "ws_open",
+          "openLatencyMs": 101
+        },
+        {
+          "ts": "2026-02-24T10:42:30.469Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:30.469Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 130,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:30.671Z",
+          "type": "reconnect_sample_start",
+          "index": 5
+        },
+        {
+          "ts": "2026-02-24T10:42:30.801Z",
+          "type": "ws_open",
+          "openLatencyMs": 130
+        },
+        {
+          "ts": "2026-02-24T10:42:30.845Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:30.845Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 194,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:31.047Z",
+          "type": "reconnect_sample_start",
+          "index": 6
+        },
+        {
+          "ts": "2026-02-24T10:42:31.241Z",
+          "type": "ws_open",
+          "openLatencyMs": 194
+        },
+        {
+          "ts": "2026-02-24T10:42:31.283Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:31.283Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 186,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:31.486Z",
+          "type": "reconnect_sample_start",
+          "index": 7
+        },
+        {
+          "ts": "2026-02-24T10:42:31.672Z",
+          "type": "ws_open",
+          "openLatencyMs": 186
+        },
+        {
+          "ts": "2026-02-24T10:42:31.805Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:31.805Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 182,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:32.008Z",
+          "type": "reconnect_sample_start",
+          "index": 8
+        },
+        {
+          "ts": "2026-02-24T10:42:32.190Z",
+          "type": "ws_open",
+          "openLatencyMs": 182
+        },
+        {
+          "ts": "2026-02-24T10:42:32.238Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:32.238Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 114,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:32.440Z",
+          "type": "reconnect_sample_start",
+          "index": 9
+        },
+        {
+          "ts": "2026-02-24T10:42:32.554Z",
+          "type": "ws_open",
+          "openLatencyMs": 114
+        },
+        {
+          "ts": "2026-02-24T10:42:32.603Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:32.603Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 132,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:32.805Z",
+          "type": "reconnect_sample_start",
+          "index": 10
+        },
+        {
+          "ts": "2026-02-24T10:42:32.937Z",
+          "type": "ws_open",
+          "openLatencyMs": 132
+        },
+        {
+          "ts": "2026-02-24T10:42:32.988Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:32.988Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 136,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:33.191Z",
+          "type": "reconnect_sample_start",
+          "index": 11
+        },
+        {
+          "ts": "2026-02-24T10:42:33.327Z",
+          "type": "ws_open",
+          "openLatencyMs": 136
+        },
+        {
+          "ts": "2026-02-24T10:42:33.370Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:33.370Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 93,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:33.572Z",
+          "type": "reconnect_sample_start",
+          "index": 12
+        },
+        {
+          "ts": "2026-02-24T10:42:33.665Z",
+          "type": "ws_open",
+          "openLatencyMs": 93
+        },
+        {
+          "ts": "2026-02-24T10:42:33.782Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:33.783Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 90,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:33.985Z",
+          "type": "reconnect_sample_start",
+          "index": 13
+        },
+        {
+          "ts": "2026-02-24T10:42:34.075Z",
+          "type": "ws_open",
+          "openLatencyMs": 90
+        },
+        {
+          "ts": "2026-02-24T10:42:34.108Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:34.108Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 130,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:34.309Z",
+          "type": "reconnect_sample_start",
+          "index": 14
+        },
+        {
+          "ts": "2026-02-24T10:42:34.439Z",
+          "type": "ws_open",
+          "openLatencyMs": 130
+        },
+        {
+          "ts": "2026-02-24T10:42:34.492Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:34.492Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 184,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:34.694Z",
+          "type": "reconnect_sample_start",
+          "index": 15
+        },
+        {
+          "ts": "2026-02-24T10:42:34.878Z",
+          "type": "ws_open",
+          "openLatencyMs": 184
+        },
+        {
+          "ts": "2026-02-24T10:42:34.923Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:34.923Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 104,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:35.125Z",
+          "type": "reconnect_sample_start",
+          "index": 16
+        },
+        {
+          "ts": "2026-02-24T10:42:35.229Z",
+          "type": "ws_open",
+          "openLatencyMs": 104
+        },
+        {
+          "ts": "2026-02-24T10:42:35.359Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:35.359Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 105,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:35.562Z",
+          "type": "reconnect_sample_start",
+          "index": 17
+        },
+        {
+          "ts": "2026-02-24T10:42:35.667Z",
+          "type": "ws_open",
+          "openLatencyMs": 105
+        },
+        {
+          "ts": "2026-02-24T10:42:35.703Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:35.703Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 117,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:35.904Z",
+          "type": "reconnect_sample_start",
+          "index": 18
+        },
+        {
+          "ts": "2026-02-24T10:42:36.021Z",
+          "type": "ws_open",
+          "openLatencyMs": 117
+        },
+        {
+          "ts": "2026-02-24T10:42:36.074Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:36.074Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 177,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:36.275Z",
+          "type": "reconnect_sample_start",
+          "index": 19
+        },
+        {
+          "ts": "2026-02-24T10:42:36.452Z",
+          "type": "ws_open",
+          "openLatencyMs": 177
+        },
+        {
+          "ts": "2026-02-24T10:42:36.488Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:36.488Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 93,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:36.690Z",
+          "type": "reconnect_sample_start",
+          "index": 20
+        },
+        {
+          "ts": "2026-02-24T10:42:36.783Z",
+          "type": "ws_open",
+          "openLatencyMs": 93
+        },
+        {
+          "ts": "2026-02-24T10:42:36.906Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:42:36.906Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    }
+  ],
+  "switchSamples": [
+    {
+      "index": 1,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "eastmoney",
+      "toSource": "tencent",
+      "switchLatencyMs": 1919,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:37.226Z",
+          "type": "switch_sample_start",
+          "index": 1,
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:42:37.226Z",
+          "type": "force_failover_sent",
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:42:39.145Z",
+          "type": "tick_source",
+          "source": "tencent"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "tencent",
+      "toSource": "alltick",
+      "switchLatencyMs": 1930,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:39.347Z",
+          "type": "switch_sample_start",
+          "index": 2,
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:42:39.347Z",
+          "type": "force_failover_sent",
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:42:41.277Z",
+          "type": "tick_source",
+          "source": "alltick"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "alltick",
+      "toSource": "sina",
+      "switchLatencyMs": 1920,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:41.478Z",
+          "type": "switch_sample_start",
+          "index": 3,
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:42:41.479Z",
+          "type": "force_failover_sent",
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:42:43.398Z",
+          "type": "tick_source",
+          "source": "sina"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "sina",
+      "toSource": "eastmoney",
+      "switchLatencyMs": 1919,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:43.600Z",
+          "type": "switch_sample_start",
+          "index": 4,
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:42:43.600Z",
+          "type": "force_failover_sent",
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:42:45.519Z",
+          "type": "tick_source",
+          "source": "eastmoney"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "eastmoney",
+      "toSource": "tencent",
+      "switchLatencyMs": 1919,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:45.721Z",
+          "type": "switch_sample_start",
+          "index": 5,
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:42:45.721Z",
+          "type": "force_failover_sent",
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:42:47.640Z",
+          "type": "tick_source",
+          "source": "tencent"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "tencent",
+      "toSource": "alltick",
+      "switchLatencyMs": 1986,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:47.842Z",
+          "type": "switch_sample_start",
+          "index": 6,
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:42:47.842Z",
+          "type": "force_failover_sent",
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:42:49.828Z",
+          "type": "tick_source",
+          "source": "alltick"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "alltick",
+      "toSource": "sina",
+      "switchLatencyMs": 1920,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:50.029Z",
+          "type": "switch_sample_start",
+          "index": 7,
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:42:50.029Z",
+          "type": "force_failover_sent",
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:42:51.949Z",
+          "type": "tick_source",
+          "source": "sina"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "sina",
+      "toSource": "eastmoney",
+      "switchLatencyMs": 1919,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:52.151Z",
+          "type": "switch_sample_start",
+          "index": 8,
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:42:52.151Z",
+          "type": "force_failover_sent",
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:42:54.070Z",
+          "type": "tick_source",
+          "source": "eastmoney"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "eastmoney",
+      "toSource": "tencent",
+      "switchLatencyMs": 1922,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:54.271Z",
+          "type": "switch_sample_start",
+          "index": 9,
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:42:54.271Z",
+          "type": "force_failover_sent",
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:42:56.193Z",
+          "type": "tick_source",
+          "source": "tencent"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "tencent",
+      "toSource": "alltick",
+      "switchLatencyMs": 2025,
+      "events": [
+        {
+          "ts": "2026-02-24T10:42:56.395Z",
+          "type": "switch_sample_start",
+          "index": 10,
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:42:56.396Z",
+          "type": "force_failover_sent",
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:42:58.419Z",
+          "type": "tick_source",
+          "source": "alltick"
+        }
+      ]
+    }
+  ]
+}

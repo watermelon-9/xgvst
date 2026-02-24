@@ -10,6 +10,7 @@ export type SourceManagerStatus = {
   subscribedSymbols: string[];
   failoverCount: number;
   reconnecting: boolean;
+  debugForcedSource: string | null;
 };
 
 export class SourceManager {
@@ -22,6 +23,7 @@ export class SourceManager {
   private failoverCount = 0;
   private reconnecting = false;
   private onTick: ((tick: QuoteTick) => void) | null = null;
+  private debugForcedSource: string | null = null;
 
   constructor() {
     this.factories = [
@@ -31,6 +33,10 @@ export class SourceManager {
       () => new TencentSource()
     ];
     this.priorityOrder = this.factories.map((f) => f().name);
+  }
+
+  getAvailableSources(): string[] {
+    return [...this.priorityOrder];
   }
 
   async start(onTick: (tick: QuoteTick) => void) {
@@ -54,14 +60,53 @@ export class SourceManager {
     await this.scheduleFailover(new Error(`Failover requested: ${reason}`));
   }
 
+  async debugSetSource(sourceName: string | null) {
+    if (sourceName !== null && !this.priorityOrder.includes(sourceName)) {
+      throw new Error(`Unknown source: ${sourceName}`);
+    }
+
+    this.debugForcedSource = sourceName;
+
+    if (sourceName !== null) {
+      this.currentIndex = this.priorityOrder.indexOf(sourceName);
+    }
+
+    await this.reconnectNow();
+    return this.status();
+  }
+
   status(): SourceManagerStatus {
     return {
       activeSource: this.source?.name ?? null,
       priorityOrder: this.priorityOrder,
       subscribedSymbols: [...this.subscribed],
       failoverCount: this.failoverCount,
-      reconnecting: this.reconnecting
+      reconnecting: this.reconnecting,
+      debugForcedSource: this.debugForcedSource
     };
+  }
+
+  private async reconnectNow() {
+    if (this.source) {
+      await this.source.close();
+      this.source = null;
+    }
+
+    this.reconnecting = false;
+    await this.ensureSourceReady();
+  }
+
+  private candidateIndices(): number[] {
+    if (this.debugForcedSource) {
+      const forced = this.priorityOrder.indexOf(this.debugForcedSource);
+      return forced >= 0 ? [forced] : [];
+    }
+
+    const result: number[] = [];
+    for (let attempts = 0; attempts < this.factories.length; attempts++) {
+      result.push((this.currentIndex + attempts) % this.factories.length);
+    }
+    return result;
   }
 
   private async ensureSourceReady() {
@@ -69,8 +114,7 @@ export class SourceManager {
 
     this.reconnecting = true;
     try {
-      for (let attempts = 0; attempts < this.factories.length; attempts++) {
-        const index = (this.currentIndex + attempts) % this.factories.length;
+      for (const index of this.candidateIndices()) {
         const candidate = this.factories[index]();
 
         try {
@@ -104,14 +148,17 @@ export class SourceManager {
       this.source = null;
     }
 
-    this.currentIndex = (this.currentIndex + 1) % this.factories.length;
+    if (!this.debugForcedSource) {
+      this.currentIndex = (this.currentIndex + 1) % this.factories.length;
+    }
 
+    // DoD5: 避免固定 1s 等待；让切换在下一微任务立即执行。
     this.reconnecting = true;
-    setTimeout(() => {
+    queueMicrotask(() => {
       this.reconnecting = false;
       void this.ensureSourceReady().catch((err) => {
         console.error('SourceManager failover error', error.message, err?.message);
       });
-    }, 1000);
+    });
   }
 }
