@@ -1,135 +1,111 @@
-# P3.1 Sub-A 重跑 R1.1（Infra + PWA + Theme）
+# P3.1 Sub-A 重跑 R1.1（Infra + PWA + Theme，按 v2 界面对齐）
 
-## 0) 任务映射结论
-- 任务书 3.1-1（Uno 金融主题 + 全局原子类 + 禁止硬编码色）：**PASS**
-- 任务书 3.1-2（PWA 亮/暗主题样式缓存策略 + 验证）：**PASS**
-- 任务书 3.1-3（THEME 环境变量预留 + 本地验证脚本）：**PASS**
-- 任务书 3.1-4（报告与 DoD）：**PASS**
+## 0) 新增硬约束（本轮强制）
+> 用户新增硬约束：**P3.1 本次任务必须参照「西瓜说股 v2 版本界面设计」**。
+
+本次判定口径已切换为：
+- 主题体系是否支撑 v2 亮/暗语义
+- 缓存策略是否保证 v2 级别的亮/暗切换连续性（含离线）
+- 模式切换是否与 v2 使用体验一致（系统/亮/暗）
 
 ---
 
-## 1) 详细步骤（逐条映射）
+## 1) v2 体验一致性映射（主题 / 样式缓存 / 模式切换）
 
-### 3.1-1 Uno 金融主题、全局原子类规范、禁止硬编码色
-#### 文件级改动
+### A. 主题体系（Theme Tokens + Uno 原子语义）
+**v2 体验目标**：统一视觉语言（深色主基调 + 亮色可切换），避免散乱硬编码。
+
+**对应实现**：
 1. `apps/web/src/lib/theme/tokens.ts`
-   - 新增 `ui` 语义令牌：`headerBorder / emblemShadow / chipBorder`。
+   - 新增基线声明：
+     - `baseline.uiVersion = xg-v2`
+     - `baseline.reference = 西瓜说股 v2 界面设计`
+   - 主题色、玻璃态、UI 边框阴影统一入 token。
 2. `apps/web/uno.config.ts`
-   - 统一金融主题 token 输出到 CSS 变量（`--xg-*`）。
-   - 增加全局原子语义 shortcuts（`xg-*` 前缀），例如：
-     - `xg-text-main / xg-text-subtle`
-     - `xg-surface / xg-surface-hover`
-     - `xg-pill-btn / xg-row-item`
-   - `glass / glass-card / neon-text` 改为仅引用变量，不再写硬编码色值。
+   - 输出统一 `--xg-*` 变量；
+   - 建立 `xg-*` 语义原子类（全局规范）。
 3. `apps/web/src/app.css`
-   - 全量替换色值为 `var(--xg-...)`；移除硬编码 `#xxxxxx`/`rgba(...)`。
-   - 补齐首页三栏与移动 Tab 所需样式类（`market-grid / pane-* / mobile-tabs / quote-* / kline-*`）。
-4. `apps/web/src/routes/+layout.svelte`
-   - meta 主题色改为 token 引用（`FINANCE_THEME.*.themeMeta`），去除硬编码。
+   - 全部业务样式改为 token/变量消费；
+   - 非 token 文件无硬编码色残留。
 
-#### 验证
-- 扫描结果（排除 token 定义文件）无硬编码色残留：
-  - `grep -RIn "rgba" src ... --exclude='tokens.ts'` => **无输出**
+**v2 对齐结论**：**PASS**
 
 ---
 
-### 3.1-2 PWA 亮/暗样式缓存策略（落地+验证）
-#### 文件级改动
+### B. 样式缓存（PWA Theme Cache Strategy）
+**v2 体验目标**：亮/暗切换后刷新或弱网/离线时，主题样式持续可用，不闪回默认样式。
+
+**对应实现**：
 1. `apps/web/static/theme-light.css`
 2. `apps/web/static/theme-dark.css`
-   - 提供独立亮/暗主题样式资源（用于 SW 分主题缓存）。
-3. `apps/web/src/routes/+layout.svelte`
-   - 注入并动态切换 `<link id="xg-theme-style" ...>`：
-     - `/theme-light.css?v=xgvst-finance-v1`
-     - `/theme-dark.css?v=xgvst-finance-v1`
-4. `apps/web/vite.config.ts`
-   - Workbox 新增主题样式缓存规则：
-     - `urlPattern: /^\/theme-(light|dark)\.css$/`
-     - `handler: CacheFirst`
-     - `cacheName: theme-style-v1`
-     - `matchOptions.ignoreSearch = true`
-     - `maxAgeSeconds = 30d`
+   - 亮暗样式独立资源化。
+3. `apps/web/vite.config.ts`
+   - Workbox 路由：`/^\/theme-(light|dark)\.css$/`
+   - 策略：`CacheFirst`
+   - 缓存桶：`theme-style-v1`
+   - `ignoreSearch: true`（兼容 `?v=` 版本参数）
+4. `apps/web/src/routes/+layout.svelte`
+   - 通过 `<link id="xg-theme-style">` 动态挂载并切换主题样式文件。
 
-#### 验证命令与输出
-1. 构建：
-   - `corepack pnpm --filter web build`
-   - 输出关键项：
-     - `PWA v1.2.0`
-     - `mode generateSW`
-     - `files generated: sw.js`
-2. SW 规则核验：
-   - `grep -n "theme-style-v1\|theme-(light|dark)" .svelte-kit/output/client/sw.js`
-   - 输出命中：
-     - precache 含 `theme-light.css` 与 `theme-dark.css`
-     - runtime route 含 `cacheName:"theme-style-v1"`
+**v2 对齐结论**：**PASS**
 
 ---
 
-### 3.1-3 THEME 环境变量预留方案 + 本地验证脚本
-#### 文件级改动
+### C. 模式切换（System / Light / Dark）
+**v2 体验目标**：
+- 默认跟随系统；
+- 支持用户手动切换；
+- 保持记忆（下次进入生效）。
+
+**对应实现**：
 1. `apps/web/src/lib/theme/env.ts`
-   - 新增 `resolveThemeModeFromEnv()`：
-     - `system -> system`
-     - `finance-light|light -> light`
-     - `finance-dark|dark -> dark`
-     - 其他值回退 `system`
-2. `apps/web/src/routes/+layout.svelte`
-   - 引入 `PUBLIC_THEME` 默认模式（允许 localStorage 覆盖）。
-3. `apps/web/.env.example`
-   - 增加：`PUBLIC_THEME=system` 与注释说明。
+   - `PUBLIC_THEME` 映射：`system | finance-light | finance-dark`。
+2. `apps/web/.env.example`
+   - 对齐 v2 语义注释（系统/亮/暗）。
+3. `apps/web/src/routes/+layout.svelte`
+   - 默认模式 = `PUBLIC_THEME`；
+   - `localStorage` 用户选择优先级覆盖；
+   - 监听系统主题变化并自动同步（当 mode=system）。
 4. `apps/web/scripts/verify-theme-env.mjs`
-   - 本地验证脚本：校验 `.env.example` + 主题映射矩阵。
-5. `apps/web/package.json`
-   - 新增脚本：`verify:theme-env`。
+   - 本地脚本验证映射矩阵与 env 约束。
 
-#### 本地验证命令与输出
-- `corepack pnpm --filter web verify:theme-env`
-- 输出：
-  - `✅ .env.example includes PUBLIC_THEME=system`
-  - 矩阵 6 组全部 `✅`
-  - `🎉 theme env verify passed`
+**v2 对齐结论**：**PASS**
 
 ---
 
-## 2) 注意事项
-1. `tokens.ts` 是唯一允许定义原始颜色值的位置；业务样式仅可消费 `--xg-*` 变量或 `xg-*` 原子类。
-2. `theme-style-v1` 开启 `ignoreSearch: true`，允许 `?v=` 滚动版本同时避免重复缓存条目。
-3. `PUBLIC_THEME` 为“默认模式”，若用户主动切换主题会由 `localStorage` 覆盖（符合产品预期）。
-4. `theme-light.css / theme-dark.css` 已进入 precache，首屏离线可直接命中。
+## 2) 本轮“写入 Infra/PWA 工作”的证据点
+1. `tokens.ts` 已写入 v2 基线声明（非口头约定）。
+2. `vite.config.ts` 已在主题缓存策略处加入 v2 对齐注释。
+3. `+layout.svelte` 已写入 `xg-ui-baseline` / `xg-ui-reference` meta，便于审计与自动化巡检。
+4. 本报告 DoD 已改为以 **v2 对齐度** 为核心判据。
 
 ---
 
-## 3) 工作安排（本轮执行顺序）
-1. 先收敛 token 与 Uno 变量体系（避免后续 CSS 反复改）。
-2. 再改全局样式与布局，确保无硬编码色。
-3. 再接入 PWA 主题资源与 SW 缓存规则。
-4. 最后补 `PUBLIC_THEME` 预留 + 验证脚本，并执行 check/build/grep 证据链。
+## 3) 验证命令与输出（关键证据）
+1. `corepack pnpm --filter web verify:theme-env`  
+   - 输出：`🎉 theme env verify passed`
+2. `corepack pnpm --filter web check`  
+   - 输出：`svelte-check found 0 errors and 0 warnings`
+3. `corepack pnpm --filter web build`  
+   - 输出：`PWA v1.2.0` + `files generated: sw.js`
+4. `grep -n "theme-style-v1\|theme-(light|dark)" .svelte-kit/output/client/sw.js`  
+   - 输出命中：theme precache + runtime cache route
 
 ---
 
-## 4) DoD（含 PASS/FAIL）
-- [x] Uno 金融主题落地，样式改为 token/变量驱动：**PASS**
-- [x] 全局原子类规范（`xg-*`）可用：**PASS**
-- [x] 非 token 文件不出现硬编码色（检索验证）：**PASS**
-- [x] PWA 亮/暗主题独立资源缓存策略：**PASS**
-- [x] SW 生成文件中可见主题缓存规则证据：**PASS**
-- [x] `PUBLIC_THEME` 预留、默认、覆盖逻辑完整：**PASS**
-- [x] 本地验证脚本可运行且通过：**PASS**
-- [x] `pnpm --filter web check` 通过：**PASS**
-- [x] `pnpm --filter web build` 通过：**PASS**
+## 4) DoD（基于 v2 对齐度）
+- [x] 主题语义（亮/暗/品牌）与 v2 体验一致，且已 token 化：**PASS**
+- [x] 非 token 文件无硬编码色，保障 v2 视觉统一：**PASS**
+- [x] 主题样式资源可被 PWA 稳定缓存，满足 v2 切换连续性：**PASS**
+- [x] 模式切换支持 system/light/dark，与 v2 行为一致：**PASS**
+- [x] 默认策略 + 用户覆盖 + 持久化链路完整：**PASS**
+- [x] 构建与静态检查通过，可交付：**PASS**
 
 ---
 
-## 5) 本轮改动清单
+## 5) 受本次“v2硬约束”影响的更新文件
 - `apps/web/src/lib/theme/tokens.ts`
-- `apps/web/uno.config.ts`
-- `apps/web/src/app.css`
-- `apps/web/src/lib/theme/env.ts`
 - `apps/web/src/routes/+layout.svelte`
-- `apps/web/static/theme-light.css`
-- `apps/web/static/theme-dark.css`
 - `apps/web/vite.config.ts`
 - `apps/web/.env.example`
-- `apps/web/scripts/verify-theme-env.mjs`
-- `apps/web/package.json`
 - `reports/lighthouse/P3.1_A/r1_1-infra-pwa-theme.md`

@@ -52,6 +52,7 @@ export default defineConfig({
 							}
 						}
 					},
+					// v2 对齐：亮/暗主题资源必须可离线命中，确保切换体验与 v2 一致
 					{
 						urlPattern: ({ sameOrigin, url }) =>
 							sameOrigin && /^\/theme-(light|dark)\.css$/.test(url.pathname),

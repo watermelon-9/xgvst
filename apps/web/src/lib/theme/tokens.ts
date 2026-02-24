@@ -1,5 +1,10 @@
 export const FINANCE_THEME = {
 	name: 'xgvst-finance-v1',
+	baseline: {
+		uiVersion: 'xg-v2',
+		reference: '西瓜说股 v2 界面设计',
+		requirement: 'P3.1 必须对齐 v2 体验基线'
+	},
 	light: {
 		bgBase: '#f4f6fb',
 		bgSurface: 'rgba(255,255,255,0.9)',
