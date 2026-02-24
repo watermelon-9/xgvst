@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-02-24T18:58:57.038Z",
+  "stage": "P2.4_C",
+  "baselineFiles": [
+    "p24-auth-baseline.json"
+  ],
+  "expectedArtifacts": [
+    "auth/login-latency-*.json",
+    "migration/migration-latency-*.json",
+    "sync/sync-latency-*.json",
+    "logs/wrangler-tail-*.log"
+  ],
+  "kpi": {
+    "loginP95TargetMs": 800,
+    "migrationPerUserTargetMs": 3000,
+    "syncP95TargetMs": 1000
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "generatedAt": "2026-02-24T18:58:57.038Z",
+  "baseUrl": "http://127.0.0.1:8787",
+  "config": {
+    "LOGIN_ITERATIONS": 5,
+    "MIGRATION_ITERATIONS": 3,
+    "SYNC_ITERATIONS": 3,
+    "MIGRATION_SYMBOL_COUNT": 200,
+    "SYNC_TIMEOUT_MS": 5000,
+    "SYNC_POLL_MS": 80,
+    "USER_PREFIX": "p24-baseline"
+  },
+  "metrics": {
+    "login": {
+      "iterations": 5,
+      "success": 0,
+      "successRate": 0,
+      "latency": {
+        "count": 5,
+        "p50Ms": 1.587,
+        "p95Ms": 25.214,
+        "maxMs": 25.214,
+        "meanMs": 6.417199999999999
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "userId": "p24-baseline-login-0",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 25.214
+        },
+        {
+          "iteration": 1,
+          "userId": "p24-baseline-login-1",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 2.523
+        },
+        {
+          "iteration": 2,
+          "userId": "p24-baseline-login-2",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 1.471
+        },
+        {
+          "iteration": 3,
+          "userId": "p24-baseline-login-3",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 1.291
+        },
+        {
+          "iteration": 4,
+          "userId": "p24-baseline-login-4",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 1.587
+        }
+      ]
+    },
+    "migration": {
+      "iterations": 3,
+      "symbolCountPerUser": 200,
+      "success": 0,
+      "successRate": 0,
+      "latency": {
+        "count": 3,
+        "p50Ms": 1.27,
+        "p95Ms": 2.621,
+        "maxMs": 2.621,
+        "meanMs": 1.6466666666666665
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "userId": "p24-baseline-migrate-0",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 2.621,
+          "expectedCount": 200,
+          "importedCount": 0
+        },
+        {
+          "iteration": 1,
+          "userId": "p24-baseline-migrate-1",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 1.27,
+          "expectedCount": 200,
+          "importedCount": 0
+        },
+        {
+          "iteration": 2,
+          "userId": "p24-baseline-migrate-2",
+          "ok": false,
+          "status": 401,
+          "latencyMs": 1.049,
+          "expectedCount": 200,
+          "importedCount": 0
+        }
+      ]
+    },
+    "sync": {
+      "iterations": 3,
+      "timeoutMs": 5000,
+      "pollMs": 80,
+      "success": 0,
+      "successRate": 0,
+      "latency": {
+        "count": 3,
+        "p50Ms": 5039.582,
+        "p95Ms": 5057.618,
+        "maxMs": 5057.618,
+        "meanMs": 5043.533
+      },
+      "samples": [
+        {
+          "iteration": 0,
+          "userId": "p24-baseline-sync-0",
+          "mutateOk": false,
+          "mutateStatus": 401,
+          "syncObserved": false,
+          "syncLatencyMs": 5039.582,
+          "pollCount": 59
+        },
+        {
+          "iteration": 1,
+          "userId": "p24-baseline-sync-1",
+          "mutateOk": false,
+          "mutateStatus": 401,
+          "syncObserved": false,
+          "syncLatencyMs": 5057.618,
+          "pollCount": 59
+        },
+        {
+          "iteration": 2,
+          "userId": "p24-baseline-sync-2",
+          "mutateOk": false,
+          "mutateStatus": 401,
+          "syncObserved": false,
+          "syncLatencyMs": 5033.399,
+          "pollCount": 59
+        }
+      ]
+    }
+  }
+}
