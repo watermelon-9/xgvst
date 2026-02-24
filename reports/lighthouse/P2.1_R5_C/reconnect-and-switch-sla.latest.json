@@ -1,0 +1,860 @@
+{
+  "generatedAt": "2026-02-24T10:44:27.229Z",
+  "startedAt": "2026-02-24T10:44:14.665Z",
+  "config": {
+    "WS_URL": "wss://xgvst-workers.viehh642.workers.dev/ws/quote",
+    "STATUS_URL": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+    "SYMBOLS": [
+      "000001"
+    ],
+    "RECONNECT_SAMPLES": 20,
+    "SWITCH_SAMPLES": 10,
+    "CONNECT_TIMEOUT_MS": 8000,
+    "SWITCH_TIMEOUT_MS": 8000,
+    "SWITCH_POLL_MS": 50,
+    "RECONNECT_TARGET_MS": 3000,
+    "SWITCH_TARGET_MS": 200
+  },
+  "summary": {
+    "dod4": {
+      "metric": "websocket reconnect open latency <= 3000ms",
+      "sampleRequirement": ">=20",
+      "sampleCount": 20,
+      "p50Ms": 111,
+      "p95Ms": 197,
+      "passRatePct": 100,
+      "pass": true
+    },
+    "dod5Gap": {
+      "metric": "source switch latency < 200ms",
+      "sampleRequirement": ">=10",
+      "sampleCount": 10,
+      "p50Ms": 24,
+      "p95Ms": 108,
+      "passRatePct": 100,
+      "targetMs": 200,
+      "p50GapMs": -176,
+      "p95GapMs": -92,
+      "passRateGapPct": 0,
+      "pass": true
+    }
+  },
+  "reconnectSamples": [
+    {
+      "index": 1,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 145,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:14.666Z",
+          "type": "reconnect_sample_start",
+          "index": 1
+        },
+        {
+          "ts": "2026-02-24T10:44:14.811Z",
+          "type": "ws_open",
+          "openLatencyMs": 145
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 217,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:15.316Z",
+          "type": "reconnect_sample_start",
+          "index": 2
+        },
+        {
+          "ts": "2026-02-24T10:44:15.533Z",
+          "type": "ws_open",
+          "openLatencyMs": 217
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 103,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:16.035Z",
+          "type": "reconnect_sample_start",
+          "index": 3
+        },
+        {
+          "ts": "2026-02-24T10:44:16.138Z",
+          "type": "ws_open",
+          "openLatencyMs": 103
+        },
+        {
+          "ts": "2026-02-24T10:44:16.179Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:16.179Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 182,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:16.382Z",
+          "type": "reconnect_sample_start",
+          "index": 4
+        },
+        {
+          "ts": "2026-02-24T10:44:16.564Z",
+          "type": "ws_open",
+          "openLatencyMs": 182
+        },
+        {
+          "ts": "2026-02-24T10:44:16.606Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:16.606Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 110,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:16.807Z",
+          "type": "reconnect_sample_start",
+          "index": 5
+        },
+        {
+          "ts": "2026-02-24T10:44:16.917Z",
+          "type": "ws_open",
+          "openLatencyMs": 110
+        },
+        {
+          "ts": "2026-02-24T10:44:17.046Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:17.046Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 114,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:17.246Z",
+          "type": "reconnect_sample_start",
+          "index": 6
+        },
+        {
+          "ts": "2026-02-24T10:44:17.360Z",
+          "type": "ws_open",
+          "openLatencyMs": 114
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 123,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:17.866Z",
+          "type": "reconnect_sample_start",
+          "index": 7
+        },
+        {
+          "ts": "2026-02-24T10:44:17.989Z",
+          "type": "ws_open",
+          "openLatencyMs": 123
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 195,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:18.494Z",
+          "type": "reconnect_sample_start",
+          "index": 8
+        },
+        {
+          "ts": "2026-02-24T10:44:18.689Z",
+          "type": "ws_open",
+          "openLatencyMs": 195
+        },
+        {
+          "ts": "2026-02-24T10:44:18.737Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:18.737Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 111,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:18.939Z",
+          "type": "reconnect_sample_start",
+          "index": 9
+        },
+        {
+          "ts": "2026-02-24T10:44:19.050Z",
+          "type": "ws_open",
+          "openLatencyMs": 111
+        },
+        {
+          "ts": "2026-02-24T10:44:19.172Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:19.172Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 111,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:19.374Z",
+          "type": "reconnect_sample_start",
+          "index": 10
+        },
+        {
+          "ts": "2026-02-24T10:44:19.485Z",
+          "type": "ws_open",
+          "openLatencyMs": 111
+        },
+        {
+          "ts": "2026-02-24T10:44:19.520Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:19.520Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 117,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:19.722Z",
+          "type": "reconnect_sample_start",
+          "index": 11
+        },
+        {
+          "ts": "2026-02-24T10:44:19.839Z",
+          "type": "ws_open",
+          "openLatencyMs": 117
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 106,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:20.344Z",
+          "type": "reconnect_sample_start",
+          "index": 12
+        },
+        {
+          "ts": "2026-02-24T10:44:20.450Z",
+          "type": "ws_open",
+          "openLatencyMs": 106
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 106,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:20.954Z",
+          "type": "reconnect_sample_start",
+          "index": 13
+        },
+        {
+          "ts": "2026-02-24T10:44:21.060Z",
+          "type": "ws_open",
+          "openLatencyMs": 106
+        },
+        {
+          "ts": "2026-02-24T10:44:21.105Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:21.105Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 93,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:21.307Z",
+          "type": "reconnect_sample_start",
+          "index": 14
+        },
+        {
+          "ts": "2026-02-24T10:44:21.400Z",
+          "type": "ws_open",
+          "openLatencyMs": 93
+        },
+        {
+          "ts": "2026-02-24T10:44:21.435Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:21.435Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 197,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:21.637Z",
+          "type": "reconnect_sample_start",
+          "index": 15
+        },
+        {
+          "ts": "2026-02-24T10:44:21.834Z",
+          "type": "ws_open",
+          "openLatencyMs": 197
+        },
+        {
+          "ts": "2026-02-24T10:44:21.878Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:21.878Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 97,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:22.079Z",
+          "type": "reconnect_sample_start",
+          "index": 16
+        },
+        {
+          "ts": "2026-02-24T10:44:22.176Z",
+          "type": "ws_open",
+          "openLatencyMs": 97
+        },
+        {
+          "ts": "2026-02-24T10:44:22.288Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:22.288Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 120,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:22.488Z",
+          "type": "reconnect_sample_start",
+          "index": 17
+        },
+        {
+          "ts": "2026-02-24T10:44:22.608Z",
+          "type": "ws_open",
+          "openLatencyMs": 120
+        },
+        {
+          "ts": "2026-02-24T10:44:22.666Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:22.666Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 110,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:22.868Z",
+          "type": "reconnect_sample_start",
+          "index": 18
+        },
+        {
+          "ts": "2026-02-24T10:44:22.978Z",
+          "type": "ws_open",
+          "openLatencyMs": 110
+        },
+        {
+          "ts": "2026-02-24T10:44:23.003Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:23.003Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 188,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:23.204Z",
+          "type": "reconnect_sample_start",
+          "index": 19
+        },
+        {
+          "ts": "2026-02-24T10:44:23.392Z",
+          "type": "ws_open",
+          "openLatencyMs": 188
+        },
+        {
+          "ts": "2026-02-24T10:44:23.437Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:23.437Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "ok": true,
+      "reason": "opened",
+      "reconnectOpenMs": 107,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:23.639Z",
+          "type": "reconnect_sample_start",
+          "index": 20
+        },
+        {
+          "ts": "2026-02-24T10:44:23.746Z",
+          "type": "ws_open",
+          "openLatencyMs": 107
+        },
+        {
+          "ts": "2026-02-24T10:44:23.880Z",
+          "type": "ws_error",
+          "error": "error"
+        },
+        {
+          "ts": "2026-02-24T10:44:23.880Z",
+          "type": "ws_close",
+          "code": 1006,
+          "reason": ""
+        }
+      ]
+    }
+  ],
+  "switchSamples": [
+    {
+      "index": 1,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "alltick",
+      "toSource": "sina",
+      "switchLatencyMs": 24,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:24.456Z",
+          "type": "switch_sample_start",
+          "index": 1,
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.456Z",
+          "type": "force_failover_sent",
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.480Z",
+          "type": "tick_source",
+          "source": "sina"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "sina",
+      "toSource": "eastmoney",
+      "switchLatencyMs": 24,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:24.683Z",
+          "type": "switch_sample_start",
+          "index": 2,
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.683Z",
+          "type": "force_failover_sent",
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.685Z",
+          "type": "tick_source",
+          "source": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.707Z",
+          "type": "tick_source",
+          "source": "eastmoney"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "eastmoney",
+      "toSource": "tencent",
+      "switchLatencyMs": 24,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:24.908Z",
+          "type": "switch_sample_start",
+          "index": 3,
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.908Z",
+          "type": "force_failover_sent",
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.909Z",
+          "type": "tick_source",
+          "source": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:44:24.931Z",
+          "type": "tick_source",
+          "source": "tencent"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "tencent",
+      "toSource": "alltick",
+      "switchLatencyMs": 24,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:25.133Z",
+          "type": "switch_sample_start",
+          "index": 4,
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.133Z",
+          "type": "force_failover_sent",
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.133Z",
+          "type": "tick_source",
+          "source": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.157Z",
+          "type": "tick_source",
+          "source": "alltick"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "alltick",
+      "toSource": "sina",
+      "switchLatencyMs": 91,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:25.359Z",
+          "type": "switch_sample_start",
+          "index": 5,
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.359Z",
+          "type": "force_failover_sent",
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.434Z",
+          "type": "tick_source",
+          "source": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.450Z",
+          "type": "tick_source",
+          "source": "sina"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "sina",
+      "toSource": "eastmoney",
+      "switchLatencyMs": 22,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:25.651Z",
+          "type": "switch_sample_start",
+          "index": 6,
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.651Z",
+          "type": "force_failover_sent",
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.652Z",
+          "type": "tick_source",
+          "source": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.673Z",
+          "type": "tick_source",
+          "source": "eastmoney"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "eastmoney",
+      "toSource": "tencent",
+      "switchLatencyMs": 108,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:25.876Z",
+          "type": "switch_sample_start",
+          "index": 7,
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.876Z",
+          "type": "force_failover_sent",
+          "fromSource": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.958Z",
+          "type": "tick_source",
+          "source": "eastmoney"
+        },
+        {
+          "ts": "2026-02-24T10:44:25.984Z",
+          "type": "tick_source",
+          "source": "tencent"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "tencent",
+      "toSource": "alltick",
+      "switchLatencyMs": 24,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:26.185Z",
+          "type": "switch_sample_start",
+          "index": 8,
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.185Z",
+          "type": "force_failover_sent",
+          "fromSource": "tencent"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.209Z",
+          "type": "tick_source",
+          "source": "alltick"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "alltick",
+      "toSource": "sina",
+      "switchLatencyMs": 89,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:26.410Z",
+          "type": "switch_sample_start",
+          "index": 9,
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.411Z",
+          "type": "force_failover_sent",
+          "fromSource": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.479Z",
+          "type": "tick_source",
+          "source": "alltick"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.499Z",
+          "type": "tick_source",
+          "source": "sina"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "ok": true,
+      "reason": "source_switched",
+      "fromSource": "sina",
+      "toSource": "eastmoney",
+      "switchLatencyMs": 25,
+      "events": [
+        {
+          "ts": "2026-02-24T10:44:26.700Z",
+          "type": "switch_sample_start",
+          "index": 10,
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.701Z",
+          "type": "force_failover_sent",
+          "fromSource": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.703Z",
+          "type": "tick_source",
+          "source": "sina"
+        },
+        {
+          "ts": "2026-02-24T10:44:26.725Z",
+          "type": "tick_source",
+          "source": "eastmoney"
+        }
+      ]
+    }
+  ]
+}
