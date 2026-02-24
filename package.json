@@ -11,6 +11,8 @@
     "workers:dev": "corepack pnpm --filter workers dev",
     "workers:check": "corepack pnpm --filter workers check",
     "workers:deploy": "corepack pnpm --filter workers run deploy",
-    "workers:failover-test": "node scripts/source-failover-test.mjs"
+    "workers:failover-test": "node scripts/source-failover-test.mjs",
+    "workers:p21-three-sources-proof": "node scripts/p21-three-sources-proof.mjs",
+    "workers:p22-sentinel-load": "node scripts/p22-sentinel-load-test.mjs"
   }
 }

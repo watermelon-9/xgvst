@@ -1,0 +1,1072 @@
+{
+  "generatedAt": "2026-02-24T11:37:48.538Z",
+  "config": {
+    "WS_URL": "wss://xgvst-workers.viehh642.workers.dev/ws/quote",
+    "STATUS_URL": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+    "symbols": [
+      "000001",
+      "600519",
+      "300750",
+      "000858",
+      "601318"
+    ],
+    "targetConcurrency": 1000,
+    "actualConcurrency": 40,
+    "testDurationMs": 20000,
+    "reconnectRatio": 0.6,
+    "recoveryTimeoutMs": 6000,
+    "bundleWindowMs": 100
+  },
+  "summary": {
+    "concurrency": {
+      "target": 1000,
+      "actual": 40,
+      "gapToTarget": 960
+    },
+    "reconnect": {
+      "attempted": 24,
+      "success": 24,
+      "successRatePct": 100,
+      "p50OpenMs": 254,
+      "p95OpenMs": 320
+    },
+    "subscriptionRecovery": {
+      "attempted": 24,
+      "success": 24,
+      "successRatePct": 100,
+      "p50RecoveryMs": 235,
+      "p95RecoveryMs": 260
+    },
+    "bandwidth": {
+      "rawBytes": 211740,
+      "jsonEquivalentBytes": 438443,
+      "savingVsJsonPct": 51.706379164452386,
+      "binaryFrames": 3529,
+      "jsonFallbackFrames": 0
+    },
+    "bundle": {
+      "rawFrames": 3529,
+      "bundledFrames": 487,
+      "bundledBytes": 375902,
+      "reductionByFramePct": 86.20005667327855,
+      "reductionByBytesPctVsRaw": -77.52998960989893,
+      "windowMs": 100
+    },
+    "broadcast": {
+      "rawTicksPerSec": 197.74739437408942,
+      "bundledFramesPerSec": 27.289028353692704,
+      "observedSeconds": 17.846
+    },
+    "memory": {
+      "observable": true,
+      "note": "仅可观测压测器进程内存；Worker 单实例内存需平台级指标补充。",
+      "peakRssBytes": 136314880,
+      "peakHeapUsedBytes": 17928944,
+      "sampleCount": 35
+    },
+    "sourceStatus": {
+      "before": {
+        "ok": true,
+        "latencyMs": 621,
+        "body": {
+          "ok": true,
+          "clients": 0,
+          "availableSources": [
+            "alltick",
+            "sina",
+            "eastmoney",
+            "tencent"
+          ],
+          "wsFrameStats": {
+            "sentBinaryFrames": 0,
+            "sentFallbackFrames": 0
+          },
+          "activeSource": "alltick",
+          "priorityOrder": [
+            "alltick",
+            "sina",
+            "eastmoney",
+            "tencent"
+          ],
+          "subscribedSymbols": [],
+          "failoverCount": 0,
+          "reconnecting": false,
+          "debugForcedSource": null
+        }
+      },
+      "after": {
+        "ok": true,
+        "latencyMs": 98,
+        "body": {
+          "ok": true,
+          "clients": 0,
+          "availableSources": [
+            "alltick",
+            "sina",
+            "eastmoney",
+            "tencent"
+          ],
+          "wsFrameStats": {
+            "sentBinaryFrames": 0,
+            "sentFallbackFrames": 0
+          },
+          "activeSource": "alltick",
+          "priorityOrder": [
+            "alltick",
+            "sina",
+            "eastmoney",
+            "tencent"
+          ],
+          "subscribedSymbols": [],
+          "failoverCount": 0,
+          "reconnecting": false,
+          "debugForcedSource": null
+        }
+      }
+    }
+  },
+  "dod": {
+    "DoD1": {
+      "name": "断线重连成功率 >= 99%",
+      "actual": 100,
+      "target": 99,
+      "pass": true,
+      "gap": 0
+    },
+    "DoD2": {
+      "name": "订阅恢复成功率 >= 99%",
+      "actual": 100,
+      "target": 99,
+      "pass": true,
+      "gap": 0
+    },
+    "DoD3": {
+      "name": "100ms 合包后帧频下降 >= 30%",
+      "actual": 86.2,
+      "target": 30,
+      "pass": true,
+      "gap": 0
+    },
+    "DoD4": {
+      "name": "并发连接达到 1000",
+      "actual": 40,
+      "target": 1000,
+      "pass": false,
+      "gap": 960
+    },
+    "DoD5": {
+      "name": "二进制/合包带宽节省 >= 30%",
+      "actual": 51.71,
+      "target": 30,
+      "pass": true,
+      "gap": 0
+    },
+    "DoD6": {
+      "name": "单实例内存具备可观测口径（已采样）",
+      "actual": 1,
+      "target": 1,
+      "pass": true,
+      "gap": 0,
+      "note": "仅可观测压测器进程内存；Worker 单实例内存需平台级指标补充。"
+    }
+  },
+  "samples": {
+    "memorySamples": [
+      {
+        "ts": 1771933051194,
+        "rssBytes": 119586816,
+        "heapTotalBytes": 19709952,
+        "heapUsedBytes": 12590608,
+        "externalBytes": 4513925
+      },
+      {
+        "ts": 1771933051697,
+        "rssBytes": 122208256,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 10034096,
+        "externalBytes": 4446777
+      },
+      {
+        "ts": 1771933052198,
+        "rssBytes": 122241024,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 10972576,
+        "externalBytes": 4365175
+      },
+      {
+        "ts": 1771933052700,
+        "rssBytes": 122634240,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 11630656,
+        "externalBytes": 4396488
+      },
+      {
+        "ts": 1771933053200,
+        "rssBytes": 122699776,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 12596824,
+        "externalBytes": 4441464
+      },
+      {
+        "ts": 1771933053701,
+        "rssBytes": 122732544,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 13216664,
+        "externalBytes": 4465500
+      },
+      {
+        "ts": 1771933054204,
+        "rssBytes": 122781696,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 10805544,
+        "externalBytes": 4349760
+      },
+      {
+        "ts": 1771933054706,
+        "rssBytes": 122781696,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 11527120,
+        "externalBytes": 4386247
+      },
+      {
+        "ts": 1771933055206,
+        "rssBytes": 124928000,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 12457904,
+        "externalBytes": 4430447
+      },
+      {
+        "ts": 1771933055707,
+        "rssBytes": 124928000,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 13070056,
+        "externalBytes": 4454743
+      },
+      {
+        "ts": 1771933056209,
+        "rssBytes": 124944384,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 10769064,
+        "externalBytes": 4344674
+      },
+      {
+        "ts": 1771933056712,
+        "rssBytes": 124944384,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 11376960,
+        "externalBytes": 4376890
+      },
+      {
+        "ts": 1771933057212,
+        "rssBytes": 124944384,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 12293496,
+        "externalBytes": 4420887
+      },
+      {
+        "ts": 1771933057715,
+        "rssBytes": 124977152,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 12909200,
+        "externalBytes": 4453562
+      },
+      {
+        "ts": 1771933058217,
+        "rssBytes": 125009920,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 10543016,
+        "externalBytes": 4344144
+      },
+      {
+        "ts": 1771933058718,
+        "rssBytes": 125009920,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 11150808,
+        "externalBytes": 4368240
+      },
+      {
+        "ts": 1771933059220,
+        "rssBytes": 125042688,
+        "heapTotalBytes": 20234240,
+        "heapUsedBytes": 12064608,
+        "externalBytes": 4412552
+      },
+      {
+        "ts": 1771933059720,
+        "rssBytes": 125075456,
+        "heapTotalBytes": 20496384,
+        "heapUsedBytes": 13052640,
+        "externalBytes": 4447904
+      },
+      {
+        "ts": 1771933060222,
+        "rssBytes": 126386176,
+        "heapTotalBytes": 20496384,
+        "heapUsedBytes": 13550952,
+        "externalBytes": 4945877
+      },
+      {
+        "ts": 1771933060723,
+        "rssBytes": 127565824,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 11751632,
+        "externalBytes": 4752384
+      },
+      {
+        "ts": 1771933061226,
+        "rssBytes": 127582208,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 12708016,
+        "externalBytes": 4798758
+      },
+      {
+        "ts": 1771933061728,
+        "rssBytes": 127631360,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 13317568,
+        "externalBytes": 4823062
+      },
+      {
+        "ts": 1771933062230,
+        "rssBytes": 127680512,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 14226928,
+        "externalBytes": 4867409
+      },
+      {
+        "ts": 1771933062731,
+        "rssBytes": 127795200,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 14845016,
+        "externalBytes": 4899930
+      },
+      {
+        "ts": 1771933063232,
+        "rssBytes": 131727360,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 15786776,
+        "externalBytes": 4943977
+      },
+      {
+        "ts": 1771933063734,
+        "rssBytes": 132333568,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 16391120,
+        "externalBytes": 4968290
+      },
+      {
+        "ts": 1771933064235,
+        "rssBytes": 133234688,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 17287352,
+        "externalBytes": 5012721
+      },
+      {
+        "ts": 1771933064742,
+        "rssBytes": 133988352,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 17928944,
+        "externalBytes": 5045470
+      },
+      {
+        "ts": 1771933065243,
+        "rssBytes": 134201344,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 12104808,
+        "externalBytes": 4770888
+      },
+      {
+        "ts": 1771933065744,
+        "rssBytes": 134201344,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 12811960,
+        "externalBytes": 4797845
+      },
+      {
+        "ts": 1771933066245,
+        "rssBytes": 134201344,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 13709064,
+        "externalBytes": 4842147
+      },
+      {
+        "ts": 1771933066747,
+        "rssBytes": 134201344,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 14314808,
+        "externalBytes": 4874282
+      },
+      {
+        "ts": 1771933067247,
+        "rssBytes": 134840320,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 15210416,
+        "externalBytes": 4918406
+      },
+      {
+        "ts": 1771933067747,
+        "rssBytes": 135692288,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 16028368,
+        "externalBytes": 4959422
+      },
+      {
+        "ts": 1771933068248,
+        "rssBytes": 136314880,
+        "heapTotalBytes": 29671424,
+        "heapUsedBytes": 16672432,
+        "externalBytes": 4985787
+      }
+    ],
+    "events": [
+      {
+        "ts": "2026-02-24T11:37:30.270Z",
+        "clientId": 1,
+        "type": "connect_open",
+        "openLatencyMs": 77
+      },
+      {
+        "ts": "2026-02-24T11:37:30.355Z",
+        "clientId": 5,
+        "type": "connect_open",
+        "openLatencyMs": 156
+      },
+      {
+        "ts": "2026-02-24T11:37:30.356Z",
+        "clientId": 36,
+        "type": "connect_open",
+        "openLatencyMs": 142
+      },
+      {
+        "ts": "2026-02-24T11:37:30.361Z",
+        "clientId": 17,
+        "type": "connect_open",
+        "openLatencyMs": 154
+      },
+      {
+        "ts": "2026-02-24T11:37:30.362Z",
+        "clientId": 24,
+        "type": "connect_open",
+        "openLatencyMs": 152
+      },
+      {
+        "ts": "2026-02-24T11:37:30.365Z",
+        "clientId": 10,
+        "type": "connect_open",
+        "openLatencyMs": 161
+      },
+      {
+        "ts": "2026-02-24T11:37:30.365Z",
+        "clientId": 26,
+        "type": "connect_open",
+        "openLatencyMs": 154
+      },
+      {
+        "ts": "2026-02-24T11:37:30.369Z",
+        "clientId": 38,
+        "type": "connect_open",
+        "openLatencyMs": 154
+      },
+      {
+        "ts": "2026-02-24T11:37:30.370Z",
+        "clientId": 13,
+        "type": "connect_open",
+        "openLatencyMs": 164
+      },
+      {
+        "ts": "2026-02-24T11:37:30.371Z",
+        "clientId": 2,
+        "type": "connect_open",
+        "openLatencyMs": 175
+      },
+      {
+        "ts": "2026-02-24T11:37:30.371Z",
+        "clientId": 19,
+        "type": "connect_open",
+        "openLatencyMs": 163
+      },
+      {
+        "ts": "2026-02-24T11:37:30.372Z",
+        "clientId": 9,
+        "type": "connect_open",
+        "openLatencyMs": 169
+      },
+      {
+        "ts": "2026-02-24T11:37:30.373Z",
+        "clientId": 6,
+        "type": "connect_open",
+        "openLatencyMs": 173
+      },
+      {
+        "ts": "2026-02-24T11:37:30.373Z",
+        "clientId": 35,
+        "type": "connect_open",
+        "openLatencyMs": 159
+      },
+      {
+        "ts": "2026-02-24T11:37:30.374Z",
+        "clientId": 22,
+        "type": "connect_open",
+        "openLatencyMs": 165
+      },
+      {
+        "ts": "2026-02-24T11:37:30.375Z",
+        "clientId": 4,
+        "type": "connect_open",
+        "openLatencyMs": 177
+      },
+      {
+        "ts": "2026-02-24T11:37:30.376Z",
+        "clientId": 28,
+        "type": "connect_open",
+        "openLatencyMs": 164
+      },
+      {
+        "ts": "2026-02-24T11:37:30.379Z",
+        "clientId": 32,
+        "type": "connect_open",
+        "openLatencyMs": 166
+      },
+      {
+        "ts": "2026-02-24T11:37:30.382Z",
+        "clientId": 37,
+        "type": "connect_open",
+        "openLatencyMs": 168
+      },
+      {
+        "ts": "2026-02-24T11:37:30.383Z",
+        "clientId": 29,
+        "type": "connect_open",
+        "openLatencyMs": 171
+      },
+      {
+        "ts": "2026-02-24T11:37:30.383Z",
+        "clientId": 40,
+        "type": "connect_open",
+        "openLatencyMs": 168
+      },
+      {
+        "ts": "2026-02-24T11:37:30.384Z",
+        "clientId": 27,
+        "type": "connect_open",
+        "openLatencyMs": 173
+      },
+      {
+        "ts": "2026-02-24T11:37:30.384Z",
+        "clientId": 7,
+        "type": "connect_open",
+        "openLatencyMs": 183
+      },
+      {
+        "ts": "2026-02-24T11:37:30.385Z",
+        "clientId": 23,
+        "type": "connect_open",
+        "openLatencyMs": 176
+      },
+      {
+        "ts": "2026-02-24T11:37:30.399Z",
+        "clientId": 15,
+        "type": "connect_open",
+        "openLatencyMs": 193
+      },
+      {
+        "ts": "2026-02-24T11:37:30.407Z",
+        "clientId": 3,
+        "type": "connect_open",
+        "openLatencyMs": 210
+      },
+      {
+        "ts": "2026-02-24T11:37:30.410Z",
+        "clientId": 12,
+        "type": "connect_open",
+        "openLatencyMs": 205
+      },
+      {
+        "ts": "2026-02-24T11:37:30.412Z",
+        "clientId": 20,
+        "type": "connect_open",
+        "openLatencyMs": 204
+      },
+      {
+        "ts": "2026-02-24T11:37:30.416Z",
+        "clientId": 11,
+        "type": "connect_open",
+        "openLatencyMs": 211
+      },
+      {
+        "ts": "2026-02-24T11:37:30.417Z",
+        "clientId": 30,
+        "type": "connect_open",
+        "openLatencyMs": 205
+      },
+      {
+        "ts": "2026-02-24T11:37:30.418Z",
+        "clientId": 8,
+        "type": "connect_open",
+        "openLatencyMs": 216
+      },
+      {
+        "ts": "2026-02-24T11:37:30.418Z",
+        "clientId": 31,
+        "type": "connect_open",
+        "openLatencyMs": 206
+      },
+      {
+        "ts": "2026-02-24T11:37:30.421Z",
+        "clientId": 39,
+        "type": "connect_open",
+        "openLatencyMs": 206
+      },
+      {
+        "ts": "2026-02-24T11:37:30.425Z",
+        "clientId": 18,
+        "type": "connect_open",
+        "openLatencyMs": 217
+      },
+      {
+        "ts": "2026-02-24T11:37:30.425Z",
+        "clientId": 21,
+        "type": "connect_open",
+        "openLatencyMs": 216
+      },
+      {
+        "ts": "2026-02-24T11:37:30.426Z",
+        "clientId": 34,
+        "type": "connect_open",
+        "openLatencyMs": 213
+      },
+      {
+        "ts": "2026-02-24T11:37:30.427Z",
+        "clientId": 14,
+        "type": "connect_open",
+        "openLatencyMs": 221
+      },
+      {
+        "ts": "2026-02-24T11:37:30.658Z",
+        "clientId": 16,
+        "type": "connect_open",
+        "openLatencyMs": 451
+      },
+      {
+        "ts": "2026-02-24T11:37:30.658Z",
+        "clientId": 25,
+        "type": "connect_open",
+        "openLatencyMs": 448
+      },
+      {
+        "ts": "2026-02-24T11:37:30.692Z",
+        "clientId": 33,
+        "type": "connect_open",
+        "openLatencyMs": 479
+      },
+      {
+        "ts": "2026-02-24T11:37:39.716Z",
+        "clientId": 1,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 2,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 3,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 4,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 5,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 6,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 7,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 8,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 9,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 10,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 11,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 12,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 13,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 14,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 15,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.717Z",
+        "clientId": 16,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 17,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 18,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 19,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 20,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 21,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 22,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 23,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:39.718Z",
+        "clientId": 24,
+        "type": "forced_disconnect"
+      },
+      {
+        "ts": "2026-02-24T11:37:40.072Z",
+        "clientId": 15,
+        "type": "reconnect_open",
+        "openLatencyMs": 227
+      },
+      {
+        "ts": "2026-02-24T11:37:40.074Z",
+        "clientId": 6,
+        "type": "reconnect_open",
+        "openLatencyMs": 233
+      },
+      {
+        "ts": "2026-02-24T11:37:40.079Z",
+        "clientId": 9,
+        "type": "reconnect_open",
+        "openLatencyMs": 236
+      },
+      {
+        "ts": "2026-02-24T11:37:40.079Z",
+        "clientId": 20,
+        "type": "reconnect_open",
+        "openLatencyMs": 232
+      },
+      {
+        "ts": "2026-02-24T11:37:40.080Z",
+        "clientId": 5,
+        "type": "reconnect_open",
+        "openLatencyMs": 239
+      },
+      {
+        "ts": "2026-02-24T11:37:40.083Z",
+        "clientId": 3,
+        "type": "reconnect_open",
+        "openLatencyMs": 243
+      },
+      {
+        "ts": "2026-02-24T11:37:40.084Z",
+        "clientId": 7,
+        "type": "reconnect_open",
+        "openLatencyMs": 242
+      },
+      {
+        "ts": "2026-02-24T11:37:40.086Z",
+        "clientId": 8,
+        "type": "reconnect_open",
+        "openLatencyMs": 244
+      },
+      {
+        "ts": "2026-02-24T11:37:40.086Z",
+        "clientId": 12,
+        "type": "reconnect_open",
+        "openLatencyMs": 242
+      },
+      {
+        "ts": "2026-02-24T11:37:40.091Z",
+        "clientId": 1,
+        "type": "reconnect_open",
+        "openLatencyMs": 254
+      },
+      {
+        "ts": "2026-02-24T11:37:40.091Z",
+        "clientId": 14,
+        "type": "reconnect_open",
+        "openLatencyMs": 246
+      },
+      {
+        "ts": "2026-02-24T11:37:40.097Z",
+        "clientId": 17,
+        "type": "reconnect_open",
+        "openLatencyMs": 251
+      },
+      {
+        "ts": "2026-02-24T11:37:40.107Z",
+        "clientId": 10,
+        "type": "reconnect_open",
+        "openLatencyMs": 264
+      },
+      {
+        "ts": "2026-02-24T11:37:40.107Z",
+        "clientId": 18,
+        "type": "reconnect_open",
+        "openLatencyMs": 261
+      },
+      {
+        "ts": "2026-02-24T11:37:40.107Z",
+        "clientId": 22,
+        "type": "reconnect_open",
+        "openLatencyMs": 260
+      },
+      {
+        "ts": "2026-02-24T11:37:40.108Z",
+        "clientId": 13,
+        "type": "reconnect_open",
+        "openLatencyMs": 264
+      },
+      {
+        "ts": "2026-02-24T11:37:40.109Z",
+        "clientId": 21,
+        "type": "reconnect_open",
+        "openLatencyMs": 262
+      },
+      {
+        "ts": "2026-02-24T11:37:40.117Z",
+        "clientId": 16,
+        "type": "reconnect_open",
+        "openLatencyMs": 272
+      },
+      {
+        "ts": "2026-02-24T11:37:40.117Z",
+        "clientId": 11,
+        "type": "reconnect_open",
+        "openLatencyMs": 274
+      },
+      {
+        "ts": "2026-02-24T11:37:40.147Z",
+        "clientId": 23,
+        "type": "reconnect_open",
+        "openLatencyMs": 299
+      },
+      {
+        "ts": "2026-02-24T11:37:40.147Z",
+        "clientId": 24,
+        "type": "reconnect_open",
+        "openLatencyMs": 299
+      },
+      {
+        "ts": "2026-02-24T11:37:40.148Z",
+        "clientId": 4,
+        "type": "reconnect_open",
+        "openLatencyMs": 308
+      },
+      {
+        "ts": "2026-02-24T11:37:40.159Z",
+        "clientId": 2,
+        "type": "reconnect_open",
+        "openLatencyMs": 320
+      },
+      {
+        "ts": "2026-02-24T11:37:40.173Z",
+        "clientId": 15,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 77
+      },
+      {
+        "ts": "2026-02-24T11:37:40.176Z",
+        "clientId": 6,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 74
+      },
+      {
+        "ts": "2026-02-24T11:37:40.180Z",
+        "clientId": 9,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 70
+      },
+      {
+        "ts": "2026-02-24T11:37:40.180Z",
+        "clientId": 20,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 70
+      },
+      {
+        "ts": "2026-02-24T11:37:40.180Z",
+        "clientId": 5,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 69
+      },
+      {
+        "ts": "2026-02-24T11:37:40.185Z",
+        "clientId": 3,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 63
+      },
+      {
+        "ts": "2026-02-24T11:37:40.213Z",
+        "clientId": 19,
+        "type": "reconnect_open",
+        "openLatencyMs": 367
+      },
+      {
+        "ts": "2026-02-24T11:37:40.346Z",
+        "clientId": 1,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 252
+      },
+      {
+        "ts": "2026-02-24T11:37:40.346Z",
+        "clientId": 14,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 251
+      },
+      {
+        "ts": "2026-02-24T11:37:40.349Z",
+        "clientId": 24,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 195
+      },
+      {
+        "ts": "2026-02-24T11:37:40.349Z",
+        "clientId": 17,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 249
+      },
+      {
+        "ts": "2026-02-24T11:37:40.358Z",
+        "clientId": 10,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 236
+      },
+      {
+        "ts": "2026-02-24T11:37:40.358Z",
+        "clientId": 18,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 235
+      },
+      {
+        "ts": "2026-02-24T11:37:40.358Z",
+        "clientId": 22,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 239
+      },
+      {
+        "ts": "2026-02-24T11:37:40.363Z",
+        "clientId": 13,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 238
+      },
+      {
+        "ts": "2026-02-24T11:37:40.363Z",
+        "clientId": 21,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 237
+      },
+      {
+        "ts": "2026-02-24T11:37:40.369Z",
+        "clientId": 16,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 232
+      },
+      {
+        "ts": "2026-02-24T11:37:40.388Z",
+        "clientId": 7,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 259
+      },
+      {
+        "ts": "2026-02-24T11:37:40.388Z",
+        "clientId": 8,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 256
+      },
+      {
+        "ts": "2026-02-24T11:37:40.388Z",
+        "clientId": 12,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 260
+      },
+      {
+        "ts": "2026-02-24T11:37:40.399Z",
+        "clientId": 23,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 241
+      },
+      {
+        "ts": "2026-02-24T11:37:40.400Z",
+        "clientId": 4,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 202
+      },
+      {
+        "ts": "2026-02-24T11:37:40.415Z",
+        "clientId": 2,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 230
+      },
+      {
+        "ts": "2026-02-24T11:37:40.415Z",
+        "clientId": 19,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 171
+      },
+      {
+        "ts": "2026-02-24T11:37:40.420Z",
+        "clientId": 11,
+        "type": "subscription_recovered",
+        "recoveryLatencyMs": 272
+      }
+    ]
+  }
+}
