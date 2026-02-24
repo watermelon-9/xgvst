@@ -256,11 +256,12 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const heartbeatIntervalMs = options.heartbeatIntervalMs ?? 15000;
 	const allowJsonTickFallback = options.allowJsonTickFallback ?? false;
 
-	const BASE_DELAY_MS = options.baseDelayMs ?? 500;
-	const MAX_DELAY_MS = options.maxDelayMs ?? 30_000;
-	const JITTER_FACTOR = options.jitterFactor ?? 0.5;
-	const MAX_RETRIES = options.maxRetries ?? 20;
-	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 200;
+	const BASE_DELAY_MS = options.baseDelayMs ?? 800;
+	const MAX_DELAY_MS = options.maxDelayMs ?? 60_000;
+	const JITTER_FACTOR = options.jitterFactor ?? 0.8;
+	const MAX_RETRIES = options.maxRetries ?? 25;
+	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 800;
+	const BACKOFF_MULTIPLIER = 2.2;
 
 	let socket: WebSocket | null = null;
 	let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
@@ -335,20 +336,22 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		reconnectTimer = null;
 	};
 
-	const getNextReconnectDelay = (attempt: number) => {
-		if (attempt > MAX_RETRIES) return Number.POSITIVE_INFINITY;
+	const getNextReconnectDelay = () => {
+		if (reconnectAttempt >= MAX_RETRIES) {
+			return Number.POSITIVE_INFINITY;
+		}
 
-		let delay = BASE_DELAY_MS * Math.pow(2, Math.max(0, attempt - 1));
+		let delay = BASE_DELAY_MS * Math.pow(BACKOFF_MULTIPLIER, reconnectAttempt);
 		delay = Math.min(delay, MAX_DELAY_MS);
 
 		const jitter = delay * JITTER_FACTOR * (Math.random() * 2 - 1);
 		delay += jitter;
 
-		if (attempt === 1) {
+		if (reconnectAttempt === 0) {
 			delay += Math.random() * INITIAL_JITTER_RANGE_MS;
 		}
 
-		return Math.max(100, Math.round(delay));
+		return Math.max(200, Math.round(delay));
 	};
 
 	const resetReconnectState = () => {
@@ -362,21 +365,27 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		reconnectStartedAt = null;
 	};
 
-	const scheduleReconnect = () => {
+	const scheduleReconnect = (closeCode?: number) => {
 		if (manualClose) return;
 		if (reconnectTimer) return;
 
-		if (reconnectStartedAt === null) {
-			reconnectStartedAt = Date.now();
-		}
-
 		reconnectAttempt += 1;
-		const delay = getNextReconnectDelay(reconnectAttempt);
+		let delay = getNextReconnectDelay();
+
+		if (closeCode === 1008 || closeCode === 1011) {
+			delay = Math.min(delay * 1.5, MAX_DELAY_MS);
+		} else if (closeCode === 1006) {
+			delay = Math.max(300, delay * 0.8);
+		}
 
 		if (!Number.isFinite(delay)) {
 			updateStatus('failed');
 			console.warn('[ws] max reconnect attempts reached');
 			return;
+		}
+
+		if (reconnectStartedAt === null) {
+			reconnectStartedAt = Date.now();
 		}
 
 		updateStatus('reconnecting');
@@ -454,12 +463,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 				return;
 			}
 
-			if (event.code === 1000 || event.code === 1001) {
-				updateStatus('closed');
-				return;
-			}
-
-			scheduleReconnect();
+			scheduleReconnect(event.code);
 		});
 	};
 
