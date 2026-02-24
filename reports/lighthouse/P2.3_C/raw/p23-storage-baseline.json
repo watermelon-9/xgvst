@@ -1,9 +1,43 @@
 {
-  "generatedAt": "2026-02-24T18:15:39.805Z",
-  "durationMs": 21,
+  "generatedAt": "2026-02-24T18:21:11.881Z",
+  "durationMs": 64,
   "url": "http://127.0.0.1:8791/api/debug/storage/bench",
-  "ok": false,
-  "httpStatus": 500,
-  "body": null,
-  "rawText": "Internal Server Error"
+  "ok": true,
+  "httpStatus": 200,
+  "body": {
+    "ok": true,
+    "runId": "1771957271834-d1fcf3",
+    "iterations": 30,
+    "valueSize": 256,
+    "stats": {
+      "kvWrite": {
+        "count": 30,
+        "p50Ms": 0,
+        "p95Ms": 1,
+        "maxMs": 2,
+        "meanMs": 0.4
+      },
+      "kvRead": {
+        "count": 30,
+        "p50Ms": 0,
+        "p95Ms": 1,
+        "maxMs": 2,
+        "meanMs": 0.16666666666666666
+      },
+      "d1Read": {
+        "count": 30,
+        "p50Ms": 0,
+        "p95Ms": 1,
+        "maxMs": 1,
+        "meanMs": 0.3333333333333333
+      },
+      "d1Write": {
+        "count": 30,
+        "p50Ms": 0,
+        "p95Ms": 1,
+        "maxMs": 2,
+        "meanMs": 0.4666666666666667
+      }
+    }
+  }
 }

@@ -3,10 +3,12 @@ import { QuoteDurableObject } from './durable/QuoteDurableObject';
 import { protobufCodec } from './proto/codec';
 import { SourceManager } from './sources/SourceManager';
 import type { QuoteTick } from './sources/QuoteSource';
+import { StorageTelemetry } from './observability/storageTelemetry';
 
 type Bindings = Env;
 
 const app = new Hono<{ Bindings: Bindings }>();
+const storageTelemetry = new StorageTelemetry('workers-index');
 
 type DebugBindings = Bindings & { DEBUG_SOURCE_TOKEN?: string };
 
@@ -269,7 +271,7 @@ class QuoteConnectionPool {
   }
 
   private broadcastTick(tick: QuoteTick) {
-    let frameToSend: ArrayBuffer | string;
+    let frameToSend: ArrayBuffer | null = null;
     let protobufOk = false;
 
     try {
@@ -280,14 +282,13 @@ class QuoteConnectionPool {
       const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
       if (debugEnabled) {
         const qt1 = encodeCustomBinaryTickFrame(tick);
-        if (qt1) {
-          frameToSend = toArrayBuffer(qt1);
-        } else {
-          frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
-        }
-      } else {
-        frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+        frameToSend = qt1 ? toArrayBuffer(qt1) : null;
       }
+    }
+
+    if (!frameToSend) {
+      this.frameStats.sentFallbackFrames += 1;
+      return;
     }
 
     for (const [ws, { symbols }] of this.clients.entries()) {
@@ -295,12 +296,8 @@ class QuoteConnectionPool {
 
       try {
         ws.send(frameToSend);
-        if (typeof frameToSend === 'string') {
-          this.frameStats.sentFallbackFrames += 1;
-        } else {
-          this.frameStats.sentBinaryFrames += 1;
-          if (protobufOk) this.frameStats.sentProtobufFrames += 1;
-        }
+        this.frameStats.sentBinaryFrames += 1;
+        if (protobufOk) this.frameStats.sentProtobufFrames += 1;
       } catch {
         ws.close(1011, 'broadcast failed');
         this.clients.delete(ws);
@@ -478,33 +475,39 @@ app.post('/api/debug/storage/bench', async (c) => {
   const d1ReadMs: number[] = [];
   const d1WriteMs: number[] = [];
 
-  await c.env.QUOTE_DB.exec(`
-    CREATE TABLE IF NOT EXISTS p23_storage_bench (
-      id TEXT PRIMARY KEY,
-      payload TEXT,
-      created_at TEXT
-    )
-  `);
+  await storageTelemetry.observe('d1', 'bench.create_table', () =>
+    c.env.QUOTE_DB
+      .prepare(
+        `CREATE TABLE IF NOT EXISTS p23_storage_bench (
+          id TEXT PRIMARY KEY,
+          payload TEXT,
+          created_at TEXT
+        )`
+      )
+      .run()
+  );
 
   for (let i = 0; i < iterations; i += 1) {
     const key = `p23:${runId}:${i}`;
 
     let started = performance.now();
-    await c.env.QUOTE_KV.put(key, value, { expirationTtl: 600 });
+    await storageTelemetry.observe('kv', 'bench.put', () => c.env.QUOTE_KV.put(key, value, { expirationTtl: 600 }));
     kvWriteMs.push(performance.now() - started);
 
     started = performance.now();
-    await c.env.QUOTE_KV.get(key);
+    await storageTelemetry.observe('kv', 'bench.get', () => c.env.QUOTE_KV.get(key));
     kvReadMs.push(performance.now() - started);
 
     started = performance.now();
-    await c.env.QUOTE_DB.prepare('SELECT ? as v').bind(i).first();
+    await storageTelemetry.observe('d1', 'bench.select', () => c.env.QUOTE_DB.prepare('SELECT ? as v').bind(i).first());
     d1ReadMs.push(performance.now() - started);
 
     started = performance.now();
-    await c.env.QUOTE_DB.prepare('INSERT OR REPLACE INTO p23_storage_bench (id, payload, created_at) VALUES (?, ?, ?)')
-      .bind(key, value, new Date().toISOString())
-      .run();
+    await storageTelemetry.observe('d1', 'bench.upsert', () =>
+      c.env.QUOTE_DB.prepare('INSERT OR REPLACE INTO p23_storage_bench (id, payload, created_at) VALUES (?, ?, ?)')
+        .bind(key, value, new Date().toISOString())
+        .run()
+    );
     d1WriteMs.push(performance.now() - started);
   }
 
@@ -567,7 +570,7 @@ async function writeSelfSelectHistory(db: D1Database, userId: string, action: st
       .bind(userId, symbol, action, now)
   );
 
-  await db.batch(statements);
+  await storageTelemetry.observe('d1', 'self_select.history.batch_insert', () => db.batch(statements));
 }
 
 app.get('/api/self-selects', async (c) => {
@@ -576,11 +579,13 @@ app.get('/api/self-selects', async (c) => {
     return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
   }
 
-  const rows = await c.env.QUOTE_DB.prepare(
-    'SELECT symbol, created_at AS createdAt, updated_at AS updatedAt FROM self_selects WHERE user_id = ? ORDER BY symbol ASC'
-  )
-    .bind(userId)
-    .all<{ symbol: string; createdAt: string; updatedAt: string }>();
+  const rows = await storageTelemetry.observe('d1', 'self_select.list', () =>
+    c.env.QUOTE_DB.prepare(
+      'SELECT symbol, created_at AS createdAt, updated_at AS updatedAt FROM self_selects WHERE user_id = ? ORDER BY symbol ASC'
+    )
+      .bind(userId)
+      .all<{ symbol: string; createdAt: string; updatedAt: string }>()
+  );
 
   return c.json({ ok: true, userId, symbols: rows.results.map((row) => row.symbol), items: rows.results });
 });
@@ -595,7 +600,9 @@ app.put('/api/self-selects', async (c) => {
   const symbols = normalizeSelfSelectSymbols(payload.symbols);
   const now = new Date().toISOString();
 
-  const existingRows = await c.env.QUOTE_DB.prepare('SELECT symbol FROM self_selects WHERE user_id = ?').bind(userId).all<{ symbol: string }>();
+  const existingRows = await storageTelemetry.observe('d1', 'self_select.replace.read_existing', () =>
+    c.env.QUOTE_DB.prepare('SELECT symbol FROM self_selects WHERE user_id = ?').bind(userId).all<{ symbol: string }>()
+  );
   const existingSymbols = new Set(existingRows.results.map((row) => row.symbol));
 
   const statements: D1PreparedStatement[] = [];
@@ -614,7 +621,7 @@ app.put('/api/self-selects', async (c) => {
     );
   }
 
-  await c.env.QUOTE_DB.batch(statements);
+  await storageTelemetry.observe('d1', 'self_select.replace.batch_write', () => c.env.QUOTE_DB.batch(statements));
 
   const nextSymbols = new Set(symbols);
   const added = symbols.filter((symbol) => !existingSymbols.has(symbol));
@@ -648,14 +655,16 @@ app.post('/api/self-selects', async (c) => {
 
   const now = new Date().toISOString();
 
-  await c.env.QUOTE_DB.batch([
-    c.env.QUOTE_DB
-      .prepare('INSERT INTO users (user_id, created_at, updated_at) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET updated_at = excluded.updated_at')
-      .bind(userId, now, now),
-    c.env.QUOTE_DB
-      .prepare('INSERT INTO self_selects (user_id, symbol, created_at, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(user_id, symbol) DO UPDATE SET updated_at = excluded.updated_at')
-      .bind(userId, symbol, now, now)
-  ]);
+  await storageTelemetry.observe('d1', 'self_select.add.batch_upsert', () =>
+    c.env.QUOTE_DB.batch([
+      c.env.QUOTE_DB
+        .prepare('INSERT INTO users (user_id, created_at, updated_at) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET updated_at = excluded.updated_at')
+        .bind(userId, now, now),
+      c.env.QUOTE_DB
+        .prepare('INSERT INTO self_selects (user_id, symbol, created_at, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(user_id, symbol) DO UPDATE SET updated_at = excluded.updated_at')
+        .bind(userId, symbol, now, now)
+    ])
+  );
 
   await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'add', [symbol]);
 
@@ -673,7 +682,9 @@ app.delete('/api/self-selects/:symbol', async (c) => {
     return c.json({ ok: false, error: 'symbol is required' }, 400);
   }
 
-  await c.env.QUOTE_DB.prepare('DELETE FROM self_selects WHERE user_id = ? AND symbol = ?').bind(userId, symbol).run();
+  await storageTelemetry.observe('d1', 'self_select.remove', () =>
+    c.env.QUOTE_DB.prepare('DELETE FROM self_selects WHERE user_id = ? AND symbol = ?').bind(userId, symbol).run()
+  );
   await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'remove', [symbol]);
 
   return c.json({ ok: true, userId, symbol });
@@ -687,11 +698,13 @@ app.get('/api/self-selects/history', async (c) => {
 
   const limit = Math.max(1, Math.min(200, Number(c.req.query('limit') ?? 50) || 50));
 
-  const rows = await c.env.QUOTE_DB.prepare(
-    'SELECT symbol, action, ts FROM quote_history WHERE user_id = ? ORDER BY ts DESC LIMIT ?'
-  )
-    .bind(userId, limit)
-    .all<{ symbol: string; action: string; ts: string }>();
+  const rows = await storageTelemetry.observe('d1', 'self_select.history.list', () =>
+    c.env.QUOTE_DB.prepare(
+      'SELECT symbol, action, ts FROM quote_history WHERE user_id = ? ORDER BY ts DESC LIMIT ?'
+    )
+      .bind(userId, limit)
+      .all<{ symbol: string; action: string; ts: string }>()
+  );
 
   return c.json({ ok: true, userId, history: rows.results });
 });
@@ -717,6 +730,10 @@ app.get('/api/do/metrics', async (c) => {
   const response = await stub.fetch('https://quote-do/metrics');
   const payload = await response.json();
   return c.json({ ok: true, sessionKey, payload });
+});
+
+app.get('/api/infra/storage-metrics', (c) => {
+  return c.json({ ok: true, scope: 'workers-index', storage: storageTelemetry.snapshot() });
 });
 
 app.get('/ws/quote', async (c) => {
