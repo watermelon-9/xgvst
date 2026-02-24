@@ -77,6 +77,7 @@ export type UseQuoteWebSocketOptions = {
 	jitterFactor?: number;
 	maxRetries?: number;
 	initialJitterRangeMs?: number;
+	reconnectFastLaneMs?: number;
 };
 
 const textDecoder = new TextDecoder();
@@ -165,8 +166,7 @@ function decodeCustomBinaryFrame(bytes: Uint8Array): QuoteTick | null {
 	return normalizeTick({ symbol, price, changePct, ts, source }, 'ws-binary');
 }
 
-async function decodeBinaryTick(data: ArrayBuffer | Blob): Promise<DecodeBinaryResult | null> {
-	const buffer = data instanceof Blob ? await data.arrayBuffer() : data;
+function decodeBinaryTickFromBuffer(buffer: ArrayBuffer): DecodeBinaryResult | null {
 	const bytes = new Uint8Array(buffer);
 
 	const protoPayload = decodeQuotePayload(bytes);
@@ -193,6 +193,15 @@ async function decodeBinaryTick(data: ArrayBuffer | Blob): Promise<DecodeBinaryR
 	};
 }
 
+async function decodeBinaryTick(data: ArrayBuffer | Blob): Promise<DecodeBinaryResult | null> {
+	if (data instanceof ArrayBuffer) {
+		return decodeBinaryTickFromBuffer(data);
+	}
+
+	const buffer = await data.arrayBuffer();
+	return decodeBinaryTickFromBuffer(buffer);
+}
+
 function normalizeSymbols(symbols: string[]): string[] {
 	const unique = new Set<string>();
 	for (const raw of symbols) {
@@ -213,6 +222,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const JITTER_FACTOR = options.jitterFactor ?? 0.9;
 	const MAX_RETRIES = options.maxRetries ?? 25;
 	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 1200;
+	const RECONNECT_FAST_LANE_MS = options.reconnectFastLaneMs ?? 40;
 	const BACKOFF_MULTIPLIER = 2.4;
 	const MIN_RECONNECT_GAP_MS = 200;
 
@@ -302,7 +312,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		}
 
 		updateRecoveryState(next);
-		send({ type: 'resync', symbols: next });
+		send({ type: 'resync', symbols: next, clientSentAtMs: Date.now() });
 	};
 
 	const flushSubscriptions = () => {
@@ -381,8 +391,12 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 
 		let delay = getNextReconnectDelay();
 
+		if (reconnectAttempt === 1) {
+			delay = Math.min(delay, Math.max(0, RECONNECT_FAST_LANE_MS));
+		}
+
 		if (isWsError && reconnectAttempt === 1) {
-			delay = Math.random() * 300;
+			delay = Math.min(delay, Math.random() * 300);
 		}
 
 		if (!Number.isFinite(delay)) {
@@ -448,10 +462,13 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 
 		if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
 			stats.binaryFrames += 1;
-			const decoded = await decodeBinaryTick(event.data);
+
+			const decoded =
+				stats.recovering && event.data instanceof ArrayBuffer
+					? decodeBinaryTickFromBuffer(event.data)
+					: await decodeBinaryTick(event.data);
 			if (decoded?.decodedBy === 'protobuf') {
 				stats.protobufDecodeSuccess += 1;
-				console.info(`[ws] protobuf decode success: ${stats.protobufDecodeSuccess}`);
 			}
 			emitStats();
 			if (decoded) {
@@ -467,8 +484,8 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			clearReconnectTimer();
 			resetReconnectState();
 			consecutiveErrors = 0;
-			updateStatus('open');
 			flushSubscriptions();
+			updateStatus('open');
 			startHeartbeat();
 		});
 		ws.addEventListener('message', (event) => {

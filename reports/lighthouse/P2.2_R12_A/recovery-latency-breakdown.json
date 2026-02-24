@@ -1,0 +1,618 @@
+{
+  "generatedAt": "2026-02-24T16:03:57.341Z",
+  "config": {
+    "wsUrl": "ws://127.0.0.1:8787/ws/quote?session=p22-r12-breakdown-1771949033984",
+    "iterations": 40,
+    "symbols": [
+      "000001",
+      "600519",
+      "300750"
+    ]
+  },
+  "summary": {
+    "openToResyncSendMs": {
+      "count": 40,
+      "p50": 0,
+      "p95": 0,
+      "max": 0
+    },
+    "resyncToDoRecvMs": {
+      "count": 40,
+      "p50": 0,
+      "p95": 1,
+      "max": 31
+    },
+    "doRecvToUpstreamReadyMs": {
+      "count": 40,
+      "p50": 0,
+      "p95": 0,
+      "max": 1
+    },
+    "upstreamToMemorySnapshotSentMs": {
+      "count": 40,
+      "p50": 0,
+      "p95": 1,
+      "max": 1
+    },
+    "memorySnapshotToFirstTickMs": {
+      "count": 40,
+      "p50": 0,
+      "p95": 2,
+      "max": 3
+    },
+    "endToEndOpenToFirstTickMs": {
+      "count": 40,
+      "p50": 1,
+      "p95": 4,
+      "max": 32
+    },
+    "endToEndResyncToFirstTickMs": {
+      "count": 40,
+      "p50": 1,
+      "p95": 4,
+      "max": 32
+    }
+  },
+  "samples": [
+    {
+      "iteration": 1,
+      "openLatencyMs": 11,
+      "reconnectGapMs": 73,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949034588,
+        "doResyncReceivedAtMs": 1771949034590,
+        "doUpstreamReadyAtMs": 1771949034591,
+        "doMemorySnapshotSentAtMs": 1771949034591,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949034594
+    },
+    {
+      "iteration": 2,
+      "openLatencyMs": 3,
+      "reconnectGapMs": 65,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949034659,
+        "doResyncReceivedAtMs": 1771949034659,
+        "doUpstreamReadyAtMs": 1771949034659,
+        "doMemorySnapshotSentAtMs": 1771949034659,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949034660
+    },
+    {
+      "iteration": 3,
+      "openLatencyMs": 3,
+      "reconnectGapMs": 64,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949034724,
+        "doResyncReceivedAtMs": 1771949034725,
+        "doUpstreamReadyAtMs": 1771949034725,
+        "doMemorySnapshotSentAtMs": 1771949034725,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949034725
+    },
+    {
+      "iteration": 4,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949034791,
+        "doResyncReceivedAtMs": 1771949034791,
+        "doUpstreamReadyAtMs": 1771949034791,
+        "doMemorySnapshotSentAtMs": 1771949034791,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949034792
+    },
+    {
+      "iteration": 5,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949034859,
+        "doResyncReceivedAtMs": 1771949034859,
+        "doUpstreamReadyAtMs": 1771949034859,
+        "doMemorySnapshotSentAtMs": 1771949034859,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949034859
+    },
+    {
+      "iteration": 6,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949034927,
+        "doResyncReceivedAtMs": 1771949034927,
+        "doUpstreamReadyAtMs": 1771949034927,
+        "doMemorySnapshotSentAtMs": 1771949034927,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949034928
+    },
+    {
+      "iteration": 7,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 68,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949034996,
+        "doResyncReceivedAtMs": 1771949034997,
+        "doUpstreamReadyAtMs": 1771949034997,
+        "doMemorySnapshotSentAtMs": 1771949034997,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949034997
+    },
+    {
+      "iteration": 8,
+      "openLatencyMs": 7,
+      "reconnectGapMs": 68,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035066,
+        "doResyncReceivedAtMs": 1771949035066,
+        "doUpstreamReadyAtMs": 1771949035066,
+        "doMemorySnapshotSentAtMs": 1771949035066,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035067
+    },
+    {
+      "iteration": 9,
+      "openLatencyMs": 8,
+      "reconnectGapMs": 70,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035137,
+        "doResyncReceivedAtMs": 1771949035138,
+        "doUpstreamReadyAtMs": 1771949035138,
+        "doMemorySnapshotSentAtMs": 1771949035139,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035141
+    },
+    {
+      "iteration": 10,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035208,
+        "doResyncReceivedAtMs": 1771949035208,
+        "doUpstreamReadyAtMs": 1771949035208,
+        "doMemorySnapshotSentAtMs": 1771949035208,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035209
+    },
+    {
+      "iteration": 11,
+      "openLatencyMs": 4,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035275,
+        "doResyncReceivedAtMs": 1771949035275,
+        "doUpstreamReadyAtMs": 1771949035275,
+        "doMemorySnapshotSentAtMs": 1771949035275,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035275
+    },
+    {
+      "iteration": 12,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 65,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035341,
+        "doResyncReceivedAtMs": 1771949035341,
+        "doUpstreamReadyAtMs": 1771949035341,
+        "doMemorySnapshotSentAtMs": 1771949035341,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035342
+    },
+    {
+      "iteration": 13,
+      "openLatencyMs": 7,
+      "reconnectGapMs": 68,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035410,
+        "doResyncReceivedAtMs": 1771949035410,
+        "doUpstreamReadyAtMs": 1771949035410,
+        "doMemorySnapshotSentAtMs": 1771949035410,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035410
+    },
+    {
+      "iteration": 14,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035477,
+        "doResyncReceivedAtMs": 1771949035477,
+        "doUpstreamReadyAtMs": 1771949035477,
+        "doMemorySnapshotSentAtMs": 1771949035477,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035478
+    },
+    {
+      "iteration": 15,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035545,
+        "doResyncReceivedAtMs": 1771949035545,
+        "doUpstreamReadyAtMs": 1771949035545,
+        "doMemorySnapshotSentAtMs": 1771949035545,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035546
+    },
+    {
+      "iteration": 16,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035613,
+        "doResyncReceivedAtMs": 1771949035613,
+        "doUpstreamReadyAtMs": 1771949035613,
+        "doMemorySnapshotSentAtMs": 1771949035613,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035614
+    },
+    {
+      "iteration": 17,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035681,
+        "doResyncReceivedAtMs": 1771949035681,
+        "doUpstreamReadyAtMs": 1771949035681,
+        "doMemorySnapshotSentAtMs": 1771949035681,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035681
+    },
+    {
+      "iteration": 18,
+      "openLatencyMs": 82,
+      "reconnectGapMs": 142,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035824,
+        "doResyncReceivedAtMs": 1771949035855,
+        "doUpstreamReadyAtMs": 1771949035855,
+        "doMemorySnapshotSentAtMs": 1771949035856,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035856
+    },
+    {
+      "iteration": 19,
+      "openLatencyMs": 3,
+      "reconnectGapMs": 65,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035921,
+        "doResyncReceivedAtMs": 1771949035921,
+        "doUpstreamReadyAtMs": 1771949035921,
+        "doMemorySnapshotSentAtMs": 1771949035921,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035922
+    },
+    {
+      "iteration": 20,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949035988,
+        "doResyncReceivedAtMs": 1771949035988,
+        "doUpstreamReadyAtMs": 1771949035988,
+        "doMemorySnapshotSentAtMs": 1771949035988,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949035988
+    },
+    {
+      "iteration": 21,
+      "openLatencyMs": 7,
+      "reconnectGapMs": 68,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036057,
+        "doResyncReceivedAtMs": 1771949036057,
+        "doUpstreamReadyAtMs": 1771949036057,
+        "doMemorySnapshotSentAtMs": 1771949036057,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036058
+    },
+    {
+      "iteration": 22,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036125,
+        "doResyncReceivedAtMs": 1771949036125,
+        "doUpstreamReadyAtMs": 1771949036125,
+        "doMemorySnapshotSentAtMs": 1771949036125,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036127
+    },
+    {
+      "iteration": 23,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036194,
+        "doResyncReceivedAtMs": 1771949036194,
+        "doUpstreamReadyAtMs": 1771949036194,
+        "doMemorySnapshotSentAtMs": 1771949036194,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036194
+    },
+    {
+      "iteration": 24,
+      "openLatencyMs": 4,
+      "reconnectGapMs": 65,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036260,
+        "doResyncReceivedAtMs": 1771949036260,
+        "doUpstreamReadyAtMs": 1771949036260,
+        "doMemorySnapshotSentAtMs": 1771949036260,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036260
+    },
+    {
+      "iteration": 25,
+      "openLatencyMs": 3,
+      "reconnectGapMs": 64,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036325,
+        "doResyncReceivedAtMs": 1771949036326,
+        "doUpstreamReadyAtMs": 1771949036326,
+        "doMemorySnapshotSentAtMs": 1771949036326,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036326
+    },
+    {
+      "iteration": 26,
+      "openLatencyMs": 3,
+      "reconnectGapMs": 63,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036390,
+        "doResyncReceivedAtMs": 1771949036390,
+        "doUpstreamReadyAtMs": 1771949036390,
+        "doMemorySnapshotSentAtMs": 1771949036390,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036391
+    },
+    {
+      "iteration": 27,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036457,
+        "doResyncReceivedAtMs": 1771949036457,
+        "doUpstreamReadyAtMs": 1771949036457,
+        "doMemorySnapshotSentAtMs": 1771949036457,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036457
+    },
+    {
+      "iteration": 28,
+      "openLatencyMs": 4,
+      "reconnectGapMs": 65,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036523,
+        "doResyncReceivedAtMs": 1771949036524,
+        "doUpstreamReadyAtMs": 1771949036524,
+        "doMemorySnapshotSentAtMs": 1771949036524,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036524
+    },
+    {
+      "iteration": 29,
+      "openLatencyMs": 8,
+      "reconnectGapMs": 70,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036595,
+        "doResyncReceivedAtMs": 1771949036595,
+        "doUpstreamReadyAtMs": 1771949036595,
+        "doMemorySnapshotSentAtMs": 1771949036595,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036596
+    },
+    {
+      "iteration": 30,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036662,
+        "doResyncReceivedAtMs": 1771949036662,
+        "doUpstreamReadyAtMs": 1771949036662,
+        "doMemorySnapshotSentAtMs": 1771949036663,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036663
+    },
+    {
+      "iteration": 31,
+      "openLatencyMs": 4,
+      "reconnectGapMs": 64,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036727,
+        "doResyncReceivedAtMs": 1771949036728,
+        "doUpstreamReadyAtMs": 1771949036728,
+        "doMemorySnapshotSentAtMs": 1771949036728,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036728
+    },
+    {
+      "iteration": 32,
+      "openLatencyMs": 4,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036794,
+        "doResyncReceivedAtMs": 1771949036795,
+        "doUpstreamReadyAtMs": 1771949036795,
+        "doMemorySnapshotSentAtMs": 1771949036795,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036795
+    },
+    {
+      "iteration": 33,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036862,
+        "doResyncReceivedAtMs": 1771949036863,
+        "doUpstreamReadyAtMs": 1771949036863,
+        "doMemorySnapshotSentAtMs": 1771949036863,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036863
+    },
+    {
+      "iteration": 34,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 68,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036931,
+        "doResyncReceivedAtMs": 1771949036931,
+        "doUpstreamReadyAtMs": 1771949036931,
+        "doMemorySnapshotSentAtMs": 1771949036931,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036931
+    },
+    {
+      "iteration": 35,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949036998,
+        "doResyncReceivedAtMs": 1771949036998,
+        "doUpstreamReadyAtMs": 1771949036998,
+        "doMemorySnapshotSentAtMs": 1771949036998,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949036999
+    },
+    {
+      "iteration": 36,
+      "openLatencyMs": 7,
+      "reconnectGapMs": 68,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949037067,
+        "doResyncReceivedAtMs": 1771949037067,
+        "doUpstreamReadyAtMs": 1771949037067,
+        "doMemorySnapshotSentAtMs": 1771949037067,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949037067
+    },
+    {
+      "iteration": 37,
+      "openLatencyMs": 7,
+      "reconnectGapMs": 68,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949037136,
+        "doResyncReceivedAtMs": 1771949037136,
+        "doUpstreamReadyAtMs": 1771949037136,
+        "doMemorySnapshotSentAtMs": 1771949037136,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949037137
+    },
+    {
+      "iteration": 38,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 67,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949037204,
+        "doResyncReceivedAtMs": 1771949037204,
+        "doUpstreamReadyAtMs": 1771949037204,
+        "doMemorySnapshotSentAtMs": 1771949037204,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949037204
+    },
+    {
+      "iteration": 39,
+      "openLatencyMs": 6,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949037271,
+        "doResyncReceivedAtMs": 1771949037271,
+        "doUpstreamReadyAtMs": 1771949037271,
+        "doMemorySnapshotSentAtMs": 1771949037271,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949037272
+    },
+    {
+      "iteration": 40,
+      "openLatencyMs": 5,
+      "reconnectGapMs": 66,
+      "resyncedPerf": {
+        "clientSentAtMs": 1771949037338,
+        "doResyncReceivedAtMs": 1771949037339,
+        "doUpstreamReadyAtMs": 1771949037339,
+        "doMemorySnapshotSentAtMs": 1771949037339,
+        "memoryHits": 3,
+        "pendingKvFallback": 0
+      },
+      "firstTickAtMs": 1771949037341
+    }
+  ]
+}

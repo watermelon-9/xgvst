@@ -349,9 +349,21 @@ export class QuoteDurableObject implements DurableObject {
       return;
     }
 
-    let parsed: { type?: string; symbols?: string[]; transport?: string; compression?: string };
+    let parsed: {
+      type?: string;
+      symbols?: string[];
+      transport?: string;
+      compression?: string;
+      clientSentAtMs?: number;
+    };
     try {
-      parsed = JSON.parse(raw) as { type?: string; symbols?: string[]; transport?: string; compression?: string };
+      parsed = JSON.parse(raw) as {
+        type?: string;
+        symbols?: string[];
+        transport?: string;
+        compression?: string;
+        clientSentAtMs?: number;
+      };
     } catch {
       ws.send(JSON.stringify({ ok: false, error: 'invalid ws payload' }));
       return;
@@ -380,22 +392,32 @@ export class QuoteDurableObject implements DurableObject {
       this.refreshClientDictionary(client);
 
       await this.syncUpstreamSubscriptions();
+      this.sendBundleDictionaryIfNeeded(ws, client);
+
+      const targetSymbols = requestedSymbols.length ? requestedSymbols : [...client.symbols];
+      const snapshotResult = await this.sendImmediateSnapshot(ws, client, targetSymbols);
+      this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
+
       ws.send(
         JSON.stringify({
           ok: true,
           type: 'subscribed',
-          symbols: [...client.symbols],
+          symbols: snapshotResult.pendingSymbols,
           transport: client.transport,
           compression: client.compression,
-          dictVersion: client.dictVersion
+          dictVersion: client.dictVersion,
+          snapshot: {
+            memoryHits: snapshotResult.memoryHits,
+            pendingSymbols: snapshotResult.pendingSymbols.length
+          }
         })
       );
-      this.sendBundleDictionaryIfNeeded(ws, client);
-      await this.sendImmediateSnapshot(ws, client, requestedSymbols.length ? requestedSymbols : [...client.symbols]);
       return;
     }
 
     if (parsed.type === 'resync') {
+      const tResyncRecvMs = Date.now();
+
       if (parsed.transport) client.transport = normalizeTransport(parsed.transport);
       if (parsed.compression) {
         client.compression = normalizeCompression(parsed.compression);
@@ -417,19 +439,31 @@ export class QuoteDurableObject implements DurableObject {
 
       this.refreshClientDictionary(client);
       await this.syncUpstreamSubscriptions();
+      const tUpstreamReadyMs = Date.now();
+
+      this.sendBundleDictionaryIfNeeded(ws, client);
+      const snapshotResult = await this.sendImmediateSnapshot(ws, client, nextSymbols);
+      const tMemorySnapshotSentMs = Date.now();
+      this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
 
       ws.send(
         JSON.stringify({
           ok: true,
           type: 'resynced',
-          symbols: [...client.symbols],
+          symbols: snapshotResult.pendingSymbols,
           transport: client.transport,
           compression: client.compression,
-          dictVersion: client.dictVersion
+          dictVersion: client.dictVersion,
+          perf: {
+            clientSentAtMs: typeof parsed.clientSentAtMs === 'number' ? parsed.clientSentAtMs : null,
+            doResyncReceivedAtMs: tResyncRecvMs,
+            doUpstreamReadyAtMs: tUpstreamReadyMs,
+            doMemorySnapshotSentAtMs: tMemorySnapshotSentMs,
+            memoryHits: snapshotResult.memoryHits,
+            pendingKvFallback: snapshotResult.pendingSymbols.length
+          }
         })
       );
-      this.sendBundleDictionaryIfNeeded(ws, client);
-      await this.sendImmediateSnapshot(ws, client, nextSymbols);
       return;
     }
 
@@ -494,43 +528,81 @@ export class QuoteDurableObject implements DurableObject {
     }
   }
 
-  private async resolveSnapshotBySymbol(symbol: string): Promise<QuoteTickSnapshot | null> {
-    const kvSnapshot = await this.readSnapshotFromKv(symbol);
-    if (kvSnapshot) return kvSnapshot;
+  private async sendImmediateSnapshot(
+    ws: WebSocket,
+    client: ClientState,
+    symbols: string[]
+  ): Promise<{ pendingSymbols: string[]; memoryHits: number }> {
+    const targetSymbols = this.normalizeSymbols(symbols).filter((symbol) => client.symbols.has(symbol));
+    if (!targetSymbols.length) {
+      return { pendingSymbols: [], memoryHits: 0 };
+    }
 
-    const memorySnapshot = this.latestTickBySymbol.get(symbol);
-    return memorySnapshot ?? null;
+    const memoryTicks: QuoteTickSnapshot[] = [];
+    const missingSymbols: string[] = [];
+
+    for (const symbol of targetSymbols) {
+      const snapshot = this.latestTickBySymbol.get(symbol);
+      if (snapshot) {
+        memoryTicks.push(snapshot);
+      } else {
+        missingSymbols.push(symbol);
+      }
+    }
+
+    const sortedMemoryTicks = memoryTicks.sort((a, b) => a.symbol.localeCompare(b.symbol));
+    if (sortedMemoryTicks.length) {
+      if (client.transport === 'bundle') {
+        const frame = await this.encodeBundleFrame(sortedMemoryTicks, client, client.compression, true);
+        if (frame.byteLength) {
+          ws.send(frame);
+          this.stats.sentBinaryFrames += 1;
+          this.stats.sentBundleFrames += 1;
+          if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
+          this.stats.sentBytes += frame.byteLength;
+        }
+      } else {
+        for (const tick of sortedMemoryTicks) {
+          this.sendLegacyTick(ws, client, tick);
+        }
+      }
+    }
+
+    return { pendingSymbols: missingSymbols, memoryHits: sortedMemoryTicks.length };
   }
 
-  private async sendImmediateSnapshot(ws: WebSocket, client: ClientState, symbols: string[]) {
-    const targetSymbols = this.normalizeSymbols(symbols).filter((symbol) => client.symbols.has(symbol));
-    if (!targetSymbols.length) return;
+  private scheduleKvFallbackSnapshot(ws: WebSocket, client: ClientState, symbols: string[]) {
+    if (!symbols.length || !this.env.QUOTE_KV) return;
 
-    const resolvedSnapshots = await Promise.all(
-      targetSymbols.map(async (symbol) => this.resolveSnapshotBySymbol(symbol))
-    );
+    void (async () => {
+      const kvResults = await Promise.all(symbols.map((symbol) => this.readSnapshotFromKv(symbol)));
+      const kvTicks = kvResults
+        .filter((tick): tick is QuoteTickSnapshot => Boolean(tick))
+        .filter((tick) => client.symbols.has(tick.symbol))
+        .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
-    const ticks = resolvedSnapshots
-      .filter((tick): tick is QuoteTick => Boolean(tick))
-      .sort((a, b) => a.symbol.localeCompare(b.symbol));
+      if (!kvTicks.length) return;
 
-    if (!ticks.length) return;
+      try {
+        if (client.transport === 'bundle') {
+          const frame = await this.encodeBundleFrame(kvTicks, client, client.compression, true);
+          if (!frame.byteLength) return;
 
-    if (client.transport === 'bundle') {
-      const frame = await this.encodeBundleFrame(ticks, client, client.compression, true);
-      if (!frame.byteLength) return;
+          ws.send(frame);
+          this.stats.sentBinaryFrames += 1;
+          this.stats.sentBundleFrames += 1;
+          if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
+          this.stats.sentBytes += frame.byteLength;
+          return;
+        }
 
-      ws.send(frame);
-      this.stats.sentBinaryFrames += 1;
-      this.stats.sentBundleFrames += 1;
-      if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
-      this.stats.sentBytes += frame.byteLength;
-      return;
-    }
-
-    for (const tick of ticks) {
-      this.sendLegacyTick(ws, client, tick);
-    }
+        for (const tick of kvTicks) {
+          this.sendLegacyTick(ws, client, tick);
+        }
+      } catch {
+        this.stats.droppedFrames += 1;
+      }
+    })();
   }
 
   private sendLegacyTick(ws: WebSocket, client: ClientState, tick: QuoteTick) {
