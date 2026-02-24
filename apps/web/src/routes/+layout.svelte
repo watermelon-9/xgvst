@@ -45,10 +45,7 @@
 <header class="app-header">
 	<a class="brand-link" href="/" aria-label="返回首页">
 		<div class="brand-emblem" aria-hidden="true">
-			<div class="xg-container">
-				<span class="xg-arrow">&gt;</span>
-				<span class="xg-g">G</span>
-			</div>
+			<img class="xg-mark" src="/brand/xg-reference.png" alt="XG logo" />
 		</div>
 		<div class="brand-copy">
 			<div class="brand-main">XGVST</div>

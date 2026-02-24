@@ -57,40 +57,17 @@ body {
 }
 
 .brand-emblem {
-	width: 2.4rem;
-	height: 2.4rem;
+	width: 2.45rem;
+	height: 2.45rem;
 	display: grid;
 	place-items: center;
 }
 
-.xg-container {
-	position: relative;
+.xg-mark {
 	width: 100%;
 	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.xg-arrow {
-	position: absolute;
-	left: -2%;
-	font-family: system-ui, -apple-system, sans-serif;
-	font-size: 2.35rem;
-	font-weight: 900;
-	color: #00ffaa;
-	line-height: 1;
-	letter-spacing: -0.08em;
-	text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
-}
-
-.xg-g {
-	font-family: system-ui, -apple-system, sans-serif;
-	font-size: 1.95rem;
-	font-weight: 800;
-	color: #ffffff;
-	line-height: 1;
-	letter-spacing: -0.05em;
+	display: block;
+	object-fit: contain;
 }
 
 .brand-copy {
