@@ -1,0 +1,9 @@
+{
+  "generatedAt": "2026-02-24T18:15:39.805Z",
+  "durationMs": 21,
+  "url": "http://127.0.0.1:8791/api/debug/storage/bench",
+  "ok": false,
+  "httpStatus": 500,
+  "body": null,
+  "rawText": "Internal Server Error"
+}
