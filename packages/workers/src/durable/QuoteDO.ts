@@ -51,7 +51,6 @@ type QuoteTickSnapshot = {
 
 type SnapshotPlan = {
   targetSymbols: string[];
-  immediateData: QuoteTickSnapshot[];
   memoryRemainder: QuoteTickSnapshot[];
   missingSymbols: string[];
 };
@@ -61,6 +60,7 @@ const DEFAULT_HEARTBEAT_TIMEOUT_MS = 60_000;
 const DEFAULT_BATCH_FLUSH_MS = 100;
 const DEFAULT_SNAPSHOT_BATCH_SYMBOLS = 24;
 const DEFAULT_SNAPSHOT_IMMEDIATE_SYMBOLS = 8;
+const DEFAULT_DEBUG_IMMEDIATE_DATA_ENABLED = false;
 const DEFAULT_SNAPSHOT_BACKPRESSURE_BYTES = 512 * 1024;
 const DEFAULT_SNAPSHOT_BACKPRESSURE_YIELD_MS = 8;
 // 提升 bundle delta 阈值，减少对前端几乎无感的抖动帧
@@ -214,6 +214,7 @@ export class QuoteDurableObject implements DurableObject {
   private readonly batchFlushMs: number;
   private readonly snapshotBatchSymbols: number;
   private readonly snapshotImmediateSymbols: number;
+  private readonly debugImmediateDataEnabled: boolean;
   private readonly snapshotBackpressureBytes: number;
   private readonly snapshotBackpressureYieldMs: number;
   private readonly priceDeltaMilli: number;
@@ -248,6 +249,7 @@ export class QuoteDurableObject implements DurableObject {
       QUOTE_DO_BATCH_FLUSH_MS?: string;
       QUOTE_DO_SNAPSHOT_BATCH_SYMBOLS?: string;
       QUOTE_DO_SNAPSHOT_IMMEDIATE_SYMBOLS?: string;
+      QUOTE_DO_DEBUG_IMMEDIATE_DATA_JSON?: string;
       QUOTE_DO_SNAPSHOT_BACKPRESSURE_BYTES?: string;
       QUOTE_DO_SNAPSHOT_BACKPRESSURE_YIELD_MS?: string;
       QUOTE_DO_PRICE_DELTA_MILLI?: string;
@@ -282,6 +284,9 @@ export class QuoteDurableObject implements DurableObject {
       0,
       64
     );
+    this.debugImmediateDataEnabled =
+      runtimeEnv.QUOTE_DO_DEBUG_IMMEDIATE_DATA_JSON === '1' ||
+      (DEFAULT_DEBUG_IMMEDIATE_DATA_ENABLED && runtimeEnv.QUOTE_DO_DEBUG_IMMEDIATE_DATA_JSON !== '0');
     this.snapshotBackpressureBytes = parseEnvInt(
       runtimeEnv.QUOTE_DO_SNAPSHOT_BACKPRESSURE_BYTES,
       DEFAULT_SNAPSHOT_BACKPRESSURE_BYTES,
@@ -449,7 +454,7 @@ export class QuoteDurableObject implements DurableObject {
       this.sendBundleDictionaryIfNeeded(ws, client);
 
       const targetSymbols = requestedSymbols.length ? requestedSymbols : [...client.symbols];
-      const snapshotPlan = this.buildSnapshotPlan(client, targetSymbols, 0);
+      const snapshotPlan = this.buildSnapshotPlan(client, targetSymbols);
       this.deferSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
 
       ws.send(
@@ -461,7 +466,7 @@ export class QuoteDurableObject implements DurableObject {
           compression: client.compression,
           dictVersion: client.dictVersion,
           snapshot: {
-            memoryHits: snapshotPlan.immediateData.length + snapshotPlan.memoryRemainder.length,
+            memoryHits: snapshotPlan.memoryRemainder.length,
             pendingSymbols: snapshotPlan.missingSymbols.length
           }
         })
@@ -491,7 +496,10 @@ export class QuoteDurableObject implements DurableObject {
 
       this.refreshClientDictionary(client);
 
-      const snapshotPlan = this.buildSnapshotPlan(client, nextSymbols, this.snapshotImmediateSymbols);
+      const snapshotPlan = this.buildSnapshotPlan(client, nextSymbols);
+      const immediateData = this.debugImmediateDataEnabled
+        ? snapshotPlan.memoryRemainder.slice(0, this.snapshotImmediateSymbols)
+        : [];
 
       ws.send(
         JSON.stringify({
@@ -499,7 +507,12 @@ export class QuoteDurableObject implements DurableObject {
           type: 'resync_ack',
           pending: snapshotPlan.memoryRemainder.length + snapshotPlan.missingSymbols.length > 0,
           symbols: snapshotPlan.targetSymbols,
-          immediateData: snapshotPlan.immediateData,
+          ...(this.debugImmediateDataEnabled
+            ? {
+                debugImmediateData: true,
+                immediateData
+              }
+            : {}),
           transport: client.transport,
           compression: client.compression,
           dictVersion: client.dictVersion,
@@ -511,7 +524,12 @@ export class QuoteDurableObject implements DurableObject {
         // 上游订阅同步失败不影响 resync ack 主链路
       });
       this.sendBundleDictionaryIfNeeded(ws, client);
-      this.deferSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
+      this.deferSnapshotRemainder(
+        ws,
+        client,
+        this.debugImmediateDataEnabled ? snapshotPlan.memoryRemainder.slice(immediateData.length) : snapshotPlan.memoryRemainder,
+        snapshotPlan.missingSymbols
+      );
       return;
     }
 
@@ -613,32 +631,23 @@ export class QuoteDurableObject implements DurableObject {
     }
   }
 
-  private buildSnapshotPlan(client: ClientState, symbols: string[], immediateLimit: number): SnapshotPlan {
+  private buildSnapshotPlan(client: ClientState, symbols: string[]): SnapshotPlan {
     const targetSymbols = this.normalizeSymbols(symbols).filter((symbol) => client.symbols.has(symbol));
 
-    const memoryTicks: QuoteTickSnapshot[] = [];
+    const memoryRemainder: QuoteTickSnapshot[] = [];
     const missingSymbols: string[] = [];
 
     for (const symbol of targetSymbols) {
       const snapshot = this.latestTickBySymbol.get(symbol);
       if (snapshot) {
-        memoryTicks.push(snapshot);
+        memoryRemainder.push(snapshot);
       } else {
         missingSymbols.push(symbol);
       }
     }
 
-    const normalizedImmediateLimit = Math.max(0, Math.round(immediateLimit));
-    const boostedImmediateLimit =
-      normalizedImmediateLimit > 0 ? Math.max(normalizedImmediateLimit, Math.ceil(normalizedImmediateLimit * 1.3)) : 0;
-    const safeImmediateLimit = Math.min(memoryTicks.length, boostedImmediateLimit);
-
-    const immediateData = safeImmediateLimit > 0 ? memoryTicks.slice(0, safeImmediateLimit) : [];
-    const memoryRemainder = safeImmediateLimit > 0 ? memoryTicks.slice(safeImmediateLimit) : memoryTicks;
-
     return {
       targetSymbols,
-      immediateData,
       memoryRemainder,
       missingSymbols
     };
@@ -1138,6 +1147,7 @@ export class QuoteDurableObject implements DurableObject {
         batchFlushMs: this.batchFlushMs,
         snapshotBatchSymbols: this.snapshotBatchSymbols,
         snapshotImmediateSymbols: this.snapshotImmediateSymbols,
+        debugImmediateDataEnabled: this.debugImmediateDataEnabled,
         snapshotBackpressureBytes: this.snapshotBackpressureBytes,
         snapshotBackpressureYieldMs: this.snapshotBackpressureYieldMs,
         priceDeltaMilli: this.priceDeltaMilli,

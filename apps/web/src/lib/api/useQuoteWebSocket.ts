@@ -47,6 +47,7 @@ type QuoteSocketMessage =
 			type: 'resync_ack';
 			pending?: boolean;
 			symbols?: string[];
+			debugImmediateData?: boolean;
 			immediateData?: unknown[];
 	  }
 	| {
@@ -82,7 +83,13 @@ const textDecoder = new TextDecoder();
 
 function isResyncAckMessage(
 	value: QuoteSocketMessage
-): value is { type: 'resync_ack'; pending?: boolean; symbols?: string[]; immediateData?: unknown[] } {
+): value is {
+	type: 'resync_ack';
+	pending?: boolean;
+	symbols?: string[];
+	debugImmediateData?: boolean;
+	immediateData?: unknown[];
+} {
 	return value.type === 'resync_ack';
 }
 
@@ -413,6 +420,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			if (isResyncAckMessage(payload)) {
 				if (
 					allowJsonTickFallback &&
+					payload.debugImmediateData === true &&
 					Array.isArray(payload.immediateData) &&
 					payload.immediateData.length > 0
 				) {
