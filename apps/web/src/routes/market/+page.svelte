@@ -9,13 +9,37 @@
 	let latestTick = $state<QuoteTick | null>(null);
 	let latestSource = $state<string>('—');
 	let latestTickBySymbol = $state<Record<string, QuoteTick | undefined>>({});
+	let tickTransportCounter = $state<Record<QuoteTick['transport'], number>>({
+		'ws-binary': 0,
+		'ws-protobuf': 0,
+		'ws-json-fallback': 0
+	});
+	let latestTickDataType = $state<string>('none');
+
+	const tickRenderChain = 'WS frame(binary/json fallback) → QuoteTick(type-guard) → latestTickBySymbol → 面板渲染';
+
+	function isRenderableTick(tick: QuoteTick): boolean {
+		return (
+			typeof tick.symbol === 'string' &&
+			typeof tick.source === 'string' &&
+			typeof tick.ts === 'string' &&
+			typeof tick.price === 'number' &&
+			Number.isFinite(tick.price) &&
+			typeof tick.changePct === 'number' &&
+			Number.isFinite(tick.changePct)
+		);
+	}
 
 	onMount(() => {
 		const detach = quoteSocket.onTick((tick) => {
 			if (!sampleSymbols.includes(tick.symbol)) return;
+			if (!isRenderableTick(tick)) return;
+
 			latestTick = tick;
 			latestSource = tick.source;
 			latestTickBySymbol[tick.symbol] = tick;
+			tickTransportCounter[tick.transport] += 1;
+			latestTickDataType = `${typeof tick.price}/${typeof tick.changePct}/${typeof tick.symbol}`;
 		});
 
 		void (async () => {
@@ -95,7 +119,12 @@
 							<div class="row-between">
 								<div>
 									<div>{symbol}</div>
-									<div class="muted">{latestTickBySymbol[symbol]?.source ?? 'waiting...'}</div>
+									<div class="muted">
+										{latestTickBySymbol[symbol]?.source ?? 'waiting...'}
+										{#if latestTickBySymbol[symbol]}
+											({latestTickBySymbol[symbol]?.transport})
+										{/if}
+									</div>
 								</div>
 								<div class="align-right">
 									<div>{latestTickBySymbol[symbol]?.price ?? '--'}</div>
@@ -117,6 +146,14 @@
 		<footer class="footer">
 			当前版块：{getTopBoardName() || '未选择'} ｜ 当前个股：{marketState.activeSymbol || '未选择'} ｜
 			最新 WS Tick：{latestTick?.symbol ?? '--'} @{latestSource}
+			<br />
+			链路：{tickRenderChain}
+			<br />
+			类型校验：{latestTickDataType}
+			<br />
+			JSON tick 残留：{tickTransportCounter['ws-json-fallback'] === 0
+				? '未检测到'
+				: `检测到 ${tickTransportCounter['ws-json-fallback']} 条（仅兼容兜底）`}
 		</footer>
 	</div>
 </main>
