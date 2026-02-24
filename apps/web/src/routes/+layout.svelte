@@ -34,9 +34,12 @@
 <svelte:head>
 	<link rel="icon" href="/favicon.svg" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="description" content="西瓜说股 v3.0：市场总览与个股详情原型。" />
+	<meta
+		name="description"
+		content="XGVST — Master Volatility. Master Markets. 提供市场总览、行情追踪与个股分析。"
+	/>
 	<meta name="theme-color" content="#111827" />
-	<title>西瓜说股 v3.0</title>
+	<title>XGVST — Master Volatility. Master Markets.</title>
 </svelte:head>
 
 <button type="button" class="theme-toggle" onclick={toggleTheme} aria-label="切换明暗主题">

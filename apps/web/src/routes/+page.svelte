@@ -1,8 +1,8 @@
 <main class="page">
 	<section class="container">
-		<h1 class="title">西瓜说股 v3.0</h1>
+		<h1 class="title">XGVST</h1>
 		<p class="subtitle">
-			SvelteKit + Svelte 5 Runes 初始化完成。
+			Master Volatility. Master Markets.
 			<span class="status-badge">样式已启用</span>
 			<span class="trend-tag trend-up">up</span>
 			<span class="trend-tag trend-down">down</span>
