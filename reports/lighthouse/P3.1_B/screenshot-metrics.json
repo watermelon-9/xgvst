@@ -1,0 +1,130 @@
+{
+  "pc-dark-home.png": {
+    "size": [
+      1920,
+      1080
+    ],
+    "avg_rgb": [
+      19.63,
+      19.63,
+      19.63
+    ],
+    "center_rgb": [
+      18,
+      18,
+      18
+    ]
+  },
+  "pc-light-home.png": {
+    "size": [
+      1920,
+      1080
+    ],
+    "avg_rgb": [
+      253.25,
+      253.25,
+      253.24
+    ],
+    "center_rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  "tablet-dark-home.png": {
+    "size": [
+      1024,
+      1366
+    ],
+    "avg_rgb": [
+      19.46,
+      19.45,
+      19.44
+    ],
+    "center_rgb": [
+      18,
+      18,
+      18
+    ]
+  },
+  "mobile-left-dark.png": {
+    "size": [
+      390,
+      844
+    ],
+    "avg_rgb": [
+      23.53,
+      23.52,
+      23.48
+    ],
+    "center_rgb": [
+      18,
+      18,
+      18
+    ]
+  },
+  "mobile-center-dark.png": {
+    "size": [
+      390,
+      844
+    ],
+    "avg_rgb": [
+      23.58,
+      23.57,
+      23.53
+    ],
+    "center_rgb": [
+      74,
+      74,
+      74
+    ]
+  },
+  "mobile-right-dark.png": {
+    "size": [
+      390,
+      844
+    ],
+    "avg_rgb": [
+      23.37,
+      23.35,
+      23.32
+    ],
+    "center_rgb": [
+      18,
+      18,
+      18
+    ]
+  },
+  "pc-dark-symbol600519.png": {
+    "size": [
+      1920,
+      1080
+    ],
+    "avg_rgb": [
+      19.64,
+      19.63,
+      19.63
+    ],
+    "center_rgb": [
+      18,
+      18,
+      18
+    ]
+  },
+  "mobile-right-symbol600519.png": {
+    "size": [
+      390,
+      844
+    ],
+    "avg_rgb": [
+      23.4,
+      23.38,
+      23.35
+    ],
+    "center_rgb": [
+      18,
+      18,
+      18
+    ]
+  }
+}

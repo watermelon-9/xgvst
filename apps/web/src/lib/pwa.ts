@@ -8,7 +8,7 @@ export function initPwa() {
 		void import('virtual:pwa-register').then(({ registerSW }) => {
 			registerSW({
 				immediate: false,
-				onRegisterError(error) {
+				onRegisterError(error: unknown) {
 					console.error('[pwa] service worker register failed', error);
 				}
 			});

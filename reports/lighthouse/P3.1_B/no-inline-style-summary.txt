@@ -1,0 +1,1 @@
+PASS: no inline style in routes/components
