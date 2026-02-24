@@ -1,0 +1,597 @@
+{
+  "generatedAt": "2026-02-24T10:15:04.449Z",
+  "config": {
+    "STATUS_URLS": [
+      "https://xgvst.com/api/source/status",
+      "https://xgvst-workers.viehh642.workers.dev/api/source/status"
+    ],
+    "WS_URL": "wss://xgvst.com/ws/quote",
+    "SYMBOLS": [
+      "000001",
+      "600519",
+      "300750"
+    ],
+    "DURATION_MS": 30000,
+    "STATUS_INTERVAL_MS": 5000,
+    "WS_CYCLES": 3,
+    "WS_SESSION_MS": 8000,
+    "WS_CONNECT_TIMEOUT_MS": 6000
+  },
+  "summary": {
+    "sourceStatus": {
+      "totalPolls": 6,
+      "successfulPolls": 6,
+      "successRate": 100,
+      "activeSourceCounts": {
+        "alltick": 6
+      },
+      "reconnectingTrueSamples": 0,
+      "failoverDelta": 0,
+      "selectedEndpoint": "https://xgvst-workers.viehh642.workers.dev/api/source/status"
+    },
+    "tickLatency": {
+      "totalTicks": 48,
+      "clockSkewAdjustMs": 37,
+      "rawP50Ms": -36,
+      "rawP95Ms": 270,
+      "p50Ms": 1,
+      "p90Ms": 45,
+      "p95Ms": 307,
+      "maxMs": 308,
+      "minMs": 0
+    },
+    "reconnect": {
+      "cycles": 3,
+      "reconnectAttempts": 2,
+      "successfulReconnects": 2,
+      "successRate": 100,
+      "openedCycles": 3,
+      "cyclesWithTick": 2
+    }
+  },
+  "statusSamples": [
+    {
+      "ts": "2026-02-24T10:14:33.749Z",
+      "endpoint": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 101,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false
+      }
+    },
+    {
+      "ts": "2026-02-24T10:14:38.853Z",
+      "endpoint": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 104,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false
+      }
+    },
+    {
+      "ts": "2026-02-24T10:14:44.018Z",
+      "endpoint": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 164,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false
+      }
+    },
+    {
+      "ts": "2026-02-24T10:14:49.208Z",
+      "endpoint": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 188,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false
+      }
+    },
+    {
+      "ts": "2026-02-24T10:14:54.318Z",
+      "endpoint": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 108,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false
+      }
+    },
+    {
+      "ts": "2026-02-24T10:14:59.446Z",
+      "endpoint": "https://xgvst-workers.viehh642.workers.dev/api/source/status",
+      "ok": true,
+      "httpStatus": 200,
+      "latencyMs": 127,
+      "body": {
+        "ok": true,
+        "clients": 0,
+        "activeSource": "alltick",
+        "priorityOrder": [
+          "alltick",
+          "sina",
+          "eastmoney",
+          "tencent"
+        ],
+        "subscribedSymbols": [],
+        "failoverCount": 0,
+        "reconnecting": false
+      }
+    }
+  ],
+  "wsCycles": [
+    {
+      "cycleNo": 1,
+      "startedAt": "2026-02-24T10:14:33.509Z",
+      "endedAt": "2026-02-24T10:14:41.643Z",
+      "opened": true,
+      "openLatencyMs": 130,
+      "tickCount": 24,
+      "ticks": [
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:34.564Z",
+          "receiveTs": "2026-02-24T10:14:34.530Z",
+          "rawLatencyMs": -34
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:34.564Z",
+          "receiveTs": "2026-02-24T10:14:34.530Z",
+          "rawLatencyMs": -34
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:34.564Z",
+          "receiveTs": "2026-02-24T10:14:34.531Z",
+          "rawLatencyMs": -33
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:35.464Z",
+          "receiveTs": "2026-02-24T10:14:35.427Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:35.464Z",
+          "receiveTs": "2026-02-24T10:14:35.427Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:35.464Z",
+          "receiveTs": "2026-02-24T10:14:35.428Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:36.364Z",
+          "receiveTs": "2026-02-24T10:14:36.328Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:36.364Z",
+          "receiveTs": "2026-02-24T10:14:36.329Z",
+          "rawLatencyMs": -35
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:36.364Z",
+          "receiveTs": "2026-02-24T10:14:36.329Z",
+          "rawLatencyMs": -35
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:37.264Z",
+          "receiveTs": "2026-02-24T10:14:37.233Z",
+          "rawLatencyMs": -31
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:37.264Z",
+          "receiveTs": "2026-02-24T10:14:37.234Z",
+          "rawLatencyMs": -30
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:37.264Z",
+          "receiveTs": "2026-02-24T10:14:37.234Z",
+          "rawLatencyMs": -30
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:38.164Z",
+          "receiveTs": "2026-02-24T10:14:38.171Z",
+          "rawLatencyMs": 7
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:38.164Z",
+          "receiveTs": "2026-02-24T10:14:38.172Z",
+          "rawLatencyMs": 8
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:38.164Z",
+          "receiveTs": "2026-02-24T10:14:38.172Z",
+          "rawLatencyMs": 8
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:39.064Z",
+          "receiveTs": "2026-02-24T10:14:39.028Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:39.064Z",
+          "receiveTs": "2026-02-24T10:14:39.028Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:39.064Z",
+          "receiveTs": "2026-02-24T10:14:39.028Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:39.964Z",
+          "receiveTs": "2026-02-24T10:14:39.927Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:39.964Z",
+          "receiveTs": "2026-02-24T10:14:39.927Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:39.964Z",
+          "receiveTs": "2026-02-24T10:14:39.927Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:40.864Z",
+          "receiveTs": "2026-02-24T10:14:40.826Z",
+          "rawLatencyMs": -38
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:40.864Z",
+          "receiveTs": "2026-02-24T10:14:40.826Z",
+          "rawLatencyMs": -38
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:40.864Z",
+          "receiveTs": "2026-02-24T10:14:40.827Z",
+          "rawLatencyMs": -37
+        }
+      ],
+      "events": [
+        {
+          "type": "open",
+          "ts": "2026-02-24T10:14:33.639Z",
+          "openLatencyMs": 130
+        },
+        {
+          "type": "session_complete",
+          "ts": "2026-02-24T10:14:41.642Z"
+        }
+      ],
+      "ok": true,
+      "reason": "session_complete"
+    },
+    {
+      "cycleNo": 2,
+      "startedAt": "2026-02-24T10:14:42.146Z",
+      "endedAt": "2026-02-24T10:14:50.369Z",
+      "opened": true,
+      "openLatencyMs": 220,
+      "tickCount": 0,
+      "ticks": [],
+      "events": [
+        {
+          "type": "open",
+          "ts": "2026-02-24T10:14:42.366Z",
+          "openLatencyMs": 220
+        },
+        {
+          "type": "session_complete",
+          "ts": "2026-02-24T10:14:50.369Z"
+        },
+        {
+          "type": "error",
+          "ts": "2026-02-24T10:14:50.391Z",
+          "error": "TypeError"
+        },
+        {
+          "type": "close",
+          "ts": "2026-02-24T10:14:50.392Z",
+          "code": 1006,
+          "reason": ""
+        }
+      ],
+      "ok": true,
+      "reason": "session_complete"
+    },
+    {
+      "cycleNo": 3,
+      "startedAt": "2026-02-24T10:14:50.872Z",
+      "endedAt": "2026-02-24T10:14:59.012Z",
+      "opened": true,
+      "openLatencyMs": 137,
+      "tickCount": 24,
+      "ticks": [
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:51.940Z",
+          "receiveTs": "2026-02-24T10:14:51.906Z",
+          "rawLatencyMs": -34
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:51.940Z",
+          "receiveTs": "2026-02-24T10:14:51.907Z",
+          "rawLatencyMs": -33
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:51.940Z",
+          "receiveTs": "2026-02-24T10:14:51.907Z",
+          "rawLatencyMs": -33
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:52.840Z",
+          "receiveTs": "2026-02-24T10:14:53.110Z",
+          "rawLatencyMs": 270
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:52.840Z",
+          "receiveTs": "2026-02-24T10:14:53.110Z",
+          "rawLatencyMs": 270
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:52.840Z",
+          "receiveTs": "2026-02-24T10:14:53.111Z",
+          "rawLatencyMs": 271
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:53.740Z",
+          "receiveTs": "2026-02-24T10:14:53.703Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:53.740Z",
+          "receiveTs": "2026-02-24T10:14:53.704Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:53.740Z",
+          "receiveTs": "2026-02-24T10:14:53.704Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:54.640Z",
+          "receiveTs": "2026-02-24T10:14:54.604Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:54.640Z",
+          "receiveTs": "2026-02-24T10:14:54.604Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:54.640Z",
+          "receiveTs": "2026-02-24T10:14:54.604Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:55.540Z",
+          "receiveTs": "2026-02-24T10:14:55.503Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:55.540Z",
+          "receiveTs": "2026-02-24T10:14:55.503Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:55.540Z",
+          "receiveTs": "2026-02-24T10:14:55.503Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:56.440Z",
+          "receiveTs": "2026-02-24T10:14:56.404Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:56.440Z",
+          "receiveTs": "2026-02-24T10:14:56.404Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:56.440Z",
+          "receiveTs": "2026-02-24T10:14:56.404Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:57.340Z",
+          "receiveTs": "2026-02-24T10:14:57.309Z",
+          "rawLatencyMs": -31
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:57.340Z",
+          "receiveTs": "2026-02-24T10:14:57.309Z",
+          "rawLatencyMs": -31
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:57.340Z",
+          "receiveTs": "2026-02-24T10:14:57.310Z",
+          "rawLatencyMs": -30
+        },
+        {
+          "symbol": "000001",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:58.240Z",
+          "receiveTs": "2026-02-24T10:14:58.203Z",
+          "rawLatencyMs": -37
+        },
+        {
+          "symbol": "600519",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:58.240Z",
+          "receiveTs": "2026-02-24T10:14:58.204Z",
+          "rawLatencyMs": -36
+        },
+        {
+          "symbol": "300750",
+          "source": "alltick",
+          "serverTs": "2026-02-24T10:14:58.240Z",
+          "receiveTs": "2026-02-24T10:14:58.205Z",
+          "rawLatencyMs": -35
+        }
+      ],
+      "events": [
+        {
+          "type": "open",
+          "ts": "2026-02-24T10:14:51.009Z",
+          "openLatencyMs": 137
+        },
+        {
+          "type": "session_complete",
+          "ts": "2026-02-24T10:14:59.011Z"
+        }
+      ],
+      "ok": true,
+      "reason": "session_complete"
+    }
+  ]
+}
