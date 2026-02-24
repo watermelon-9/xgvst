@@ -93,8 +93,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isResyncAckMessage(
 	value: QuoteSocketMessage
-): value is { type: 'resync_ack'; pending?: boolean; symbols: string[] } {
-	return value.type === 'resync_ack' && 'symbols' in value && Array.isArray(value.symbols);
+): value is { type: 'resync_ack'; pending?: boolean; symbols?: string[] } {
+	return value.type === 'resync_ack';
 }
 
 function normalizeTick(value: unknown, transport: QuoteTick['transport']): QuoteTick | null {
@@ -443,15 +443,15 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			}
 
 			if (isResyncAckMessage(payload)) {
-				const ackSymbols = normalizeSymbols(payload.symbols);
+				const ackSymbols = normalizeSymbols(payload.symbols ?? []);
+
+				if (payload.pending === false) {
+					updateRecoveryState([]);
+					return;
+				}
+
 				const recoveringSymbols = ackSymbols.length ? ackSymbols : lastResyncRequestSymbols;
 				updateRecoveryState(recoveringSymbols);
-				return;
-			}
-
-			if (payload.type === 'resynced' && !stats.recovering && lastResyncRequestSymbols.length) {
-				// 兼容旧服务端：没有 ack 时，仍用最近一次 resync 请求进入 recovering
-				updateRecoveryState(lastResyncRequestSymbols);
 				return;
 			}
 

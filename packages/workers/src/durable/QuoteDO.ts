@@ -458,12 +458,13 @@ export class QuoteDurableObject implements DurableObject {
         })
       );
 
+      this.sendBundleDictionaryIfNeeded(ws, client);
+
+      const snapshotResult = this.sendImmediateSnapshot(ws, client, nextSymbols);
+      this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
+
       this.deferSlowTask(async () => {
         await this.syncUpstreamSubscriptions();
-        this.sendBundleDictionaryIfNeeded(ws, client);
-
-        const snapshotResult = this.sendImmediateSnapshot(ws, client, nextSymbols);
-        this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
       });
       return;
     }
@@ -556,10 +557,27 @@ export class QuoteDurableObject implements DurableObject {
       return { pendingSymbols: [], memoryHits: 0 };
     }
 
+    let fastPathHits = 0;
+    const remainingSymbols = [...targetSymbols];
+
+    for (const symbol of targetSymbols) {
+      const snapshot = this.latestTickBySymbol.get(symbol);
+      if (!snapshot) continue;
+
+      if (this.sendRecoveryFastPathTick(ws, client, snapshot)) {
+        fastPathHits = 1;
+        const index = remainingSymbols.indexOf(symbol);
+        if (index >= 0) {
+          remainingSymbols.splice(index, 1);
+        }
+      }
+      break;
+    }
+
     const memoryTicks: QuoteTickSnapshot[] = [];
     const missingSymbols: string[] = [];
 
-    for (const symbol of targetSymbols) {
+    for (const symbol of remainingSymbols) {
       const snapshot = this.latestTickBySymbol.get(symbol);
       if (snapshot) {
         memoryTicks.push(snapshot);
@@ -568,14 +586,31 @@ export class QuoteDurableObject implements DurableObject {
       }
     }
 
-    const sortedMemoryTicks = memoryTicks.sort((a, b) => a.symbol.localeCompare(b.symbol));
-    if (sortedMemoryTicks.length) {
+    if (memoryTicks.length) {
+      const sortedMemoryTicks = memoryTicks.sort((a, b) => a.symbol.localeCompare(b.symbol));
       this.deferSlowTask(async () => {
         await this.sendSnapshotTicks(ws, client, sortedMemoryTicks);
       });
     }
 
-    return { pendingSymbols: missingSymbols, memoryHits: sortedMemoryTicks.length };
+    return { pendingSymbols: missingSymbols, memoryHits: memoryTicks.length + fastPathHits };
+  }
+
+  private sendRecoveryFastPathTick(ws: WebSocket, client: ClientState, tick: QuoteTickSnapshot): boolean {
+    if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return false;
+
+    try {
+      // 恢复首帧走轻量通道：优先单 symbol protobuf，避免 bundle+压缩首包开销
+      this.sendLegacyTick(ws, client, tick);
+      return true;
+    } catch {
+      this.stats.droppedFrames += 1;
+      if (this.isSocketOpen(ws)) {
+        ws.close(1011, 'recovery fast-path send failed');
+      }
+      this.cleanupClient(ws);
+      return false;
+    }
   }
 
   private scheduleKvFallbackSnapshot(ws: WebSocket, client: ClientState, symbols: string[]) {
