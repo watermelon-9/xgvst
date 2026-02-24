@@ -225,8 +225,6 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const MAX_RETRIES = options.maxRetries ?? 25;
 	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 1200;
 	const RECONNECT_FAST_LANE_MS = options.reconnectFastLaneMs ?? 40;
-	const RECONNECT_SECOND_LANE_MS = 180;
-	const RECONNECT_THIRD_LANE_MS = 420;
 	const BACKOFF_MULTIPLIER = 2.4;
 	const MIN_RECONNECT_GAP_MS = 200;
 
@@ -403,10 +401,6 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 
 		if (reconnectAttempt === 1) {
 			delay = Math.min(delay, Math.max(0, RECONNECT_FAST_LANE_MS));
-		} else if (reconnectAttempt === 2) {
-			delay = Math.min(delay, RECONNECT_SECOND_LANE_MS);
-		} else if (reconnectAttempt === 3) {
-			delay = Math.min(delay, RECONNECT_THIRD_LANE_MS);
 		}
 
 		if (isWsError && reconnectAttempt === 1) {
