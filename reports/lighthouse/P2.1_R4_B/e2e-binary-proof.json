@@ -1,0 +1,123 @@
+{
+  "generatedAt": "2026-02-24T11:09:44.874Z",
+  "wsUrl": "ws://localhost:8788/ws/quote",
+  "statusUrl": "http://localhost:8788/api/source/status",
+  "symbols": [
+    "000001",
+    "600519"
+  ],
+  "sampleMs": 8000,
+  "statusBefore": {
+    "ok": true,
+    "clients": 0,
+    "availableSources": [
+      "alltick",
+      "sina",
+      "eastmoney",
+      "tencent"
+    ],
+    "wsFrameStats": {
+      "sentBinaryFrames": 0,
+      "sentFallbackFrames": 0
+    },
+    "activeSource": "alltick",
+    "priorityOrder": [
+      "alltick",
+      "sina",
+      "eastmoney",
+      "tencent"
+    ],
+    "subscribedSymbols": [],
+    "failoverCount": 0,
+    "reconnecting": false,
+    "debugForcedSource": null
+  },
+  "wsResult": {
+    "reason": "sample_complete",
+    "startedAt": "2026-02-24T11:09:44.908Z",
+    "endedAt": "2026-02-24T11:09:52.914Z",
+    "durationMs": 8006,
+    "counters": {
+      "binaryFrames": 4,
+      "jsonTickFrames": 0,
+      "controlStringFrames": 2,
+      "binaryDecodedTicks": 4,
+      "fallbackDecodedTicks": 0,
+      "decodeFailedFrames": 0
+    },
+    "binaryFrameSamples": [
+      {
+        "bytes": 60,
+        "headHex": "51 54 31 06 30 30 30 30 30 31 3d 0a d7 a3 70 bd 25 40 0a d7 a3 70 3d 0a b7 bf 18 00 32 30 32 36 2d 30 32 2d 32 34 54 31 31 3a 30 39 3a 34 34 2e 39 31 31 5a 07 61 6c 6c 74 69 63 6b"
+      },
+      {
+        "bytes": 60,
+        "headHex": "51 54 31 06 36 30 30 35 31 39 00 00 00 00 00 71 99 40 00 00 00 00 00 00 00 80 18 00 32 30 32 36 2d 30 32 2d 32 34 54 31 31 3a 30 39 3a 34 34 2e 39 31 38 5a 07 61 6c 6c 74 69 63 6b"
+      },
+      {
+        "bytes": 60,
+        "headHex": "51 54 31 06 30 30 30 30 30 31 33 33 33 33 33 b3 25 40 ec 51 b8 1e 85 eb d1 bf 18 00 32 30 32 36 2d 30 32 2d 32 34 54 31 31 3a 30 39 3a 34 34 2e 39 31 38 5a 07 61 6c 6c 74 69 63 6b"
+      }
+    ],
+    "jsonFrameSamples": [],
+    "tickSamples": [
+      {
+        "symbol": "000001",
+        "price": 10.87,
+        "changePct": -0.09,
+        "ts": "2026-02-24T11:09:44.911Z",
+        "source": "alltick",
+        "transport": "ws-binary"
+      },
+      {
+        "symbol": "600519",
+        "price": 1628.25,
+        "changePct": 0,
+        "ts": "2026-02-24T11:09:44.918Z",
+        "source": "alltick",
+        "transport": "ws-binary"
+      },
+      {
+        "symbol": "000001",
+        "price": 10.85,
+        "changePct": -0.28,
+        "ts": "2026-02-24T11:09:44.918Z",
+        "source": "alltick",
+        "transport": "ws-binary"
+      },
+      {
+        "symbol": "600519",
+        "price": 1628.33,
+        "changePct": 0,
+        "ts": "2026-02-24T11:09:44.918Z",
+        "source": "alltick",
+        "transport": "ws-binary"
+      }
+    ]
+  },
+  "statusAfter": {
+    "ok": true,
+    "clients": 0,
+    "availableSources": [
+      "alltick",
+      "sina",
+      "eastmoney",
+      "tencent"
+    ],
+    "wsFrameStats": {
+      "sentBinaryFrames": 4,
+      "sentFallbackFrames": 0
+    },
+    "activeSource": "alltick",
+    "priorityOrder": [
+      "alltick",
+      "sina",
+      "eastmoney",
+      "tencent"
+    ],
+    "subscribedSymbols": [],
+    "failoverCount": 0,
+    "reconnecting": false,
+    "debugForcedSource": null
+  }
+}

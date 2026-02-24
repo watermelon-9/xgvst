@@ -18,7 +18,9 @@
 	let socketStats = $state<QuoteSocketStats>({
 		status: 'idle',
 		reconnectCount: 0,
-		lastReconnectDurationMs: null
+		lastReconnectDurationMs: null,
+		binaryFrames: 0,
+		fallbackFrames: 0
 	});
 
 	const tickRenderChain = 'WS frame(binary/protobuf) → QuoteTick(type-guard) → latestTickBySymbol → 面板渲染';
@@ -144,6 +146,12 @@
 									? '--'
 									: `${socketStats.lastReconnectDurationMs} ms`}
 							</div>
+						</div>
+					</div>
+					<div class="row-link">
+						<div class="row-between">
+							<div>binary frames vs fallback frames</div>
+							<div class="muted">{socketStats.binaryFrames} vs {socketStats.fallbackFrames}</div>
 						</div>
 					</div>
 					{#each sampleSymbols as symbol}

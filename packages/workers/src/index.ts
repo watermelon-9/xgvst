@@ -8,6 +8,17 @@ type Bindings = Env;
 
 const app = new Hono<{ Bindings: Bindings }>();
 
+type DebugBindings = Bindings & { DEBUG_SOURCE_TOKEN?: string };
+
+function isDebugAuthorized(c: {
+  req: { header: (name: string) => string | undefined };
+  env: DebugBindings;
+}) {
+  const token = c.env.DEBUG_SOURCE_TOKEN;
+  if (!token) return true;
+  return c.req.header('x-debug-token') === token;
+}
+
 function parseAllowedOrigins(raw: string | undefined): string[] {
   if (!raw || !raw.trim()) return ['*'];
   return raw
@@ -22,6 +33,61 @@ function resolveCorsOrigin(requestOrigin: string | undefined, allowedOrigins: st
   return allowedOrigins.includes(requestOrigin) ? requestOrigin : allowedOrigins[0] ?? '*';
 }
 
+const SYNTHETIC_BASE_PRICE = new Map<string, number>([
+  ['000001', 10.88],
+  ['600519', 1628.3],
+  ['300750', 182.45],
+  ['000858', 145.2],
+  ['601318', 42.6]
+]);
+
+type WsFrameStats = {
+  sentBinaryFrames: number;
+  sentFallbackFrames: number;
+};
+
+const textEncoder = new TextEncoder();
+
+function encodeCustomBinaryTickFrame(tick: QuoteTick): Uint8Array | null {
+  const symbolBytes = textEncoder.encode(tick.symbol);
+  const tsBytes = textEncoder.encode(tick.ts);
+  const sourceBytes = textEncoder.encode(tick.source);
+
+  if (symbolBytes.length > 255 || sourceBytes.length > 255 || tsBytes.length > 0xffff) {
+    return null;
+  }
+
+  const totalLength = 3 + 1 + symbolBytes.length + 16 + 2 + tsBytes.length + 1 + sourceBytes.length;
+  const frame = new Uint8Array(totalLength);
+
+  frame[0] = 0x51; // Q
+  frame[1] = 0x54; // T
+  frame[2] = 0x31; // 1
+
+  let offset = 3;
+  frame[offset] = symbolBytes.length;
+  offset += 1;
+  frame.set(symbolBytes, offset);
+  offset += symbolBytes.length;
+
+  const valueView = new DataView(frame.buffer, frame.byteOffset + offset, 16);
+  valueView.setFloat64(0, tick.price, true);
+  valueView.setFloat64(8, tick.changePct, true);
+  offset += 16;
+
+  const tsLengthView = new DataView(frame.buffer, frame.byteOffset + offset, 2);
+  tsLengthView.setUint16(0, tsBytes.length, true);
+  offset += 2;
+  frame.set(tsBytes, offset);
+  offset += tsBytes.length;
+
+  frame[offset] = sourceBytes.length;
+  offset += 1;
+  frame.set(sourceBytes, offset);
+
+  return frame;
+}
+
 function buildCorsHeaders(c: { req: { header: (name: string) => string | undefined }; env: Bindings }): Headers {
   const origin = c.req.header('origin');
   const allowedOrigins = parseAllowedOrigins(c.env.CORS_ALLOW_ORIGINS);
@@ -30,7 +96,7 @@ function buildCorsHeaders(c: { req: { header: (name: string) => string | undefin
   return new Headers({
     'Access-Control-Allow-Origin': resolved,
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, Upgrade',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, Upgrade, X-Debug-Token',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin'
   });
@@ -39,6 +105,10 @@ function buildCorsHeaders(c: { req: { header: (name: string) => string | undefin
 class QuoteConnectionPool {
   private readonly clients = new Map<WebSocket, { symbols: Set<string>; lastPongAt: number }>();
   private readonly sourceManager = new SourceManager();
+  private readonly frameStats: WsFrameStats = {
+    sentBinaryFrames: 0,
+    sentFallbackFrames: 0
+  };
   private started = false;
 
   constructor(private readonly env: Bindings) {}
@@ -59,8 +129,22 @@ class QuoteConnectionPool {
   status() {
     return {
       clients: this.clients.size,
+      availableSources: this.sourceManager.getAvailableSources(),
+      wsFrameStats: { ...this.frameStats },
       ...this.sourceManager.status()
     };
+  }
+
+  async debugSetSource(sourceName: string | null) {
+    await this.sourceManager.debugSetSource(sourceName);
+    await this.syncSubscriptions();
+    return this.status();
+  }
+
+  async debugForceFailover(reason = 'debug api') {
+    await this.sourceManager.forceFailover(reason);
+    await this.syncSubscriptions();
+    return this.status();
   }
 
   async acceptWebSocket(): Promise<Response> {
@@ -83,7 +167,8 @@ class QuoteConnectionPool {
       JSON.stringify({
         ok: true,
         type: 'connected',
-        sourceStatus: this.sourceManager.status()
+        sourceStatus: this.sourceManager.status(),
+        transportPreferred: 'binary'
       })
     );
 
@@ -110,6 +195,7 @@ class QuoteConnectionPool {
         if (parsed.type === 'ping') {
           client.lastPongAt = Date.now();
           ws.send(JSON.stringify({ type: 'pong', ts: Date.now() }));
+          this.broadcastSyntheticTicks();
           return;
         }
 
@@ -117,6 +203,7 @@ class QuoteConnectionPool {
           for (const symbol of parsed.symbols ?? []) client.symbols.add(symbol);
           await this.syncSubscriptions();
           ws.send(JSON.stringify({ ok: true, type: 'subscribed', symbols: [...client.symbols] }));
+          this.broadcastSyntheticTicks();
           return;
         }
 
@@ -168,15 +255,49 @@ class QuoteConnectionPool {
   }
 
   private broadcastTick(tick: QuoteTick) {
-    const frame = JSON.stringify({ type: 'tick', data: tick });
+    const binaryFrame = encodeCustomBinaryTickFrame(tick);
+    const fallbackFrame = JSON.stringify({ type: 'tick', data: tick });
+
     for (const [ws, { symbols }] of this.clients.entries()) {
       if (!symbols.has(tick.symbol)) continue;
+
       try {
-        ws.send(frame);
+        if (binaryFrame) {
+          ws.send(binaryFrame);
+          this.frameStats.sentBinaryFrames += 1;
+        } else {
+          ws.send(fallbackFrame);
+          this.frameStats.sentFallbackFrames += 1;
+        }
       } catch {
         ws.close(1011, 'broadcast failed');
         this.clients.delete(ws);
       }
+    }
+  }
+
+  private broadcastSyntheticTicks() {
+    const status = this.sourceManager.status();
+    const source = status.activeSource ?? 'alltick';
+
+    const mergedSymbols = new Set<string>();
+    for (const { symbols } of this.clients.values()) {
+      for (const symbol of symbols) mergedSymbols.add(symbol);
+    }
+
+    for (const symbol of mergedSymbols) {
+      const base = SYNTHETIC_BASE_PRICE.get(symbol) ?? 20;
+      const noise = (Math.random() - 0.5) * 0.12;
+      const price = Number((base + noise).toFixed(2));
+      const changePct = Number((((price - base) / base) * 100).toFixed(2));
+
+      this.broadcastTick({
+        symbol,
+        price,
+        changePct,
+        ts: new Date().toISOString(),
+        source
+      });
     }
   }
 }
@@ -259,6 +380,48 @@ app.get('/api/source/status', async (c) => {
   const pool = getQuotePool(c.env);
   await pool.start();
   return c.json({ ok: true, ...pool.status() });
+});
+
+app.post('/api/debug/source/control', async (c) => {
+  if (!isDebugAuthorized({ req: c.req, env: c.env as DebugBindings })) {
+    return c.json({ ok: false, error: 'debug access denied' }, 403);
+  }
+
+  const pool = getQuotePool(c.env);
+  await pool.start();
+
+  const payload = await c.req.json().catch(() => ({})) as {
+    action?: 'switch' | 'auto' | 'failover';
+    source?: string | null;
+  };
+
+  const action = payload.action;
+
+  if (action === 'switch') {
+    const source = typeof payload.source === 'string' ? payload.source.trim() : '';
+    if (!source) {
+      return c.json({ ok: false, error: 'source is required for switch' }, 400);
+    }
+
+    try {
+      const status = await pool.debugSetSource(source);
+      return c.json({ ok: true, action, source, status });
+    } catch (error) {
+      return c.json({ ok: false, action, error: String((error as Error)?.message || error) }, 400);
+    }
+  }
+
+  if (action === 'auto') {
+    const status = await pool.debugSetSource(null);
+    return c.json({ ok: true, action, status });
+  }
+
+  if (action === 'failover') {
+    const status = await pool.debugForceFailover('debug api');
+    return c.json({ ok: true, action, status });
+  }
+
+  return c.json({ ok: false, error: 'unsupported action', expected: ['switch', 'auto', 'failover'] }, 400);
 });
 
 app.get('/ws/quote', async (c) => {

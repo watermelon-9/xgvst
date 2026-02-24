@@ -19,6 +19,8 @@ export type QuoteSocketStats = {
 	status: WsConnectionStatus;
 	reconnectCount: number;
 	lastReconnectDurationMs: number | null;
+	binaryFrames: number;
+	fallbackFrames: number;
 };
 
 type QuoteSocketCommand =
@@ -253,14 +255,18 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const stats: QuoteSocketStats = {
 		status: 'idle',
 		reconnectCount: 0,
-		lastReconnectDurationMs: null
+		lastReconnectDurationMs: null,
+		binaryFrames: 0,
+		fallbackFrames: 0
 	};
 
 	const emitStats = () => {
 		const snapshot: QuoteSocketStats = {
 			status: stats.status,
 			reconnectCount: stats.reconnectCount,
-			lastReconnectDurationMs: stats.lastReconnectDurationMs
+			lastReconnectDurationMs: stats.lastReconnectDurationMs,
+			binaryFrames: stats.binaryFrames,
+			fallbackFrames: stats.fallbackFrames
 		};
 		for (const handler of statsHandlers) {
 			handler(snapshot);
@@ -344,14 +350,21 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 				return;
 			}
 
-			if (payload.type === 'tick' && allowJsonTickFallback && 'data' in payload) {
-				const tick = normalizeTick(payload.data, 'ws-json-fallback');
-				if (tick) emitTick(tick);
+			if (payload.type === 'tick' && 'data' in payload) {
+				stats.fallbackFrames += 1;
+				emitStats();
+
+				if (allowJsonTickFallback) {
+					const tick = normalizeTick(payload.data, 'ws-json-fallback');
+					if (tick) emitTick(tick);
+				}
 			}
 			return;
 		}
 
 		if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
+			stats.binaryFrames += 1;
+			emitStats();
 			const tick = await decodeBinaryTick(event.data);
 			if (tick) emitTick(tick);
 		}
