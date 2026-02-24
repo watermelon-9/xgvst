@@ -45,15 +45,12 @@
 <header class="app-header">
 	<a class="brand-link" href="/" aria-label="返回首页">
 		<div class="brand-emblem" aria-hidden="true">
-			<svg class="xg-mark" viewBox="0 0 64 64" role="img" aria-label="XG logo">
-				<path fill="#24d3b1" d="M8 14h14l12 18-12 18H8l12-18z" />
-				<path fill="#1ab89c" d="M19 23h6l6 9-6 9h-6l6-9z" />
-				<path
-					fill="#f8fafc"
-					d="M40.5 16c7.7 0 14 6.3 14 14s-6.3 14-14 14c-4.2 0-8-1.9-10.6-4.9l5.2-4.4c1.4 1.6 3.5 2.5 5.8 2.5 4.1 0 7.5-3.3 7.5-7.4s-3.4-7.4-7.5-7.4h-3.6l4.8-6h2.4z"
-				/>
-				<rect x="35.2" y="29.5" width="13.2" height="5.5" rx="2.75" fill="#f8fafc" transform="rotate(-37 41.8 32.25)" />
-			</svg>
+			<div class="xg-logo">
+				<div class="xg-inner">
+					<span class="xg-arrow">&gt;</span>
+					<span class="xg-g">G</span>
+				</div>
+			</div>
 		</div>
 		<div class="brand-copy">
 			<div class="brand-main">XGVST</div>
