@@ -1,0 +1,643 @@
+{
+  "generatedAt": "2026-02-24T19:07:05.374Z",
+  "endpoints": [
+    "/api/self-selects",
+    "/api/v2/self-selects"
+  ],
+  "scenarioCount": 8,
+  "passCount": 8,
+  "results": [
+    {
+      "name": "exp-off-no-claim",
+      "description": "exp不提供时，不触发过期拒绝（路径可关闭）",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "",
+        "ACCESS_JWT_AUD": "",
+        "ACCESS_JWT_HS256_SECRET": ""
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 200
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "exp-on-expired",
+      "description": "exp过期时拒绝",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "",
+        "ACCESS_JWT_AUD": "",
+        "ACCESS_JWT_HS256_SECRET": ""
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 401
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "iss-off-mismatch",
+      "description": "iss未配置时，iss不匹配不拒绝（路径可关闭）",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "",
+        "ACCESS_JWT_AUD": "",
+        "ACCESS_JWT_HS256_SECRET": ""
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 200
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "iss-on-mismatch",
+      "description": "iss配置后，iss不匹配被拒绝",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "trusted-issuer",
+        "ACCESS_JWT_AUD": "",
+        "ACCESS_JWT_HS256_SECRET": ""
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 401
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "aud-off-mismatch",
+      "description": "aud未配置时，aud不匹配不拒绝（路径可关闭）",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "",
+        "ACCESS_JWT_AUD": "",
+        "ACCESS_JWT_HS256_SECRET": ""
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 200
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "aud-on-mismatch",
+      "description": "aud配置后，aud不匹配被拒绝",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "",
+        "ACCESS_JWT_AUD": "trusted-aud",
+        "ACCESS_JWT_HS256_SECRET": ""
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 401
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "hs256-off-wrong-signature",
+      "description": "未配置HS256 secret时，错误签名不拒绝（本地验签路径可关闭）",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "",
+        "ACCESS_JWT_AUD": "",
+        "ACCESS_JWT_HS256_SECRET": ""
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 200
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "hs256-on-wrong-signature",
+      "description": "配置HS256 secret后，错误签名被拒绝",
+      "vars": {
+        "ACCESS_AUTH_REQUIRED": "1",
+        "ACCESS_TRUST_CF_HEADERS": "0",
+        "ACCESS_JWT_ISS": "",
+        "ACCESS_JWT_AUD": "",
+        "ACCESS_JWT_HS256_SECRET": "dev-access-secret"
+      },
+      "expected": {
+        "noToken": 401,
+        "goodToken": 200,
+        "probeToken": 401
+      },
+      "pass": true,
+      "endpointResults": [
+        {
+          "endpoint": "/api/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        },
+        {
+          "endpoint": "/api/v2/self-selects",
+          "noToken": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          },
+          "good": {
+            "status": 200,
+            "ok": true,
+            "json": {
+              "ok": true,
+              "userId": "p24-r2@example.com",
+              "symbols": [],
+              "items": []
+            }
+          },
+          "probe": {
+            "status": 401,
+            "ok": false,
+            "json": {
+              "ok": false,
+              "error": "unauthorized: missing or invalid access jwt"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
