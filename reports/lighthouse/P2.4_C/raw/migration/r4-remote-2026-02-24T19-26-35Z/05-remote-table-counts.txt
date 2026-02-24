@@ -1,0 +1,38 @@
+[cmd] SELECT COUNT(*) checks
+
+ ⛅️ wrangler 4.67.0 (update available 4.68.1)
+─────────────────────────────────────────────
+Resource location: remote 
+
+🌀 Executing on remote database xgvst_quote (9db19911-21e7-4245-8c94-6571aa7a35fb):
+🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+🚣 Executed 1 command in 0.21ms
+[
+  {
+    "results": [
+      {
+        "users_count": 1,
+        "self_selects_count": 2,
+        "quote_history_count": 4
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "HKG",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2063
+      },
+      "duration": 0.2063,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 57344,
+      "rows_read": 7,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]
