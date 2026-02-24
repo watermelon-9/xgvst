@@ -1,0 +1,13 @@
+{
+  "url": "https://xgvst-workers.viehh642.workers.dev/api/quote/mock",
+  "duration": 15.03,
+  "connections": 1,
+  "p50_ms": 26,
+  "p90_ms": 30,
+  "p97_5_ms": 110,
+  "p99_ms": 115,
+  "average_ms": 31.94,
+  "requests_total": 462,
+  "errors": 0,
+  "timeouts": 0
+}
