@@ -1,57 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fetchUniverse, useQuoteWebSocket, type QuoteSocketStats, type QuoteTick } from '$lib/api';
+	import { fetchUniverse } from '$lib/api';
 	import { marketState, getTopBoardName } from '$lib/runes/market-state.svelte';
+	import { quoteStore, mountQuoteStore, setQuoteSubscriptionScope } from '$lib/runes/quote-store.svelte';
 
-	const sampleSymbols = ['000001', '600519'];
-	const quoteSocket = useQuoteWebSocket({ allowJsonTickFallback: false });
-
-	let latestTick = $state<QuoteTick | null>(null);
-	let latestSource = $state<string>('—');
-	let latestTickBySymbol = $state<Record<string, QuoteTick | undefined>>({});
-	let tickTransportCounter = $state<Record<QuoteTick['transport'], number>>({
-		'ws-binary': 0,
-		'ws-protobuf': 0,
-		'ws-json-fallback': 0
-	});
-	let latestTickDataType = $state<string>('none');
-	let socketStats = $state<QuoteSocketStats>({
-		status: 'idle',
-		reconnectCount: 0,
-		lastReconnectDurationMs: null,
-		binaryFrames: 0,
-		fallbackFrames: 0
-	});
-
-	const tickRenderChain = 'WS frame(binary/protobuf) → QuoteTick(type-guard) → latestTickBySymbol → 面板渲染';
-
-	function isRenderableTick(tick: QuoteTick): boolean {
-		return (
-			typeof tick.symbol === 'string' &&
-			typeof tick.source === 'string' &&
-			typeof tick.ts === 'string' &&
-			typeof tick.price === 'number' &&
-			Number.isFinite(tick.price) &&
-			typeof tick.changePct === 'number' &&
-			Number.isFinite(tick.changePct)
-		);
-	}
+	const tickRenderChain =
+		'WS frame(binary/protobuf) → useQuoteWebSocket.subscribe(当前个股+自选) → quoteStore → 页面渲染';
 
 	onMount(() => {
-		const detach = quoteSocket.onTick((tick) => {
-			if (!sampleSymbols.includes(tick.symbol)) return;
-			if (!isRenderableTick(tick)) return;
-
-			latestTick = tick;
-			latestSource = tick.source;
-			latestTickBySymbol[tick.symbol] = tick;
-			tickTransportCounter[tick.transport] += 1;
-			latestTickDataType = `${typeof tick.price}/${typeof tick.changePct}/${typeof tick.symbol}`;
-		});
-
-		const detachStats = quoteSocket.onStats((stats) => {
-			socketStats = stats;
-		});
+		const unmountQuoteStore = mountQuoteStore();
 
 		void (async () => {
 			const data = await fetchUniverse();
@@ -61,15 +18,16 @@
 			marketState.activeSymbol = data.watchlist[0]?.symbol ?? '';
 		})();
 
-		quoteSocket.connect();
-		quoteSocket.subscribe(sampleSymbols);
-
 		return () => {
-			detach();
-			detachStats();
-			quoteSocket.unsubscribe(sampleSymbols);
-			quoteSocket.close();
+			unmountQuoteStore();
 		};
+	});
+
+	$effect(() => {
+		setQuoteSubscriptionScope({
+			activeSymbol: marketState.activeSymbol,
+			watchlistSymbols: marketState.watchlist.map((item) => item.symbol)
+		});
 	});
 </script>
 
@@ -129,51 +87,51 @@
 					<div class="row-link">
 						<div class="row-between">
 							<div>连接状态</div>
-							<div class="muted">{socketStats.status}</div>
+							<div class="muted">{quoteStore.socketStats.status}</div>
 						</div>
 					</div>
 					<div class="row-link">
 						<div class="row-between">
-							<div>重连次数</div>
-							<div class="muted">{socketStats.reconnectCount}</div>
+							<div>精准重订阅次数</div>
+							<div class="muted">{quoteStore.resubscribeCount}</div>
 						</div>
 					</div>
 					<div class="row-link">
 						<div class="row-between">
-							<div>最近重连耗时</div>
-							<div class="muted">
-								{socketStats.lastReconnectDurationMs === null
-									? '--'
-									: `${socketStats.lastReconnectDurationMs} ms`}
-							</div>
+							<div>当前订阅 symbols</div>
+							<div class="muted">{quoteStore.subscribedSymbols.join(', ') || '--'}</div>
 						</div>
 					</div>
 					<div class="row-link">
 						<div class="row-between">
 							<div>binary frames vs fallback frames</div>
-							<div class="muted">{socketStats.binaryFrames} vs {socketStats.fallbackFrames}</div>
+							<div class="muted">
+								{quoteStore.socketStats.binaryFrames} vs {quoteStore.socketStats.fallbackFrames}
+							</div>
 						</div>
 					</div>
-					{#each sampleSymbols as symbol}
+					{#each quoteStore.subscribedSymbols as symbol}
 						<div class="row-link">
 							<div class="row-between">
 								<div>
 									<div>{symbol}</div>
 									<div class="muted">
-										{latestTickBySymbol[symbol]?.source ?? 'waiting...'}
-										{#if latestTickBySymbol[symbol]}
-											({latestTickBySymbol[symbol]?.transport})
+										{quoteStore.latestTickBySymbol[symbol]?.source ?? 'waiting...'}
+										{#if quoteStore.latestTickBySymbol[symbol]}
+											({quoteStore.latestTickBySymbol[symbol]?.transport})
 										{/if}
 									</div>
 								</div>
 								<div class="align-right">
-									<div>{latestTickBySymbol[symbol]?.price ?? '--'}</div>
+									<div>{quoteStore.latestTickBySymbol[symbol]?.price ?? '--'}</div>
 									<div
 										class={
-											(latestTickBySymbol[symbol]?.changePct ?? 0) >= 0 ? 'up muted' : 'down muted'
+											(quoteStore.latestTickBySymbol[symbol]?.changePct ?? 0) >= 0
+												? 'up muted'
+												: 'down muted'
 										}
 									>
-										{latestTickBySymbol[symbol]?.changePct ?? '--'}
+										{quoteStore.latestTickBySymbol[symbol]?.changePct ?? '--'}
 									</div>
 								</div>
 							</div>
@@ -185,15 +143,15 @@
 
 		<footer class="footer">
 			当前版块：{getTopBoardName() || '未选择'} ｜ 当前个股：{marketState.activeSymbol || '未选择'} ｜
-			最新 WS Tick：{latestTick?.symbol ?? '--'} @{latestSource}
+			最新 WS Tick：{quoteStore.latestTick?.symbol ?? '--'} @{quoteStore.latestSource}
 			<br />
 			链路：{tickRenderChain}
 			<br />
-			类型校验：{latestTickDataType}
+			类型校验：{quoteStore.latestTickDataType}
 			<br />
-			JSON tick 残留：{tickTransportCounter['ws-json-fallback'] === 0
+			JSON tick 残留：{quoteStore.tickTransportCounter['ws-json-fallback'] === 0
 				? '未检测到'
-				: `检测到 ${tickTransportCounter['ws-json-fallback']} 条（仅兼容兜底）`}
+				: `检测到 ${quoteStore.tickTransportCounter['ws-json-fallback']} 条（仅兼容兜底）`}
 		</footer>
 	</div>
 </main>

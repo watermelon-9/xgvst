@@ -1,0 +1,154 @@
+### useQuoteWebSocket.subscribe precise replacement
+   410					return;
+   411				}
+   412				scheduleReconnect();
+   413			});
+   414		};
+   415	
+   416		const connect = () => {
+   417			if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+   418				return socket;
+   419			}
+   420	
+   421			manualClose = false;
+   422			updateStatus(reconnectStartedAt === null ? 'connecting' : 'reconnecting');
+   423			socket = new WebSocket(url);
+   424			attachSocket(socket);
+   425			return socket;
+   426		};
+   427	
+   428		const subscribe = (symbols: string[]) => {
+   429			const nextSymbols = normalizeSymbols(symbols);
+   430			const nextSet = new Set(nextSymbols);
+   431			const removedSymbols = [...subscribedSymbols].filter((symbol) => !nextSet.has(symbol));
+   432	
+   433			subscribedSymbols.clear();
+   434			for (const symbol of nextSymbols) {
+   435				subscribedSymbols.add(symbol);
+   436			}
+   437	
+   438			if (removedSymbols.length) {
+   439				send({ type: 'unsubscribe', symbols: removedSymbols });
+   440			}
+   441	
+   442			if (nextSymbols.length) {
+   443				send({ type: 'subscribe', symbols: nextSymbols });
+   444			}
+   445		};
+   446	
+   447		const unsubscribe = (symbols: string[]) => {
+   448			for (const symbol of symbols) {
+   449				subscribedSymbols.delete(symbol);
+   450			}
+   451			send({ type: 'unsubscribe', symbols });
+   452		};
+   453	
+   454		const close = () => {
+   455			manualClose = true;
+   456			stopHeartbeat();
+   457			clearReconnectTimer();
+   458			reconnectStartedAt = null;
+   459			if (socket && socket.readyState < WebSocket.CLOSING) {
+   460				socket.close(1000, 'client closed');
+   461			}
+   462			socket = null;
+   463			updateStatus('closed');
+   464		};
+   465	
+   466		const onTick = (handler: (tick: QuoteTick) => void) => {
+   467			tickHandlers.add(handler);
+   468			return () => {
+   469				tickHandlers.delete(handler);
+   470			};
+
+### quoteStore scope->subscribe
+   100			if (detachStats) {
+   101				detachStats();
+   102				detachStats = null;
+   103			}
+   104			attached = false;
+   105		};
+   106	}
+   107	
+   108	export function setQuoteSubscriptionScope(scope: SubscriptionScope) {
+   109		const activeSymbol = scope.activeSymbol.trim();
+   110		const nextSymbols = normalizeSymbols([activeSymbol, ...scope.watchlistSymbols]);
+   111		if (!symbolsChanged(nextSymbols)) return;
+   112	
+   113		quoteStore.subscribedSymbols = nextSymbols;
+   114		quoteStore.resubscribeCount += 1;
+   115		quoteSocket.subscribe(nextSymbols);
+   116	}
+
+### detail page symbol effect
+    20			};
+    21		});
+    22	
+    23		$effect(() => {
+    24			marketState.activeSymbol = params.symbol;
+    25			setQuoteSubscriptionScope({
+    26				activeSymbol: params.symbol,
+    27				watchlistSymbols: marketState.watchlist.map((item) => item.symbol)
+    28			});
+    29		});
+    30	</script>
+    31	
+    32	<main class="page">
+    33		<div class="container container-narrow">
+    34			<header class="topbar">
+    35				<h1 class="title">个股详情：{params.symbol}</h1>
+    36				<a href="/market" class="back-link">返回市场页</a>
+    37			</header>
+    38	
+    39			<section class="panel panel-spaced">
+    40				<p class="subtitle subtitle-tight">已接入 quoteStore（Svelte5 runes）+ 按需订阅链路。</p>
+    41				<p class="subtitle subtitle-tight">
+    42					当前订阅：{quoteStore.subscribedSymbols.join(', ') || '--'}（切换 symbol 会触发精准重订阅）
+    43				</p>
+    44				<p class="subtitle subtitle-tight">重订阅次数：{quoteStore.resubscribeCount}</p>
+    45			</section>
+    46	
+    47			<section class="panel panel-spaced">
+    48				<h2>当前 symbol 实时 Tick</h2>
+    49				<div class="list">
+    50					<div class="row-link">
+    51						<div class="row-between">
+    52							<div>连接状态</div>
+    53							<div class="muted">{quoteStore.socketStats.status}</div>
+    54						</div>
+    55					</div>
+    56					<div class="row-link">
+    57						<div class="row-between">
+    58							<div>价格</div>
+    59							<div>{quoteStore.latestTickBySymbol[params.symbol]?.price ?? '--'}</div>
+    60						</div>
+    61					</div>
+    62					<div class="row-link">
+    63						<div class="row-between">
+    64							<div>涨跌幅</div>
+    65							<div
+    66								class={
+    67									(quoteStore.latestTickBySymbol[params.symbol]?.changePct ?? 0) >= 0
+    68										? 'up'
+    69										: 'down'
+    70								}
+    71							>
+    72								{quoteStore.latestTickBySymbol[params.symbol]?.changePct ?? '--'}
+    73							</div>
+    74						</div>
+    75					</div>
+    76				</div>
+    77			</section>
+    78	
+    79			{#if marketState.watchlist.length > 0}
+    80				<section class="panel panel-spaced">
+    81					<h2>快速切换（验证精准重订阅）</h2>
+    82					<div class="card-grid card-grid-spaced">
+    83						{#each marketState.watchlist as item}
+    84							<a class="card" href={`/detail/${item.symbol}`}>
+    85								<h3>{item.name}（{item.symbol}）</h3>
+    86								<p>点击切换 symbol，订阅列表会更新为「当前个股+自选」</p>
+    87							</a>
+    88						{/each}
+    89					</div>
+    90				</section>

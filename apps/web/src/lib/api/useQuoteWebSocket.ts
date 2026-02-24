@@ -236,6 +236,16 @@ async function decodeBinaryTick(data: ArrayBuffer | Blob): Promise<QuoteTick | n
 	return decodeCustomBinaryFrame(bytes) ?? decodeQuoteProto(bytes);
 }
 
+function normalizeSymbols(symbols: string[]): string[] {
+	const unique = new Set<string>();
+	for (const raw of symbols) {
+		const symbol = raw.trim();
+		if (!symbol) continue;
+		unique.add(symbol);
+	}
+	return [...unique];
+}
+
 export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const url = options.url ?? '/ws/quote';
 	const heartbeatIntervalMs = options.heartbeatIntervalMs ?? 15000;
@@ -416,10 +426,22 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	};
 
 	const subscribe = (symbols: string[]) => {
-		for (const symbol of symbols) {
+		const nextSymbols = normalizeSymbols(symbols);
+		const nextSet = new Set(nextSymbols);
+		const removedSymbols = [...subscribedSymbols].filter((symbol) => !nextSet.has(symbol));
+
+		subscribedSymbols.clear();
+		for (const symbol of nextSymbols) {
 			subscribedSymbols.add(symbol);
 		}
-		flushSubscriptions();
+
+		if (removedSymbols.length) {
+			send({ type: 'unsubscribe', symbols: removedSymbols });
+		}
+
+		if (nextSymbols.length) {
+			send({ type: 'subscribe', symbols: nextSymbols });
+		}
 	};
 
 	const unsubscribe = (symbols: string[]) => {
