@@ -260,8 +260,9 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const MAX_DELAY_MS = options.maxDelayMs ?? 60_000;
 	const JITTER_FACTOR = options.jitterFactor ?? 0.8;
 	const MAX_RETRIES = options.maxRetries ?? 25;
-	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 800;
+	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 1800;
 	const BACKOFF_MULTIPLIER = 2.2;
+	const MIN_RECONNECT_GAP_MS = 300;
 
 	let socket: WebSocket | null = null;
 	let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
@@ -269,6 +270,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	let reconnectAttempt = 0;
 	let reconnectStartedAt: number | null = null;
 	let manualClose = false;
+	let lastReconnectTime = 0;
 
 	const subscribedSymbols = new Set<string>();
 	const tickHandlers = new Set<(tick: QuoteTick) => void>();
@@ -351,6 +353,11 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			delay += Math.random() * INITIAL_JITTER_RANGE_MS;
 		}
 
+		const now = Date.now();
+		if (now - lastReconnectTime < MIN_RECONNECT_GAP_MS) {
+			delay += MIN_RECONNECT_GAP_MS - (now - lastReconnectTime);
+		}
+
 		return Math.max(200, Math.round(delay));
 	};
 
@@ -369,14 +376,14 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		if (manualClose) return;
 		if (reconnectTimer) return;
 
-		reconnectAttempt += 1;
-		let delay = getNextReconnectDelay();
-
+		let skipOnce = false;
 		if (closeCode === 1008 || closeCode === 1011) {
-			delay = Math.min(delay * 1.5, MAX_DELAY_MS);
-		} else if (closeCode === 1006) {
-			delay = Math.max(300, delay * 0.8);
+			skipOnce = true;
+			reconnectAttempt += 1;
 		}
+
+		reconnectAttempt += 1;
+		const delay = getNextReconnectDelay();
 
 		if (!Number.isFinite(delay)) {
 			updateStatus('failed');
@@ -391,7 +398,12 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		updateStatus('reconnecting');
 		reconnectTimer = setTimeout(() => {
 			reconnectTimer = null;
-			connect();
+			lastReconnectTime = Date.now();
+			if (!skipOnce) {
+				connect();
+			} else {
+				scheduleReconnect();
+			}
 		}, delay);
 	};
 
