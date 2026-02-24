@@ -42,8 +42,21 @@
 	<title>XGVST — Master Volatility. Master Markets.</title>
 </svelte:head>
 
-<button type="button" class="theme-toggle" onclick={toggleTheme} aria-label="切换明暗主题">
-	<span>{theme === 'light' ? '🌙 暗黑' : '☀️ 亮色'}</span>
-</button>
+<header class="app-header">
+	<a class="brand-link" href="/" aria-label="返回首页">
+		<div class="brand-emblem" aria-hidden="true">XG</div>
+		<div class="brand-copy">
+			<div class="brand-main">XGVST</div>
+			<div class="brand-sub">Master Volatility. Master Markets.</div>
+		</div>
+	</a>
+
+	<div class="header-actions">
+		<div class="user-chip">Hoeltu ▼</div>
+		<button type="button" class="theme-toggle" onclick={toggleTheme} aria-label="切换明暗主题">
+			<span>{theme === 'light' ? '🌙 暗黑' : '☀️ 亮色'}</span>
+		</button>
+	</div>
+</header>
 
 {@render children()}

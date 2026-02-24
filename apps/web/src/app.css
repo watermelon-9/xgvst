@@ -37,6 +37,77 @@ body {
 	color: var(--color-text);
 }
 
+.app-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.9rem 1.2rem;
+	background: #0f0b1f;
+	border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+	position: sticky;
+	top: 0;
+	z-index: 40;
+}
+
+.brand-link {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.brand-emblem {
+	width: 3rem;
+	height: 3rem;
+	border-radius: 0.7rem;
+	display: grid;
+	place-items: center;
+	font-weight: 900;
+	letter-spacing: -0.04em;
+	font-size: 1.1rem;
+	background: linear-gradient(135deg, #a855f7, #c084fc 45%, #22d3ee);
+	color: #ffffff;
+	box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+}
+
+.brand-copy {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.05;
+}
+
+.brand-main {
+	font-size: 1.85rem;
+	font-weight: 900;
+	letter-spacing: -0.04em;
+	background: linear-gradient(90deg, #a855f7, #c084fc, #e9d5ff);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+.brand-sub {
+	margin-top: 0.2rem;
+	font-size: 0.78rem;
+	font-weight: 500;
+	color: #c4b5fd;
+	letter-spacing: 0.04em;
+}
+
+.header-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+.user-chip {
+	font-size: 0.82rem;
+	padding: 0.35rem 0.7rem;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	color: #f3e8ff;
+}
+
 a {
 	color: inherit;
 	text-decoration: none;
@@ -54,19 +125,6 @@ a {
 
 .container-narrow {
 	width: min(100%, 900px);
-}
-
-.brand-hero {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-}
-
-.brand-logo {
-	width: 44px;
-	height: 44px;
-	border-radius: 0.5rem;
-	object-fit: cover;
 }
 
 .title {
@@ -241,10 +299,6 @@ a {
 }
 
 .theme-toggle {
-	position: fixed;
-	top: 1rem;
-	right: 1rem;
-	z-index: 50;
 	border: 1px solid var(--color-border);
 	border-radius: 999px;
 	background: var(--color-surface);
@@ -257,6 +311,30 @@ a {
 
 .theme-toggle:hover {
 	background: var(--color-surface-hover);
+}
+
+@media (max-width: 768px) {
+	.app-header {
+		padding: 0.75rem 0.8rem;
+	}
+
+	.brand-emblem {
+		width: 2.3rem;
+		height: 2.3rem;
+		font-size: 0.9rem;
+	}
+
+	.brand-main {
+		font-size: 1.35rem;
+	}
+
+	.brand-sub {
+		font-size: 0.68rem;
+	}
+
+	.user-chip {
+		display: none;
+	}
 }
 
 @media (min-width: 768px) {
