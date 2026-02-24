@@ -1,3 +1,4 @@
+import { encodeQuote } from '../proto/quote';
 import { SourceManager } from '../sources/SourceManager';
 import type { QuoteTick } from '../sources/QuoteSource';
 
@@ -12,6 +13,8 @@ type QuoteDOStats = {
   pendingSymbols: number;
   flushCount: number;
   sentBinaryFrames: number;
+  sentProtobufFrames: number;
+  sentFallbackFrames: number;
   droppedFrames: number;
   lastFlushAt: string | null;
 };
@@ -22,7 +25,13 @@ const BATCH_FLUSH_MS = 100;
 
 const textEncoder = new TextEncoder();
 
-function encodeBinaryTickFrame(tick: QuoteTick): Uint8Array | null {
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const cloned = bytes.slice();
+  return cloned.buffer;
+}
+
+// QT1: 调试兜底帧（DoD3 后不再作为主路径）
+function encodeQt1DebugFrame(tick: QuoteTick): Uint8Array | null {
   const symbolBytes = textEncoder.encode(tick.symbol);
   const tsBytes = textEncoder.encode(tick.ts);
   const sourceBytes = textEncoder.encode(tick.source);
@@ -77,6 +86,8 @@ export class QuoteDurableObject implements DurableObject {
     pendingSymbols: 0,
     flushCount: 0,
     sentBinaryFrames: 0,
+    sentProtobufFrames: 0,
+    sentFallbackFrames: 0,
     droppedFrames: 0,
     lastFlushAt: null
   };
@@ -146,7 +157,8 @@ export class QuoteDurableObject implements DurableObject {
         ok: true,
         type: 'connected',
         batchFlushMs: BATCH_FLUSH_MS,
-        sourceStatus: this.sourceManager.status()
+        sourceStatus: this.sourceManager.status(),
+        transportPreferred: 'protobuf'
       })
     );
 
@@ -274,20 +286,49 @@ export class QuoteDurableObject implements DurableObject {
     this.stats.lastFlushAt = new Date().toISOString();
 
     for (const tick of ticks) {
-      const frame = encodeBinaryTickFrame(tick);
-      if (!frame) {
-        this.stats.droppedFrames += 1;
-        continue;
-      }
-
       const listeners = this.symbolSubscribers.get(tick.symbol);
       if (!listeners?.size) continue;
 
+      let frameToSend: ArrayBuffer | string;
+      let sentAsFallback = false;
+
+      try {
+        const proto = encodeQuote({
+          symbol: tick.symbol,
+          price: tick.price,
+          changePct: tick.changePct,
+          ts: tick.ts
+        });
+        frameToSend = toArrayBuffer(proto);
+      } catch {
+        const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
+        if (debugEnabled) {
+          const qt1 = encodeQt1DebugFrame(tick);
+          if (qt1) {
+            frameToSend = toArrayBuffer(qt1);
+          } else {
+            frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+            sentAsFallback = true;
+          }
+        } else {
+          frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+          sentAsFallback = true;
+        }
+      }
+
       for (const ws of listeners) {
         try {
-          ws.send(frame);
-          this.stats.sentBinaryFrames += 1;
+          ws.send(frameToSend);
+          if (typeof frameToSend === 'string') {
+            this.stats.sentFallbackFrames += 1;
+          } else {
+            this.stats.sentBinaryFrames += 1;
+            if (!sentAsFallback) {
+              this.stats.sentProtobufFrames += 1;
+            }
+          }
         } catch {
+          this.stats.droppedFrames += 1;
           ws.close(1011, 'broadcast failed');
           this.cleanupClient(ws);
         }

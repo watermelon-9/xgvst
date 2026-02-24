@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-02-24T14:22:17.963Z",
+  "ok": true,
+  "ws": {
+    "reason": "sample_complete",
+    "counters": {
+      "binaryFrames": 80,
+      "protobufFrames": 80,
+      "qt1FallbackFrames": 0,
+      "jsonFallbackFrames": 0,
+      "controlFrames": 2,
+      "decodeFailedFrames": 0
+    }
+  },
+  "doBefore": {
+    "ok": true,
+    "sessionKey": "sess:p22-r6-a",
+    "payload": {
+      "ok": true,
+      "do": "quote",
+      "stats": {
+        "clients": 0,
+        "subscriptions": 0,
+        "pendingSymbols": 0,
+        "flushCount": 0,
+        "sentBinaryFrames": 0,
+        "sentProtobufFrames": 0,
+        "sentFallbackFrames": 0,
+        "droppedFrames": 0,
+        "lastFlushAt": null,
+        "source": {
+          "activeSource": null,
+          "priorityOrder": [
+            "alltick",
+            "sina",
+            "eastmoney",
+            "tencent"
+          ],
+          "subscribedSymbols": [],
+          "failoverCount": 0,
+          "reconnecting": false,
+          "debugForcedSource": null
+        },
+        "limits": {
+          "heartbeatSweepMs": 15000,
+          "heartbeatTimeoutMs": 30000,
+          "batchFlushMs": 100
+        }
+      }
+    }
+  },
+  "doAfter": {
+    "ok": true,
+    "sessionKey": "sess:p22-r6-a",
+    "payload": {
+      "ok": true,
+      "do": "quote",
+      "stats": {
+        "clients": 0,
+        "subscriptions": 0,
+        "pendingSymbols": 0,
+        "flushCount": 40,
+        "sentBinaryFrames": 80,
+        "sentProtobufFrames": 80,
+        "sentFallbackFrames": 0,
+        "droppedFrames": 0,
+        "lastFlushAt": "2026-02-24T14:22:27.504Z",
+        "source": {
+          "activeSource": "alltick",
+          "priorityOrder": [
+            "alltick",
+            "sina",
+            "eastmoney",
+            "tencent"
+          ],
+          "subscribedSymbols": [],
+          "failoverCount": 0,
+          "reconnecting": false,
+          "debugForcedSource": null
+        },
+        "limits": {
+          "heartbeatSweepMs": 15000,
+          "heartbeatTimeoutMs": 30000,
+          "batchFlushMs": 100
+        }
+      }
+    }
+  },
+  "doDiff": {
+    "sentBinaryFrames": 80,
+    "sentProtobufFrames": 80,
+    "sentFallbackFrames": 0
+  }
+}

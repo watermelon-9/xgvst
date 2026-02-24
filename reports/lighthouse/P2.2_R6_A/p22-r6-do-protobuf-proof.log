@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "doDiff": {
+    "sentBinaryFrames": 80,
+    "sentProtobufFrames": 80,
+    "sentFallbackFrames": 0
+  },
+  "ws": {
+    "binaryFrames": 80,
+    "protobufFrames": 80,
+    "qt1FallbackFrames": 0,
+    "jsonFallbackFrames": 0,
+    "controlFrames": 2,
+    "decodeFailedFrames": 0
+  },
+  "outDir": "/Users/mac/.openclaw/workspace/xgvst/reports/lighthouse/P2.2_R6_A"
+}

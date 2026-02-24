@@ -43,10 +43,16 @@ const SYNTHETIC_BASE_PRICE = new Map<string, number>([
 
 type WsFrameStats = {
   sentBinaryFrames: number;
+  sentProtobufFrames: number;
   sentFallbackFrames: number;
 };
 
 const textEncoder = new TextEncoder();
+
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const cloned = bytes.slice();
+  return cloned.buffer;
+}
 
 function encodeCustomBinaryTickFrame(tick: QuoteTick): Uint8Array | null {
   const symbolBytes = textEncoder.encode(tick.symbol);
@@ -107,6 +113,7 @@ class QuoteConnectionPool {
   private readonly sourceManager = new SourceManager();
   private readonly frameStats: WsFrameStats = {
     sentBinaryFrames: 0,
+    sentProtobufFrames: 0,
     sentFallbackFrames: 0
   };
   private started = false;
@@ -168,7 +175,7 @@ class QuoteConnectionPool {
         ok: true,
         type: 'connected',
         sourceStatus: this.sourceManager.status(),
-        transportPreferred: 'binary'
+        transportPreferred: 'protobuf'
       })
     );
 
@@ -255,19 +262,42 @@ class QuoteConnectionPool {
   }
 
   private broadcastTick(tick: QuoteTick) {
-    const binaryFrame = encodeCustomBinaryTickFrame(tick);
-    const fallbackFrame = JSON.stringify({ type: 'tick', data: tick });
+    let frameToSend: ArrayBuffer | string;
+    let protobufOk = false;
+
+    try {
+      const protobufFrame = encodeQuote({
+        symbol: tick.symbol,
+        price: tick.price,
+        changePct: tick.changePct,
+        ts: tick.ts
+      });
+      frameToSend = toArrayBuffer(protobufFrame);
+      protobufOk = true;
+    } catch {
+      const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
+      if (debugEnabled) {
+        const qt1 = encodeCustomBinaryTickFrame(tick);
+        if (qt1) {
+          frameToSend = toArrayBuffer(qt1);
+        } else {
+          frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+        }
+      } else {
+        frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+      }
+    }
 
     for (const [ws, { symbols }] of this.clients.entries()) {
       if (!symbols.has(tick.symbol)) continue;
 
       try {
-        if (binaryFrame) {
-          ws.send(binaryFrame);
-          this.frameStats.sentBinaryFrames += 1;
-        } else {
-          ws.send(fallbackFrame);
+        ws.send(frameToSend);
+        if (typeof frameToSend === 'string') {
           this.frameStats.sentFallbackFrames += 1;
+        } else {
+          this.frameStats.sentBinaryFrames += 1;
+          if (protobufOk) this.frameStats.sentProtobufFrames += 1;
         }
       } catch {
         ws.close(1011, 'broadcast failed');
