@@ -1,10 +1,28 @@
 import { encodeQuote } from '../proto/quote';
+import { encodeQuoteBundleDelta } from '../proto/quoteBundleDelta';
 import { SourceManager } from '../sources/SourceManager';
 import type { QuoteTick } from '../sources/QuoteSource';
+
+type TransportMode = 'legacy' | 'bundle' | 'json';
+type CompressionMode = 'none' | 'gzip' | 'deflate';
+
+type LastSentTick = {
+  sourceId: number;
+  priceMilli: number;
+  changeBp: number;
+  tsMs: number;
+  sentAtMs: number;
+};
 
 type ClientState = {
   symbols: Set<string>;
   lastPongAt: number;
+  transport: TransportMode;
+  compression: CompressionMode;
+  subscriptionSignature: string;
+  dictVersion: number;
+  symbolIdMap: Map<string, number>;
+  lastSentBySymbolId: Map<number, LastSentTick>;
 };
 
 type QuoteDOStats = {
@@ -14,20 +32,110 @@ type QuoteDOStats = {
   flushCount: number;
   sentBinaryFrames: number;
   sentProtobufFrames: number;
+  sentBundleFrames: number;
+  sentCompressedFrames: number;
   sentFallbackFrames: number;
+  sentBytes: number;
   droppedFrames: number;
   lastFlushAt: string | null;
 };
 
-const HEARTBEAT_SWEEP_MS = 15_000;
-const HEARTBEAT_TIMEOUT_MS = 30_000;
-const BATCH_FLUSH_MS = 100;
+type QuoteTickSnapshot = {
+  symbol: string;
+  price: number;
+  changePct: number;
+  ts: string;
+  source: string;
+};
+
+const DEFAULT_HEARTBEAT_SWEEP_MS = 30_000;
+const DEFAULT_HEARTBEAT_TIMEOUT_MS = 60_000;
+const DEFAULT_BATCH_FLUSH_MS = 100;
+// 提升 bundle delta 阈值，减少对前端几乎无感的抖动帧
+const DEFAULT_PRICE_DELTA_MILLI = 15;
+const DEFAULT_CHANGE_DELTA_BP = 8;
+// 拉长强制快照周期，减少“保活式”重复样本
+const DEFAULT_FORCE_SNAPSHOT_MS = 10_000;
+
+const BUNDLE_MAGIC_0 = 0x51; // Q
+const BUNDLE_MAGIC_1 = 0x42; // B
+const BUNDLE_MAGIC_2 = 0x32; // 2
+const CODEC_NONE = 0;
+const CODEC_GZIP = 1;
+const CODEC_DEFLATE = 2;
 
 const textEncoder = new TextEncoder();
+const BUNDLE_SOURCES = ['alltick', 'sina', 'eastmoney', 'tencent'];
+const BUNDLE_SOURCE_ID = new Map(BUNDLE_SOURCES.map((name, index) => [name, index]));
+const KV_SNAPSHOT_PREFIX = 'quote:snapshot:';
+
+function isQuoteTickSnapshot(value: unknown): value is QuoteTickSnapshot {
+  if (typeof value !== 'object' || value === null) return false;
+
+  const tick = value as Partial<QuoteTickSnapshot>;
+  return (
+    typeof tick.symbol === 'string' &&
+    typeof tick.ts === 'string' &&
+    typeof tick.source === 'string' &&
+    typeof tick.price === 'number' &&
+    Number.isFinite(tick.price) &&
+    typeof tick.changePct === 'number' &&
+    Number.isFinite(tick.changePct)
+  );
+}
 
 function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
   const cloned = bytes.slice();
   return cloned.buffer;
+}
+
+function normalizeTransport(value: unknown): TransportMode {
+  if (value === 'bundle') return 'bundle';
+  if (value === 'json') return 'json';
+  return 'legacy';
+}
+
+function normalizeCompression(value: unknown): CompressionMode {
+  if (value === 'none') return 'none';
+  if (value === 'deflate') return 'deflate';
+  if (value === 'gzip') return 'gzip';
+  // DoD5 默认保持 deflate；none 仅做显式回退开关
+  return 'deflate';
+}
+
+function parseEnvInt(value: string | undefined, fallback: number, min: number, max: number): number {
+  if (!value) return fallback;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  const normalized = Math.round(parsed);
+  return Math.max(min, Math.min(max, normalized));
+}
+
+function normalizeSymbolSet(symbols: Set<string>): string {
+  return [...symbols].sort().join(',');
+}
+
+function toFrameArrayBuffer(buffer: ArrayBuffer | Uint8Array): ArrayBuffer {
+  if (buffer instanceof Uint8Array) return toArrayBuffer(buffer);
+  return buffer;
+}
+
+function buildBundleEnvelope(codec: number, payload: Uint8Array | ArrayBuffer): ArrayBuffer {
+  const payloadBytes = payload instanceof Uint8Array ? payload : new Uint8Array(payload);
+  const frame = new Uint8Array(4 + payloadBytes.byteLength);
+  frame[0] = BUNDLE_MAGIC_0;
+  frame[1] = BUNDLE_MAGIC_1;
+  frame[2] = BUNDLE_MAGIC_2;
+  frame[3] = codec;
+  frame.set(payloadBytes, 4);
+  return frame.buffer;
+}
+
+async function compressBytes(bytes: Uint8Array, mode: 'gzip' | 'deflate'): Promise<ArrayBuffer> {
+  const payload = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(payload).set(bytes);
+  const stream = new Blob([payload]).stream().pipeThrough(new CompressionStream(mode));
+  return await new Response(stream).arrayBuffer();
 }
 
 // QT1: 调试兜底帧（DoD3 后不再作为主路径）
@@ -74,11 +182,20 @@ export class QuoteDurableObject implements DurableObject {
   private readonly clients = new Map<WebSocket, ClientState>();
   private readonly symbolSubscribers = new Map<string, Set<WebSocket>>();
   private readonly pendingBySymbol = new Map<string, QuoteTick>();
+  private readonly latestTickBySymbol = new Map<string, QuoteTick>();
   private readonly sourceManager = new SourceManager();
 
   private flushTimer: ReturnType<typeof setInterval> | null = null;
   private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+  private flushInFlight = false;
   private started = false;
+
+  private readonly heartbeatSweepMs: number;
+  private readonly heartbeatTimeoutMs: number;
+  private readonly batchFlushMs: number;
+  private readonly priceDeltaMilli: number;
+  private readonly changeDeltaBp: number;
+  private readonly forceSnapshotMs: number;
 
   private readonly stats: QuoteDOStats = {
     clients: 0,
@@ -87,7 +204,10 @@ export class QuoteDurableObject implements DurableObject {
     flushCount: 0,
     sentBinaryFrames: 0,
     sentProtobufFrames: 0,
+    sentBundleFrames: 0,
+    sentCompressedFrames: 0,
     sentFallbackFrames: 0,
+    sentBytes: 0,
     droppedFrames: 0,
     lastFlushAt: null
   };
@@ -97,6 +217,33 @@ export class QuoteDurableObject implements DurableObject {
     private readonly env: Env
   ) {
     this.state.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping', 'pong'));
+
+    const runtimeEnv = this.env as unknown as {
+      QUOTE_DO_HEARTBEAT_SWEEP_MS?: string;
+      QUOTE_DO_HEARTBEAT_TIMEOUT_MS?: string;
+      QUOTE_DO_BATCH_FLUSH_MS?: string;
+      QUOTE_DO_PRICE_DELTA_MILLI?: string;
+      QUOTE_DO_CHANGE_DELTA_BP?: string;
+      QUOTE_DO_FORCE_SNAPSHOT_MS?: string;
+    };
+
+    this.heartbeatSweepMs = parseEnvInt(
+      runtimeEnv.QUOTE_DO_HEARTBEAT_SWEEP_MS,
+      DEFAULT_HEARTBEAT_SWEEP_MS,
+      5_000,
+      120_000
+    );
+    const heartbeatTimeoutMs = parseEnvInt(
+      runtimeEnv.QUOTE_DO_HEARTBEAT_TIMEOUT_MS,
+      DEFAULT_HEARTBEAT_TIMEOUT_MS,
+      10_000,
+      300_000
+    );
+    this.heartbeatTimeoutMs = Math.max(heartbeatTimeoutMs, this.heartbeatSweepMs + 5_000);
+    this.batchFlushMs = parseEnvInt(runtimeEnv.QUOTE_DO_BATCH_FLUSH_MS, DEFAULT_BATCH_FLUSH_MS, 40, 1000);
+    this.priceDeltaMilli = parseEnvInt(runtimeEnv.QUOTE_DO_PRICE_DELTA_MILLI, DEFAULT_PRICE_DELTA_MILLI, 0, 100);
+    this.changeDeltaBp = parseEnvInt(runtimeEnv.QUOTE_DO_CHANGE_DELTA_BP, DEFAULT_CHANGE_DELTA_BP, 0, 100);
+    this.forceSnapshotMs = parseEnvInt(runtimeEnv.QUOTE_DO_FORCE_SNAPSHOT_MS, DEFAULT_FORCE_SNAPSHOT_MS, 500, 60_000);
   }
 
   async fetch(request: Request): Promise<Response> {
@@ -119,18 +266,21 @@ export class QuoteDurableObject implements DurableObject {
     this.started = true;
 
     await this.sourceManager.start((tick) => {
+      this.latestTickBySymbol.set(tick.symbol, tick);
+      void this.persistSnapshot(tick);
+
       if (!this.symbolSubscribers.has(tick.symbol)) return;
       this.pendingBySymbol.set(tick.symbol, tick);
       this.stats.pendingSymbols = this.pendingBySymbol.size;
     });
 
     this.flushTimer = setInterval(() => {
-      this.flushBatch();
-    }, BATCH_FLUSH_MS);
+      void this.flushBatch();
+    }, this.batchFlushMs);
 
     this.heartbeatTimer = setInterval(() => {
       this.heartbeatSweep();
-    }, HEARTBEAT_SWEEP_MS);
+    }, this.heartbeatSweepMs);
   }
 
   private acceptWebSocket(): Response {
@@ -138,7 +288,25 @@ export class QuoteDurableObject implements DurableObject {
     const [client, server] = Object.values(pair) as [WebSocket, WebSocket];
 
     server.accept();
-    this.clients.set(server, { symbols: new Set(), lastPongAt: Date.now() });
+
+    const defaultTransport = normalizeTransport(
+      (this.env as unknown as { QUOTE_DO_DEFAULT_TRANSPORT?: string }).QUOTE_DO_DEFAULT_TRANSPORT
+    );
+    const configuredCompression = normalizeCompression(
+      (this.env as unknown as { QUOTE_DO_DEFAULT_COMPRESSION?: string }).QUOTE_DO_DEFAULT_COMPRESSION
+    );
+    const defaultCompression: CompressionMode = defaultTransport === 'bundle' ? configuredCompression : 'none';
+
+    this.clients.set(server, {
+      symbols: new Set(),
+      lastPongAt: Date.now(),
+      transport: defaultTransport,
+      compression: defaultCompression,
+      subscriptionSignature: '',
+      dictVersion: 0,
+      symbolIdMap: new Map(),
+      lastSentBySymbolId: new Map()
+    });
     this.stats.clients = this.clients.size;
 
     server.addEventListener('message', (event) => {
@@ -156,9 +324,16 @@ export class QuoteDurableObject implements DurableObject {
       JSON.stringify({
         ok: true,
         type: 'connected',
-        batchFlushMs: BATCH_FLUSH_MS,
+        batchFlushMs: this.batchFlushMs,
         sourceStatus: this.sourceManager.status(),
-        transportPreferred: 'protobuf'
+        transport: defaultTransport,
+        compression: defaultCompression,
+        transportPreferred:
+          defaultTransport === 'bundle'
+            ? 'bundle-protobuf'
+            : defaultTransport === 'json'
+              ? 'json'
+              : 'protobuf'
       })
     );
 
@@ -174,9 +349,9 @@ export class QuoteDurableObject implements DurableObject {
       return;
     }
 
-    let parsed: { type?: string; symbols?: string[] };
+    let parsed: { type?: string; symbols?: string[]; transport?: string; compression?: string };
     try {
-      parsed = JSON.parse(raw) as { type?: string; symbols?: string[] };
+      parsed = JSON.parse(raw) as { type?: string; symbols?: string[]; transport?: string; compression?: string };
     } catch {
       ws.send(JSON.stringify({ ok: false, error: 'invalid ws payload' }));
       return;
@@ -189,11 +364,72 @@ export class QuoteDurableObject implements DurableObject {
     }
 
     if (parsed.type === 'subscribe') {
-      for (const symbol of parsed.symbols ?? []) {
+      if (parsed.transport) client.transport = normalizeTransport(parsed.transport);
+      if (parsed.compression) {
+        client.compression = normalizeCompression(parsed.compression);
+      } else if (client.transport === 'bundle' && client.compression === 'none') {
+        client.compression = normalizeCompression(
+          (this.env as unknown as { QUOTE_DO_DEFAULT_COMPRESSION?: string }).QUOTE_DO_DEFAULT_COMPRESSION
+        );
+      }
+
+      const requestedSymbols = this.normalizeSymbols(parsed.symbols ?? []);
+      for (const symbol of requestedSymbols) {
         this.subscribe(ws, symbol);
       }
+      this.refreshClientDictionary(client);
+
       await this.syncUpstreamSubscriptions();
-      ws.send(JSON.stringify({ ok: true, type: 'subscribed', symbols: [...client.symbols] }));
+      ws.send(
+        JSON.stringify({
+          ok: true,
+          type: 'subscribed',
+          symbols: [...client.symbols],
+          transport: client.transport,
+          compression: client.compression,
+          dictVersion: client.dictVersion
+        })
+      );
+      this.sendBundleDictionaryIfNeeded(ws, client);
+      await this.sendImmediateSnapshot(ws, client, requestedSymbols.length ? requestedSymbols : [...client.symbols]);
+      return;
+    }
+
+    if (parsed.type === 'resync') {
+      if (parsed.transport) client.transport = normalizeTransport(parsed.transport);
+      if (parsed.compression) {
+        client.compression = normalizeCompression(parsed.compression);
+      } else if (client.transport === 'bundle' && client.compression === 'none') {
+        client.compression = normalizeCompression(
+          (this.env as unknown as { QUOTE_DO_DEFAULT_COMPRESSION?: string }).QUOTE_DO_DEFAULT_COMPRESSION
+        );
+      }
+
+      const nextSymbols = this.normalizeSymbols(parsed.symbols ?? []);
+      const nextSet = new Set(nextSymbols);
+
+      for (const symbol of [...client.symbols]) {
+        if (!nextSet.has(symbol)) this.unsubscribe(ws, symbol);
+      }
+      for (const symbol of nextSymbols) {
+        this.subscribe(ws, symbol);
+      }
+
+      this.refreshClientDictionary(client);
+      await this.syncUpstreamSubscriptions();
+
+      ws.send(
+        JSON.stringify({
+          ok: true,
+          type: 'resynced',
+          symbols: [...client.symbols],
+          transport: client.transport,
+          compression: client.compression,
+          dictVersion: client.dictVersion
+        })
+      );
+      this.sendBundleDictionaryIfNeeded(ws, client);
+      await this.sendImmediateSnapshot(ws, client, nextSymbols);
       return;
     }
 
@@ -201,12 +437,146 @@ export class QuoteDurableObject implements DurableObject {
       for (const symbol of parsed.symbols ?? []) {
         this.unsubscribe(ws, symbol);
       }
+      this.refreshClientDictionary(client);
+
       await this.syncUpstreamSubscriptions();
-      ws.send(JSON.stringify({ ok: true, type: 'unsubscribed', symbols: [...client.symbols] }));
+      ws.send(
+        JSON.stringify({
+          ok: true,
+          type: 'unsubscribed',
+          symbols: [...client.symbols],
+          transport: client.transport,
+          compression: client.compression,
+          dictVersion: client.dictVersion
+        })
+      );
+      this.sendBundleDictionaryIfNeeded(ws, client);
       return;
     }
 
     ws.send(JSON.stringify({ ok: false, error: 'unsupported message type' }));
+  }
+
+  private normalizeSymbols(symbols: string[]): string[] {
+    const unique = new Set<string>();
+    for (const raw of symbols) {
+      const symbol = raw.trim();
+      if (!symbol || unique.has(symbol)) continue;
+      unique.add(symbol);
+    }
+    return [...unique];
+  }
+
+  private snapshotKvKey(symbol: string) {
+    return `${KV_SNAPSHOT_PREFIX}${symbol}`;
+  }
+
+  private async persistSnapshot(tick: QuoteTickSnapshot) {
+    this.latestTickBySymbol.set(tick.symbol, tick);
+
+    if (!this.env.QUOTE_KV) return;
+
+    try {
+      await this.env.QUOTE_KV.put(this.snapshotKvKey(tick.symbol), JSON.stringify(tick));
+    } catch {
+      // KV 写失败不影响主链路（DoD4）
+    }
+  }
+
+  private async readSnapshotFromKv(symbol: string): Promise<QuoteTickSnapshot | null> {
+    if (!this.env.QUOTE_KV) return null;
+
+    try {
+      const raw = await this.env.QUOTE_KV.get(this.snapshotKvKey(symbol), 'json');
+      return isQuoteTickSnapshot(raw) ? raw : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async resolveSnapshotBySymbol(symbol: string): Promise<QuoteTickSnapshot | null> {
+    const kvSnapshot = await this.readSnapshotFromKv(symbol);
+    if (kvSnapshot) return kvSnapshot;
+
+    const memorySnapshot = this.latestTickBySymbol.get(symbol);
+    return memorySnapshot ?? null;
+  }
+
+  private async sendImmediateSnapshot(ws: WebSocket, client: ClientState, symbols: string[]) {
+    const targetSymbols = this.normalizeSymbols(symbols).filter((symbol) => client.symbols.has(symbol));
+    if (!targetSymbols.length) return;
+
+    const resolvedSnapshots = await Promise.all(
+      targetSymbols.map(async (symbol) => this.resolveSnapshotBySymbol(symbol))
+    );
+
+    const ticks = resolvedSnapshots
+      .filter((tick): tick is QuoteTick => Boolean(tick))
+      .sort((a, b) => a.symbol.localeCompare(b.symbol));
+
+    if (!ticks.length) return;
+
+    if (client.transport === 'bundle') {
+      const frame = await this.encodeBundleFrame(ticks, client, client.compression, true);
+      if (!frame.byteLength) return;
+
+      ws.send(frame);
+      this.stats.sentBinaryFrames += 1;
+      this.stats.sentBundleFrames += 1;
+      if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
+      this.stats.sentBytes += frame.byteLength;
+      return;
+    }
+
+    for (const tick of ticks) {
+      this.sendLegacyTick(ws, client, tick);
+    }
+  }
+
+  private sendLegacyTick(ws: WebSocket, client: ClientState, tick: QuoteTick) {
+    let frameToSend: ArrayBuffer | string;
+    let sentAsFallback = false;
+
+    if (client.transport === 'json') {
+      frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json' });
+      sentAsFallback = true;
+    } else {
+      try {
+        const proto = encodeQuote({
+          symbol: tick.symbol,
+          price: tick.price,
+          changePct: tick.changePct,
+          ts: tick.ts
+        });
+        frameToSend = toArrayBuffer(proto);
+      } catch {
+        const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
+        if (debugEnabled) {
+          const qt1 = encodeQt1DebugFrame(tick);
+          if (qt1) {
+            frameToSend = toArrayBuffer(qt1);
+          } else {
+            frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+            sentAsFallback = true;
+          }
+        } else {
+          frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+          sentAsFallback = true;
+        }
+      }
+    }
+
+    ws.send(frameToSend);
+    if (typeof frameToSend === 'string') {
+      this.stats.sentFallbackFrames += 1;
+      this.stats.sentBytes += textEncoder.encode(frameToSend).byteLength;
+    } else {
+      this.stats.sentBinaryFrames += 1;
+      this.stats.sentBytes += frameToSend.byteLength;
+      if (!sentAsFallback) {
+        this.stats.sentProtobufFrames += 1;
+      }
+    }
   }
 
   private subscribe(ws: WebSocket, symbol: string) {
@@ -248,6 +618,36 @@ export class QuoteDurableObject implements DurableObject {
     this.stats.pendingSymbols = this.pendingBySymbol.size;
   }
 
+  private refreshClientDictionary(client: ClientState) {
+    const sortedSymbols = [...client.symbols].sort();
+    const nextSignature = sortedSymbols.join(',');
+
+    if (client.subscriptionSignature === nextSignature && client.symbolIdMap.size === sortedSymbols.length) {
+      return;
+    }
+
+    client.subscriptionSignature = nextSignature;
+    client.symbolIdMap.clear();
+    sortedSymbols.forEach((symbol, index) => {
+      client.symbolIdMap.set(symbol, index);
+    });
+    client.lastSentBySymbolId.clear();
+    client.dictVersion += 1;
+  }
+
+  private sendBundleDictionaryIfNeeded(ws: WebSocket, client: ClientState) {
+    if (client.transport !== 'bundle') return;
+
+    ws.send(
+      JSON.stringify({
+        type: 'bundle_dict',
+        dictVersion: client.dictVersion,
+        symbols: [...client.symbolIdMap.keys()],
+        sources: BUNDLE_SOURCES
+      })
+    );
+  }
+
   private async syncUpstreamSubscriptions() {
     await this.sourceManager.setSymbols([...this.symbolSubscribers.keys()]);
   }
@@ -276,56 +676,40 @@ export class QuoteDurableObject implements DurableObject {
     void this.syncUpstreamSubscriptions();
   }
 
-  private flushBatch() {
+  private async flushBatch() {
+    if (this.flushInFlight) return;
     if (!this.pendingBySymbol.size) return;
 
-    const ticks = [...this.pendingBySymbol.values()];
-    this.pendingBySymbol.clear();
-    this.stats.pendingSymbols = 0;
-    this.stats.flushCount += 1;
-    this.stats.lastFlushAt = new Date().toISOString();
+    this.flushInFlight = true;
 
-    for (const tick of ticks) {
-      const listeners = this.symbolSubscribers.get(tick.symbol);
-      if (!listeners?.size) continue;
+    try {
+      const ticks = [...this.pendingBySymbol.values()].sort((a, b) => a.symbol.localeCompare(b.symbol));
+      this.pendingBySymbol.clear();
+      this.stats.pendingSymbols = 0;
+      this.stats.flushCount += 1;
+      this.stats.lastFlushAt = new Date().toISOString();
 
-      let frameToSend: ArrayBuffer | string;
-      let sentAsFallback = false;
+      for (const [ws, client] of this.clients.entries()) {
+        if (!client.symbols.size) continue;
 
-      try {
-        const proto = encodeQuote({
-          symbol: tick.symbol,
-          price: tick.price,
-          changePct: tick.changePct,
-          ts: tick.ts
-        });
-        frameToSend = toArrayBuffer(proto);
-      } catch {
-        const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
-        if (debugEnabled) {
-          const qt1 = encodeQt1DebugFrame(tick);
-          if (qt1) {
-            frameToSend = toArrayBuffer(qt1);
-          } else {
-            frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
-            sentAsFallback = true;
-          }
-        } else {
-          frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
-          sentAsFallback = true;
-        }
-      }
-
-      for (const ws of listeners) {
         try {
-          ws.send(frameToSend);
-          if (typeof frameToSend === 'string') {
-            this.stats.sentFallbackFrames += 1;
-          } else {
+          if (client.transport === 'bundle') {
+            const selectedTicks = ticks.filter((tick) => client.symbols.has(tick.symbol));
+            const frame = await this.encodeBundleFrame(selectedTicks, client, client.compression);
+            if (!frame.byteLength) continue;
+
+            ws.send(frame);
             this.stats.sentBinaryFrames += 1;
-            if (!sentAsFallback) {
-              this.stats.sentProtobufFrames += 1;
-            }
+            this.stats.sentBundleFrames += 1;
+            if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
+            this.stats.sentBytes += frame.byteLength;
+            continue;
+          }
+
+          // legacy path: one protobuf tick per symbol
+          for (const tick of ticks) {
+            if (!client.symbols.has(tick.symbol)) continue;
+            this.sendLegacyTick(ws, client, tick);
           }
         } catch {
           this.stats.droppedFrames += 1;
@@ -333,14 +717,108 @@ export class QuoteDurableObject implements DurableObject {
           this.cleanupClient(ws);
         }
       }
+    } finally {
+      this.flushInFlight = false;
     }
+  }
+
+  private async encodeBundleFrame(
+    ticks: QuoteTick[],
+    client: ClientState,
+    compression: CompressionMode,
+    forceFull = false
+  ): Promise<ArrayBuffer> {
+    if (!ticks.length) return new ArrayBuffer(0);
+
+    const nowMs = Date.now();
+    const nextTicks: Array<{
+      symbolId: number;
+      sourceId: number;
+      priceMilli: number;
+      changeBp: number;
+      tsMs: number;
+      last: LastSentTick | undefined;
+    }> = [];
+
+    for (const tick of ticks) {
+      const symbolId = client.symbolIdMap.get(tick.symbol);
+      if (symbolId === undefined) continue;
+
+      const sourceId = BUNDLE_SOURCE_ID.get(tick.source) ?? 0;
+      const priceMilli = Math.round(tick.price * 1000);
+      const changeBp = Math.round(tick.changePct * 100);
+      const parsedTs = Date.parse(tick.ts);
+      const tsMs = Number.isFinite(parsedTs) ? Math.round(parsedTs) : nowMs;
+      const last = forceFull ? undefined : client.lastSentBySymbolId.get(symbolId);
+
+      const forceBySilence = forceFull || !last || nowMs - last.sentAtMs >= this.forceSnapshotMs;
+      const sourceChanged = !last || sourceId !== last.sourceId;
+      const priceChanged = !last || Math.abs(priceMilli - last.priceMilli) >= this.priceDeltaMilli;
+      const changeChanged = !last || Math.abs(changeBp - last.changeBp) >= this.changeDeltaBp;
+
+      if (!forceBySilence && !sourceChanged && !priceChanged && !changeChanged) {
+        continue;
+      }
+
+      nextTicks.push({ symbolId, sourceId, priceMilli, changeBp, tsMs, last });
+    }
+
+    if (!nextTicks.length) return new ArrayBuffer(0);
+
+    const baseTsMs = Math.min(...nextTicks.map((tick) => tick.tsMs));
+    const baseTsSec = Math.floor(baseTsMs / 1000);
+    const baseTsSecMs = baseTsSec * 1000;
+
+    const symbolIds: number[] = [];
+    const sourceIds: number[] = [];
+    const priceDeltas: number[] = [];
+    const changeDeltas: number[] = [];
+    const tsOffsetsMs: number[] = [];
+
+    for (const item of nextTicks) {
+      symbolIds.push(item.symbolId);
+      sourceIds.push(item.sourceId);
+      priceDeltas.push(item.last ? item.priceMilli - item.last.priceMilli : item.priceMilli);
+      changeDeltas.push(item.last ? item.changeBp - item.last.changeBp : item.changeBp);
+      tsOffsetsMs.push(Math.max(0, item.tsMs - baseTsSecMs));
+
+      client.lastSentBySymbolId.set(item.symbolId, {
+        sourceId: item.sourceId,
+        priceMilli: item.priceMilli,
+        changeBp: item.changeBp,
+        tsMs: item.tsMs,
+        sentAtMs: nowMs
+      });
+    }
+
+    const bytes = encodeQuoteBundleDelta({
+      dictVersion: client.dictVersion,
+      baseTsSec,
+      symbolIds,
+      sourceIds,
+      priceDeltas,
+      changeDeltas,
+      tsOffsetsMs
+    });
+
+    if (compression === 'gzip') {
+      const gz = await compressBytes(bytes, 'gzip');
+      return buildBundleEnvelope(CODEC_GZIP, gz);
+    }
+
+    if (compression === 'deflate') {
+      const df = await compressBytes(bytes, 'deflate');
+      return buildBundleEnvelope(CODEC_DEFLATE, df);
+    }
+
+    return buildBundleEnvelope(CODEC_NONE, bytes);
   }
 
   private heartbeatSweep() {
     const now = Date.now();
 
     for (const [ws, state] of this.clients.entries()) {
-      if (now - state.lastPongAt > HEARTBEAT_TIMEOUT_MS) {
+      if (now - state.lastPongAt > this.heartbeatTimeoutMs) {
         ws.close(1001, 'heartbeat timeout');
         this.cleanupClient(ws);
         continue;
@@ -360,9 +838,12 @@ export class QuoteDurableObject implements DurableObject {
       ...this.stats,
       source: this.sourceManager.status(),
       limits: {
-        heartbeatSweepMs: HEARTBEAT_SWEEP_MS,
-        heartbeatTimeoutMs: HEARTBEAT_TIMEOUT_MS,
-        batchFlushMs: BATCH_FLUSH_MS
+        heartbeatSweepMs: this.heartbeatSweepMs,
+        heartbeatTimeoutMs: this.heartbeatTimeoutMs,
+        batchFlushMs: this.batchFlushMs,
+        priceDeltaMilli: this.priceDeltaMilli,
+        changeDeltaBp: this.changeDeltaBp,
+        forceSnapshotMs: this.forceSnapshotMs
       }
     };
   }

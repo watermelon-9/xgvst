@@ -5,7 +5,7 @@
 	import { quoteStore, mountQuoteStore, setQuoteSubscriptionScope } from '$lib/runes/quote-store.svelte';
 
 	const tickRenderChain =
-		'WS frame(binary/protobuf) → useQuoteWebSocket.subscribe(当前个股+自选) → quoteStore → 页面渲染';
+		'WS frame(binary/protobuf) → useQuoteWebSocket.resync(当前个股+自选) → quoteStore → 页面渲染';
 
 	onMount(() => {
 		let disposed = false;
@@ -109,6 +109,16 @@
 						<div class="row-between">
 							<div>连接状态</div>
 							<div class="muted">{quoteStore.socketStats.status}</div>
+						</div>
+					</div>
+					<div class="row-link">
+						<div class="row-between">
+							<div>恢复补齐状态</div>
+							<div class="muted">
+								{quoteStore.socketStats.recovering
+									? `recovering(${quoteStore.socketStats.pendingRecoverySymbols.join(', ')})`
+									: 'ready'}
+							</div>
 						</div>
 					</div>
 					<div class="row-link">

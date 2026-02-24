@@ -25,6 +25,8 @@ export type QuoteSocketStats = {
 	binaryFrames: number;
 	fallbackFrames: number;
 	protobufDecodeSuccess: number;
+	recovering: boolean;
+	pendingRecoverySymbols: string[];
 };
 
 type QuoteSocketCommand =
@@ -37,12 +39,21 @@ type QuoteSocketCommand =
 			symbols: string[];
 	  }
 	| {
+			type: 'resync';
+			symbols: string[];
+			clientSentAtMs?: number;
+	  }
+	| {
 			type: 'ping';
 	  };
 
 type QuoteSocketMessage =
 	| {
 			type: 'connected';
+	  }
+	| {
+			type: 'resynced' | 'subscribed' | 'unsubscribed';
+			symbols?: string[];
 	  }
 	| {
 			type: 'tick';
@@ -72,6 +83,16 @@ const textDecoder = new TextDecoder();
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null;
+}
+
+function isMessageWithSymbols(
+	value: QuoteSocketMessage
+): value is { type: 'resynced' | 'subscribed' | 'unsubscribed'; symbols: string[] } {
+	return (
+		(value.type === 'resynced' || value.type === 'subscribed' || value.type === 'unsubscribed') &&
+		'symbols' in value &&
+		Array.isArray(value.symbols)
+	);
 }
 
 function normalizeTick(value: unknown, transport: QuoteTick['transport']): QuoteTick | null {
@@ -208,13 +229,17 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const tickHandlers = new Set<(tick: QuoteTick) => void>();
 	const statsHandlers = new Set<(stats: QuoteSocketStats) => void>();
 
+	const pendingRecoverySymbols = new Set<string>();
+
 	const stats: QuoteSocketStats = {
 		status: 'idle',
 		reconnectCount: 0,
 		lastReconnectDurationMs: null,
 		binaryFrames: 0,
 		fallbackFrames: 0,
-		protobufDecodeSuccess: 0
+		protobufDecodeSuccess: 0,
+		recovering: false,
+		pendingRecoverySymbols: []
 	};
 
 	const emitStats = () => {
@@ -224,7 +249,9 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			lastReconnectDurationMs: stats.lastReconnectDurationMs,
 			binaryFrames: stats.binaryFrames,
 			fallbackFrames: stats.fallbackFrames,
-			protobufDecodeSuccess: stats.protobufDecodeSuccess
+			protobufDecodeSuccess: stats.protobufDecodeSuccess,
+			recovering: stats.recovering,
+			pendingRecoverySymbols: [...stats.pendingRecoverySymbols]
 		};
 		for (const handler of statsHandlers) {
 			handler(snapshot);
@@ -248,9 +275,38 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		}
 	};
 
+	const updateRecoveryState = (recoveringSymbols: Iterable<string>) => {
+		pendingRecoverySymbols.clear();
+		for (const symbol of recoveringSymbols) {
+			pendingRecoverySymbols.add(symbol);
+		}
+
+		stats.pendingRecoverySymbols = [...pendingRecoverySymbols];
+		stats.recovering = stats.pendingRecoverySymbols.length > 0;
+		emitStats();
+	};
+
+	const markRecoveredBySymbol = (symbol: string) => {
+		if (!pendingRecoverySymbols.has(symbol)) return;
+		pendingRecoverySymbols.delete(symbol);
+		stats.pendingRecoverySymbols = [...pendingRecoverySymbols];
+		stats.recovering = stats.pendingRecoverySymbols.length > 0;
+		emitStats();
+	};
+
+	const requestResync = (symbols: string[]) => {
+		const next = normalizeSymbols(symbols);
+		if (!next.length) {
+			updateRecoveryState([]);
+			return;
+		}
+
+		updateRecoveryState(next);
+		send({ type: 'resync', symbols: next });
+	};
+
 	const flushSubscriptions = () => {
-		if (!subscribedSymbols.size) return;
-		send({ type: 'subscribe', symbols: [...subscribedSymbols] });
+		requestResync([...subscribedSymbols]);
 	};
 
 	const startHeartbeat = () => {
@@ -370,13 +426,21 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 				return;
 			}
 
+			if (isMessageWithSymbols(payload)) {
+				updateRecoveryState(payload.symbols);
+				return;
+			}
+
 			if (payload.type === 'tick' && 'data' in payload) {
 				stats.fallbackFrames += 1;
 				emitStats();
 
 				if (allowJsonTickFallback) {
 					const tick = normalizeTick(payload.data, 'ws-json-fallback');
-					if (tick) emitTick(tick);
+					if (tick) {
+						markRecoveredBySymbol(tick.symbol);
+						emitTick(tick);
+					}
 				}
 			}
 			return;
@@ -390,7 +454,10 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 				console.info(`[ws] protobuf decode success: ${stats.protobufDecodeSuccess}`);
 			}
 			emitStats();
-			if (decoded) emitTick(decoded.tick);
+			if (decoded) {
+				markRecoveredBySymbol(decoded.tick.symbol);
+				emitTick(decoded.tick);
+			}
 		}
 	};
 
@@ -438,28 +505,22 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 
 	const subscribe = (symbols: string[]) => {
 		const nextSymbols = normalizeSymbols(symbols);
-		const nextSet = new Set(nextSymbols);
-		const removedSymbols = [...subscribedSymbols].filter((symbol) => !nextSet.has(symbol));
 
 		subscribedSymbols.clear();
 		for (const symbol of nextSymbols) {
 			subscribedSymbols.add(symbol);
 		}
 
-		if (removedSymbols.length) {
-			send({ type: 'unsubscribe', symbols: removedSymbols });
-		}
-
-		if (nextSymbols.length) {
-			send({ type: 'subscribe', symbols: nextSymbols });
-		}
+		requestResync(nextSymbols);
 	};
 
 	const unsubscribe = (symbols: string[]) => {
-		for (const symbol of symbols) {
+		const removed = normalizeSymbols(symbols);
+		for (const symbol of removed) {
 			subscribedSymbols.delete(symbol);
 		}
-		send({ type: 'unsubscribe', symbols });
+
+		requestResync([...subscribedSymbols]);
 	};
 
 	const close = () => {
@@ -468,6 +529,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		clearReconnectTimer();
 		reconnectAttempt = 0;
 		reconnectStartedAt = null;
+		updateRecoveryState([]);
 		if (socket && socket.readyState < WebSocket.CLOSING) {
 			socket.close(1000, 'client closed');
 		}

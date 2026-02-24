@@ -23,7 +23,9 @@ export const quoteStore = $state({
 		lastReconnectDurationMs: null,
 		binaryFrames: 0,
 		fallbackFrames: 0,
-		protobufDecodeSuccess: 0
+		protobufDecodeSuccess: 0,
+		recovering: false,
+		pendingRecoverySymbols: []
 	} as QuoteSocketStats,
 	subscribedSymbols: [] as string[],
 	resubscribeCount: 0
