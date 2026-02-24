@@ -3,6 +3,10 @@ main = "src/index.ts"
 compatibility_date = "2026-02-23"
 workers_dev = true
 
+routes = [
+  { pattern = "xgvst.com/ws/*", zone_name = "xgvst.com" }
+]
+
 # Non-sensitive runtime vars can be placed in [vars] when needed.
 # Secrets must be injected via: wrangler secret put <NAME>
 
