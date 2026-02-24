@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fetchUniverse } from '$lib/api';
+	import { mockUniverse } from '$lib/api/mock';
 	import { marketState, getTopBoardName } from '$lib/runes/market-state.svelte';
 	import { quoteStore, mountQuoteStore, setQuoteSubscriptionScope } from '$lib/runes/quote-store.svelte';
 	import { useAuth } from '$lib/auth/useAuth.svelte';
@@ -9,8 +10,53 @@
 		'WS frame(binary/protobuf) → useQuoteWebSocket.resync(当前个股+自选) → quoteStore → 页面渲染';
 	const auth = useAuth();
 
+	let loginUserId = $state('');
+	let authPullReady = $state(false);
+	let mergeEvidence = $state({
+		lastMergedAt: null as string | null,
+		addedSymbols: [] as string[]
+	});
+
+	async function pullAndMergeWatchlist() {
+		if (!auth.isAuthenticated()) {
+			authPullReady = true;
+			return;
+		}
+		if (!marketState.watchlist.length) return;
+
+		const merged = await auth.mergeWatchlist(marketState.watchlist);
+		if (merged.addedSymbols.length > 0) {
+			marketState.watchlist = merged.watchlist;
+			if (!marketState.activeSymbol) {
+				marketState.activeSymbol = merged.watchlist[0]?.symbol ?? '';
+			}
+		}
+
+		if (merged.addedSymbols.length > 0 || !mergeEvidence.lastMergedAt) {
+			mergeEvidence.lastMergedAt = new Date().toISOString();
+			mergeEvidence.addedSymbols = merged.addedSymbols;
+		}
+		authPullReady = true;
+	}
+
+	function handleSignIn() {
+		const userId = loginUserId.trim();
+		if (!userId) return;
+		authPullReady = false;
+		auth.signIn(userId);
+	}
+
+	function handleSignOut() {
+		auth.signOut();
+		authPullReady = true;
+		mergeEvidence.lastMergedAt = null;
+		mergeEvidence.addedSymbols = [];
+	}
+
 	onMount(() => {
 		auth.bootstrap();
+		loginUserId = auth.state.user?.id ?? '';
+		authPullReady = auth.state.status !== 'authenticated';
 
 		let disposed = false;
 		let unmountQuoteStore: () => void = () => {};
@@ -19,7 +65,7 @@
 			if (disposed) return;
 
 			unmountQuoteStore = mountQuoteStore();
-			const data = await fetchUniverse();
+			const data = await fetchUniverse().catch(() => mockUniverse);
 			if (disposed) return;
 
 			marketState.boards = data.boards;
@@ -49,6 +95,15 @@
 	});
 
 	$effect(() => {
+		if (auth.state.status !== 'authenticated') {
+			authPullReady = true;
+			return;
+		}
+		if (!marketState.watchlist.length) return;
+		void pullAndMergeWatchlist();
+	});
+
+	$effect(() => {
 		const watchlistSymbols = marketState.watchlist.map((item) => item.symbol);
 		setQuoteSubscriptionScope({
 			activeSymbol: marketState.activeSymbol,
@@ -59,6 +114,7 @@
 	$effect(() => {
 		const watchlistSymbols = marketState.watchlist.map((item) => item.symbol);
 		if (!watchlistSymbols.length) return;
+		if (auth.state.status === 'authenticated' && !authPullReady) return;
 		void auth.syncWatchlist(watchlistSymbols);
 	});
 </script>
@@ -69,6 +125,73 @@
 			<h1 class="title">市场总览</h1>
 			<a href="/" class="back-link">返回首页</a>
 		</header>
+
+		<section class="panel panel-spaced">
+			<h2>Auth 状态流（P2.4 R2 证据）</h2>
+			<div class="list">
+				<div class="row-link">
+					<div class="row-between">
+						<div>当前状态</div>
+						<div class="muted">{auth.state.status}</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>当前用户</div>
+						<div class="muted">{auth.state.user?.id ?? '--'}（{auth.state.user?.source ?? '--'}）</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>最近自动拉取</div>
+						<div class="muted">
+							{auth.state.lastSelfSelectPullAt ?? '--'}
+							{#if auth.state.lastSelfSelectPullSource}
+								（{auth.state.lastSelfSelectPullSource}{auth.state.lastSelfSelectPullEndpoint
+									? ` @ ${auth.state.lastSelfSelectPullEndpoint}`
+									: ''}）
+							{/if}
+						</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>最近自动同步</div>
+						<div class="muted">
+							{auth.state.lastSelfSelectSyncAt ?? '--'}
+							{#if auth.state.lastSelfSelectSyncEndpoint}
+								（{auth.state.lastSelfSelectSyncEndpoint}）
+							{/if}
+						</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>合并结果（新增 symbols）</div>
+						<div class="muted">
+							{mergeEvidence.addedSymbols.length > 0 ? mergeEvidence.addedSymbols.join(', ') : 'none'}
+						</div>
+					</div>
+				</div>
+				{#if auth.state.lastSelfSelectPullError || auth.state.lastSelfSelectSyncError}
+					<div class="row-link">
+						<div class="muted">
+							pullError: {auth.state.lastSelfSelectPullError ?? '--'} ｜ syncError:
+							{auth.state.lastSelfSelectSyncError ?? '--'}
+						</div>
+					</div>
+				{/if}
+			</div>
+
+			<div class="list card-grid-spaced">
+				<label class="muted" for="auth-user-id">模拟登录 userId（本地演示）</label>
+				<input id="auth-user-id" bind:value={loginUserId} placeholder="例如：demo-user-a" class="auth-input" />
+				<div class="row-between">
+					<button type="button" class="row-btn" onclick={handleSignIn}>登录（切换 authenticated）</button>
+					<button type="button" class="row-btn" onclick={handleSignOut}>退出（回到 anonymous）</button>
+				</div>
+			</div>
+		</section>
 
 		<section class="panel-grid">
 			<div class="panel">

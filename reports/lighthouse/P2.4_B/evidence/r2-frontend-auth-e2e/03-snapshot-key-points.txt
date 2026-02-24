@@ -1,0 +1,21 @@
+[匿名态快照关键字段]
+- 当前状态: anonymous
+- 当前用户: --（--）
+- 最近自动拉取: --
+- 合并结果（新增 symbols）: none
+- 当前订阅 symbols: --
+
+[登录后快照关键字段]
+- 当前状态: authenticated
+- 当前用户: demo-user-a（localStorage）
+- 最近自动拉取: 2026-02-24T19:10:32.371Z（localStorage）
+- 合并结果（新增 symbols）: 002594, 688001
+- 自选列表新增: 自选 002594, 自选 688001
+- 当前订阅 symbols: 000001, 600519, 300750, 002594, 688001
+
+[本地模拟链路]
+1) 预置 localStorage: xgvst.auth.selfSelectSymbols.demo-user-a = ["000001","600519","688001","002594"]
+2) 页面登录后触发 pullWatchlistSymbols()
+3) 远端拉取失败（dev 无 auth backend）后 fallback 到 localStorage
+4) mergeWatchlist() 将本地自选并入 marketState.watchlist
+5) setQuoteSubscriptionScope 按“当前个股+合并后自选”重建订阅范围

@@ -1,27 +1,53 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fetchUniverse } from '$lib/api';
+	import { mockUniverse } from '$lib/api/mock';
 	import { marketState } from '$lib/runes/market-state.svelte';
 	import { quoteStore, mountQuoteStore, setQuoteSubscriptionScope } from '$lib/runes/quote-store.svelte';
 	import { useAuth } from '$lib/auth/useAuth.svelte';
 
 	let { params } = $props();
 	const auth = useAuth();
+	let authPullReady = $state(false);
+
+	async function pullAndMergeWatchlist() {
+		if (!auth.isAuthenticated()) {
+			authPullReady = true;
+			return;
+		}
+		if (!marketState.watchlist.length) return;
+
+		const merged = await auth.mergeWatchlist(marketState.watchlist);
+		if (merged.addedSymbols.length > 0) {
+			marketState.watchlist = merged.watchlist;
+		}
+		authPullReady = true;
+	}
 
 	onMount(() => {
 		auth.bootstrap();
+		authPullReady = auth.state.status !== 'authenticated';
 
 		const unmountQuoteStore = mountQuoteStore();
 
 		void (async () => {
 			if (marketState.watchlist.length > 0) return;
-			const data = await fetchUniverse();
+			const data = await fetchUniverse().catch(() => mockUniverse);
 			marketState.watchlist = data.watchlist;
 		})();
 
 		return () => {
 			unmountQuoteStore();
 		};
+	});
+
+	$effect(() => {
+		if (auth.state.status !== 'authenticated') {
+			authPullReady = true;
+			return;
+		}
+		if (!marketState.watchlist.length) return;
+		void pullAndMergeWatchlist();
 	});
 
 	$effect(() => {
@@ -36,6 +62,7 @@
 	$effect(() => {
 		const watchlistSymbols = marketState.watchlist.map((item) => item.symbol);
 		if (!watchlistSymbols.length) return;
+		if (auth.state.status === 'authenticated' && !authPullReady) return;
 		void auth.syncWatchlist(watchlistSymbols);
 	});
 </script>
