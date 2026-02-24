@@ -48,11 +48,20 @@ type QuoteTickSnapshot = {
   source: string;
 };
 
+type SnapshotPlan = {
+  targetSymbols: string[];
+  immediateData: QuoteTickSnapshot[];
+  memoryRemainder: QuoteTickSnapshot[];
+  missingSymbols: string[];
+};
+
 const DEFAULT_HEARTBEAT_SWEEP_MS = 30_000;
 const DEFAULT_HEARTBEAT_TIMEOUT_MS = 60_000;
 const DEFAULT_BATCH_FLUSH_MS = 100;
-const DEFAULT_SNAPSHOT_BATCH_INTERVAL_MS = 50;
 const DEFAULT_SNAPSHOT_BATCH_SYMBOLS = 24;
+const DEFAULT_SNAPSHOT_IMMEDIATE_SYMBOLS = 8;
+const DEFAULT_SNAPSHOT_BACKPRESSURE_BYTES = 512 * 1024;
+const DEFAULT_SNAPSHOT_BACKPRESSURE_YIELD_MS = 8;
 // 提升 bundle delta 阈值，减少对前端几乎无感的抖动帧
 const DEFAULT_PRICE_DELTA_MILLI = 15;
 const DEFAULT_CHANGE_DELTA_BP = 8;
@@ -201,6 +210,10 @@ export class QuoteDurableObject implements DurableObject {
   private readonly heartbeatSweepMs: number;
   private readonly heartbeatTimeoutMs: number;
   private readonly batchFlushMs: number;
+  private readonly snapshotBatchSymbols: number;
+  private readonly snapshotImmediateSymbols: number;
+  private readonly snapshotBackpressureBytes: number;
+  private readonly snapshotBackpressureYieldMs: number;
   private readonly priceDeltaMilli: number;
   private readonly changeDeltaBp: number;
   private readonly forceSnapshotMs: number;
@@ -230,6 +243,10 @@ export class QuoteDurableObject implements DurableObject {
       QUOTE_DO_HEARTBEAT_SWEEP_MS?: string;
       QUOTE_DO_HEARTBEAT_TIMEOUT_MS?: string;
       QUOTE_DO_BATCH_FLUSH_MS?: string;
+      QUOTE_DO_SNAPSHOT_BATCH_SYMBOLS?: string;
+      QUOTE_DO_SNAPSHOT_IMMEDIATE_SYMBOLS?: string;
+      QUOTE_DO_SNAPSHOT_BACKPRESSURE_BYTES?: string;
+      QUOTE_DO_SNAPSHOT_BACKPRESSURE_YIELD_MS?: string;
       QUOTE_DO_PRICE_DELTA_MILLI?: string;
       QUOTE_DO_CHANGE_DELTA_BP?: string;
       QUOTE_DO_FORCE_SNAPSHOT_MS?: string;
@@ -249,6 +266,30 @@ export class QuoteDurableObject implements DurableObject {
     );
     this.heartbeatTimeoutMs = Math.max(heartbeatTimeoutMs, this.heartbeatSweepMs + 5_000);
     this.batchFlushMs = parseEnvInt(runtimeEnv.QUOTE_DO_BATCH_FLUSH_MS, DEFAULT_BATCH_FLUSH_MS, 40, 1000);
+    this.snapshotBatchSymbols = parseEnvInt(
+      runtimeEnv.QUOTE_DO_SNAPSHOT_BATCH_SYMBOLS,
+      DEFAULT_SNAPSHOT_BATCH_SYMBOLS,
+      4,
+      128
+    );
+    this.snapshotImmediateSymbols = parseEnvInt(
+      runtimeEnv.QUOTE_DO_SNAPSHOT_IMMEDIATE_SYMBOLS,
+      DEFAULT_SNAPSHOT_IMMEDIATE_SYMBOLS,
+      0,
+      64
+    );
+    this.snapshotBackpressureBytes = parseEnvInt(
+      runtimeEnv.QUOTE_DO_SNAPSHOT_BACKPRESSURE_BYTES,
+      DEFAULT_SNAPSHOT_BACKPRESSURE_BYTES,
+      32 * 1024,
+      8 * 1024 * 1024
+    );
+    this.snapshotBackpressureYieldMs = parseEnvInt(
+      runtimeEnv.QUOTE_DO_SNAPSHOT_BACKPRESSURE_YIELD_MS,
+      DEFAULT_SNAPSHOT_BACKPRESSURE_YIELD_MS,
+      1,
+      100
+    );
     this.priceDeltaMilli = parseEnvInt(runtimeEnv.QUOTE_DO_PRICE_DELTA_MILLI, DEFAULT_PRICE_DELTA_MILLI, 0, 100);
     this.changeDeltaBp = parseEnvInt(runtimeEnv.QUOTE_DO_CHANGE_DELTA_BP, DEFAULT_CHANGE_DELTA_BP, 0, 100);
     this.forceSnapshotMs = parseEnvInt(runtimeEnv.QUOTE_DO_FORCE_SNAPSHOT_MS, DEFAULT_FORCE_SNAPSHOT_MS, 500, 60_000);
@@ -403,20 +444,20 @@ export class QuoteDurableObject implements DurableObject {
       this.sendBundleDictionaryIfNeeded(ws, client);
 
       const targetSymbols = requestedSymbols.length ? requestedSymbols : [...client.symbols];
-      const snapshotResult = this.sendImmediateSnapshot(ws, client, targetSymbols);
-      this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
+      const snapshotPlan = this.buildSnapshotPlan(client, targetSymbols, 0);
+      this.scheduleSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
 
       ws.send(
         JSON.stringify({
           ok: true,
           type: 'subscribed',
-          symbols: snapshotResult.pendingSymbols,
+          symbols: snapshotPlan.targetSymbols,
           transport: client.transport,
           compression: client.compression,
           dictVersion: client.dictVersion,
           snapshot: {
-            memoryHits: snapshotResult.memoryHits,
-            pendingSymbols: snapshotResult.pendingSymbols.length
+            memoryHits: snapshotPlan.immediateData.length + snapshotPlan.memoryRemainder.length,
+            pendingSymbols: snapshotPlan.missingSymbols.length
           }
         })
       );
@@ -445,12 +486,15 @@ export class QuoteDurableObject implements DurableObject {
 
       this.refreshClientDictionary(client);
 
+      const snapshotPlan = this.buildSnapshotPlan(client, nextSymbols, this.snapshotImmediateSymbols);
+
       ws.send(
         JSON.stringify({
           ok: true,
           type: 'resync_ack',
-          pending: true,
-          symbols: nextSymbols,
+          pending: snapshotPlan.memoryRemainder.length + snapshotPlan.missingSymbols.length > 0,
+          symbols: snapshotPlan.targetSymbols,
+          immediateData: snapshotPlan.immediateData,
           transport: client.transport,
           compression: client.compression,
           dictVersion: client.dictVersion,
@@ -461,9 +505,7 @@ export class QuoteDurableObject implements DurableObject {
       this.deferSlowTask(async () => {
         await this.syncUpstreamSubscriptions();
         this.sendBundleDictionaryIfNeeded(ws, client);
-
-        const snapshotResult = this.sendImmediateSnapshot(ws, client, nextSymbols);
-        this.scheduleKvFallbackSnapshot(ws, client, snapshotResult.pendingSymbols);
+        this.scheduleSnapshotRemainder(ws, client, snapshotPlan.memoryRemainder, snapshotPlan.missingSymbols);
       });
       return;
     }
@@ -546,15 +588,8 @@ export class QuoteDurableObject implements DurableObject {
     }
   }
 
-  private sendImmediateSnapshot(
-    ws: WebSocket,
-    client: ClientState,
-    symbols: string[]
-  ): { pendingSymbols: string[]; memoryHits: number } {
+  private buildSnapshotPlan(client: ClientState, symbols: string[], immediateLimit: number): SnapshotPlan {
     const targetSymbols = this.normalizeSymbols(symbols).filter((symbol) => client.symbols.has(symbol));
-    if (!targetSymbols.length) {
-      return { pendingSymbols: [], memoryHits: 0 };
-    }
 
     const memoryTicks: QuoteTickSnapshot[] = [];
     const missingSymbols: string[] = [];
@@ -568,41 +603,89 @@ export class QuoteDurableObject implements DurableObject {
       }
     }
 
-    const sortedMemoryTicks = memoryTicks.sort((a, b) => a.symbol.localeCompare(b.symbol));
-    if (sortedMemoryTicks.length) {
-      this.deferSlowTask(async () => {
-        await this.sendSnapshotTicks(ws, client, sortedMemoryTicks);
-      });
-    }
+    const safeImmediateLimit = Math.max(0, immediateLimit);
+    const immediateData = safeImmediateLimit > 0 ? memoryTicks.slice(0, safeImmediateLimit) : [];
+    const memoryRemainder = safeImmediateLimit > 0 ? memoryTicks.slice(safeImmediateLimit) : memoryTicks;
 
-    return { pendingSymbols: missingSymbols, memoryHits: sortedMemoryTicks.length };
+    return {
+      targetSymbols,
+      immediateData,
+      memoryRemainder,
+      missingSymbols
+    };
   }
 
-  private scheduleKvFallbackSnapshot(ws: WebSocket, client: ClientState, symbols: string[]) {
-    if (!symbols.length || !this.env.QUOTE_KV) return;
-
+  private scheduleSnapshotRemainder(
+    ws: WebSocket,
+    client: ClientState,
+    memoryTicks: QuoteTickSnapshot[],
+    missingSymbols: string[]
+  ) {
     this.deferSlowTask(async () => {
       if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
-      const kvResults = await Promise.all(symbols.map((symbol) => this.readSnapshotFromKv(symbol)));
+      if (memoryTicks.length) {
+        await this.sendSnapshotTicks(ws, client, memoryTicks);
+      }
+
+      if (!missingSymbols.length || !this.env.QUOTE_KV) return;
+      if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+
+      const kvResults = await Promise.all(missingSymbols.map((symbol) => this.readSnapshotFromKv(symbol)));
       const kvTicks = kvResults
         .filter((tick): tick is QuoteTickSnapshot => Boolean(tick))
-        .filter((tick) => client.symbols.has(tick.symbol))
-        .sort((a, b) => a.symbol.localeCompare(b.symbol));
+        .filter((tick) => client.symbols.has(tick.symbol));
 
       if (!kvTicks.length) return;
       await this.sendSnapshotTicks(ws, client, kvTicks);
     });
   }
 
+  private getSocketBufferedAmount(ws: WebSocket): number {
+    const bufferedAmount = (ws as unknown as { bufferedAmount?: unknown }).bufferedAmount;
+    return typeof bufferedAmount === 'number' && Number.isFinite(bufferedAmount) ? bufferedAmount : 0;
+  }
+
+  private computeSnapshotDynamicDelayMs(batchIndex: number, bufferedAmount: number): number {
+    const pressureRatio = this.snapshotBackpressureBytes
+      ? bufferedAmount / this.snapshotBackpressureBytes
+      : 0;
+
+    if (pressureRatio >= 1.6) return Math.min(40, this.snapshotBackpressureYieldMs * 4);
+    if (pressureRatio >= 1.1) return Math.min(24, this.snapshotBackpressureYieldMs * 2);
+
+    if (batchIndex <= 1) return 1;
+    if (batchIndex <= 3) return 4;
+    return 8;
+  }
+
+  private async waitForSnapshotBackpressure(ws: WebSocket): Promise<void> {
+    let bufferedAmount = this.getSocketBufferedAmount(ws);
+    if (bufferedAmount < this.snapshotBackpressureBytes) return;
+
+    let guard = 0;
+    while (bufferedAmount >= this.snapshotBackpressureBytes && guard < 3) {
+      await sleep(this.snapshotBackpressureYieldMs);
+      bufferedAmount = this.getSocketBufferedAmount(ws);
+      guard += 1;
+    }
+  }
+
   private async sendSnapshotTicks(ws: WebSocket, client: ClientState, ticks: QuoteTickSnapshot[]) {
     if (!ticks.length) return;
     if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
 
+    const normalizedTicks = ticks.slice().sort((a, b) => a.symbol.localeCompare(b.symbol));
+
     try {
+      let batchIndex = 0;
+
       if (client.transport === 'bundle') {
-        for (let index = 0; index < ticks.length; index += DEFAULT_SNAPSHOT_BATCH_SYMBOLS) {
-          const chunk = ticks.slice(index, index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS);
+        for (let index = 0; index < normalizedTicks.length; index += this.snapshotBatchSymbols) {
+          if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+          await this.waitForSnapshotBackpressure(ws);
+
+          const chunk = normalizedTicks.slice(index, index + this.snapshotBatchSymbols);
           const frame = await this.encodeBundleFrame(chunk, client, client.compression, true);
           if (!frame.byteLength) continue;
           if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
@@ -613,23 +696,40 @@ export class QuoteDurableObject implements DurableObject {
           if (client.compression !== 'none') this.stats.sentCompressedFrames += 1;
           this.stats.sentBytes += frame.byteLength;
 
-          if (index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS < ticks.length) {
-            await sleep(DEFAULT_SNAPSHOT_BATCH_INTERVAL_MS);
+          const hasMore = index + this.snapshotBatchSymbols < normalizedTicks.length;
+          if (!hasMore) continue;
+
+          if (batchIndex === 0) {
+            await Promise.resolve();
+          } else {
+            const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
+            await sleep(delayMs);
           }
+          batchIndex += 1;
         }
         return;
       }
 
-      for (let index = 0; index < ticks.length; index += DEFAULT_SNAPSHOT_BATCH_SYMBOLS) {
-        const chunk = ticks.slice(index, index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS);
+      for (let index = 0; index < normalizedTicks.length; index += this.snapshotBatchSymbols) {
+        if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
+        await this.waitForSnapshotBackpressure(ws);
+
+        const chunk = normalizedTicks.slice(index, index + this.snapshotBatchSymbols);
         for (const tick of chunk) {
           if (!this.isSocketOpen(ws) || this.clients.get(ws) !== client) return;
           this.sendLegacyTick(ws, client, tick);
         }
 
-        if (index + DEFAULT_SNAPSHOT_BATCH_SYMBOLS < ticks.length) {
-          await sleep(DEFAULT_SNAPSHOT_BATCH_INTERVAL_MS);
+        const hasMore = index + this.snapshotBatchSymbols < normalizedTicks.length;
+        if (!hasMore) continue;
+
+        if (batchIndex === 0) {
+          await Promise.resolve();
+        } else {
+          const delayMs = this.computeSnapshotDynamicDelayMs(batchIndex, this.getSocketBufferedAmount(ws));
+          await sleep(delayMs);
         }
+        batchIndex += 1;
       }
     } catch {
       this.stats.droppedFrames += 1;
@@ -948,6 +1048,10 @@ export class QuoteDurableObject implements DurableObject {
         heartbeatSweepMs: this.heartbeatSweepMs,
         heartbeatTimeoutMs: this.heartbeatTimeoutMs,
         batchFlushMs: this.batchFlushMs,
+        snapshotBatchSymbols: this.snapshotBatchSymbols,
+        snapshotImmediateSymbols: this.snapshotImmediateSymbols,
+        snapshotBackpressureBytes: this.snapshotBackpressureBytes,
+        snapshotBackpressureYieldMs: this.snapshotBackpressureYieldMs,
         priceDeltaMilli: this.priceDeltaMilli,
         changeDeltaBp: this.changeDeltaBp,
         forceSnapshotMs: this.forceSnapshotMs
