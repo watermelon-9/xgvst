@@ -1,0 +1,16 @@
+{
+  "ts": "2026-02-24T18:25:13.404Z",
+  "url": "http://127.0.0.1:4173/market?quoteWsUrl=ws://127.0.0.1:8787/ws/quote&quoteJsonFallback=0",
+  "rows": [
+    "连接状态 open",
+    "恢复补齐状态 ready",
+    "精准重订阅次数 1",
+    "当前订阅 symbols 000001, 600519, 300750",
+    "binary frames vs fallback frames 186 vs 0",
+    "protobuf decode success 186",
+    "000001 ws-protobuf (ws-protobuf) 10.94 0.55",
+    "600519 ws-protobuf (ws-protobuf) 1628.27 0",
+    "300750 ws-protobuf (ws-protobuf) 182.42 -0.02"
+  ],
+  "footer": "当前版块：沪深主板 ｜ 当前个股：000001 ｜ 最新 WS Tick：600519 @ws-protobuf 链路：WS frame(binary/protobuf) → useQuoteWebSocket.resync(当前个股+自选) → quoteStore → 页面渲染 类型校验：number/number/string（expected: number/number/string） ✅ JSON fallback 开关：关闭（默认） ｜ WS URL：ws://127.0.0.1:8787/ws/quote JSON tick 残留：未检测到"
+}

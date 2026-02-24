@@ -10,7 +10,55 @@ type SubscriptionScope = {
 	watchlistSymbols: string[];
 };
 
-const quoteSocket = useQuoteWebSocket({ allowJsonTickFallback: false });
+const QUOTE_JSON_FALLBACK_DEBUG_KEY = 'xgvst.debug.quoteJsonFallback';
+const QUOTE_WS_URL_DEBUG_KEY = 'xgvst.debug.quoteWsUrl';
+
+function parseBooleanish(raw: string | null | undefined): boolean | null {
+	if (raw == null) return null;
+	const normalized = raw.trim().toLowerCase();
+	if (normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on') {
+		return true;
+	}
+	if (normalized === '0' || normalized === 'false' || normalized === 'no' || normalized === 'off') {
+		return false;
+	}
+	return null;
+}
+
+function resolveJsonTickFallbackEnabled(): boolean {
+	if (typeof window === 'undefined') return false;
+
+	const queryValue = parseBooleanish(new URLSearchParams(window.location.search).get('quoteJsonFallback'));
+	if (queryValue !== null) return queryValue;
+
+	try {
+		const stored = parseBooleanish(window.localStorage.getItem(QUOTE_JSON_FALLBACK_DEBUG_KEY));
+		return stored ?? false;
+	} catch {
+		return false;
+	}
+}
+
+function resolveQuoteWsUrl(): string | undefined {
+	if (typeof window === 'undefined') return undefined;
+
+	const queryUrl = new URLSearchParams(window.location.search).get('quoteWsUrl')?.trim();
+	if (queryUrl) return queryUrl;
+
+	try {
+		const stored = window.localStorage.getItem(QUOTE_WS_URL_DEBUG_KEY)?.trim();
+		return stored || undefined;
+	} catch {
+		return undefined;
+	}
+}
+
+const jsonTickFallbackEnabled = resolveJsonTickFallbackEnabled();
+const quoteWsUrl = resolveQuoteWsUrl();
+const quoteSocket = useQuoteWebSocket({
+	url: quoteWsUrl,
+	allowJsonTickFallback: jsonTickFallbackEnabled
+});
 
 export const quoteStore = $state({
 	latestTick: null as QuoteTick | null,
@@ -24,6 +72,8 @@ export const quoteStore = $state({
 	latestTickDataType: 'none',
 	latestTickTypeExpected: EXPECTED_QUOTE_TICK_TYPE_SIGNATURE,
 	latestTickTypeConsistent: true,
+	jsonTickFallbackEnabled,
+	quoteWsUrl: quoteWsUrl ?? '/ws/quote',
 	socketStats: {
 		status: 'idle',
 		reconnectCount: 0,

@@ -12,12 +12,14 @@ fi
 
 cd "${ROOT_DIR}/packages/workers"
 
+MIGRATION_REL="migrations/0001_p23_proto_d1.sql"
+
 echo "[p23] applying local D1 migration..."
-wrangler d1 execute "${DB_NAME}" --local --file="${MIGRATION_FILE}"
+corepack pnpm exec wrangler d1 execute "${DB_NAME}" --local --file="${MIGRATION_REL}"
 
 echo "[p23] local migration completed."
 
 echo "[p23] to apply remote manually (recommended after backup):"
 echo "  cd ${ROOT_DIR}/packages/workers"
-echo "  wrangler d1 export ${DB_NAME} --remote --output ./backups/${DB_NAME}-$(date +%Y%m%d-%H%M%S).sql"
-echo "  wrangler d1 execute ${DB_NAME} --remote --file=${MIGRATION_FILE}"
+echo "  corepack pnpm exec wrangler d1 export ${DB_NAME} --remote --output ./backups/${DB_NAME}-$(date +%Y%m%d-%H%M%S).sql"
+echo "  corepack pnpm exec wrangler d1 execute ${DB_NAME} --remote --file=${MIGRATION_REL}"

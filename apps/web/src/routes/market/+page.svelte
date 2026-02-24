@@ -187,6 +187,9 @@
 			类型校验：{quoteStore.latestTickDataType}（expected: {quoteStore.latestTickTypeExpected}）
 			{quoteStore.latestTickTypeConsistent ? '✅' : '❌'}
 			<br />
+			JSON fallback 开关：{quoteStore.jsonTickFallbackEnabled ? '开启（调试）' : '关闭（默认）'}
+			｜ WS URL：{quoteStore.quoteWsUrl}
+			<br />
 			JSON tick 残留：{quoteStore.tickTransportCounter['ws-json-fallback'] === 0
 				? '未检测到'
 				: `检测到 ${quoteStore.tickTransportCounter['ws-json-fallback']} 条（仅兼容兜底）`}

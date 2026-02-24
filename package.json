@@ -13,6 +13,7 @@
     "workers:deploy": "corepack pnpm --filter workers run deploy",
     "workers:failover-test": "node scripts/source-failover-test.mjs",
     "workers:p21-three-sources-proof": "node scripts/p21-three-sources-proof.mjs",
-    "workers:p22-sentinel-load": "node scripts/p22-sentinel-load-test.mjs"
+    "workers:p22-sentinel-load": "node scripts/p22-sentinel-load-test.mjs",
+    "workers:p23-self-select-smoke": "node scripts/p23-self-select-smoke.mjs"
   }
 }

@@ -2,8 +2,9 @@ import { encodeQuoteBundleDelta } from '../proto/quoteBundleDelta';
 import { protobufCodec } from '../proto/codec';
 import { SourceManager } from '../sources/SourceManager';
 import type { QuoteTick } from '../sources/QuoteSource';
+import { StorageTelemetry } from '../observability/storageTelemetry';
 
-type TransportMode = 'legacy' | 'bundle' | 'json';
+type TransportMode = 'legacy' | 'bundle';
 type CompressionMode = 'none' | 'gzip' | 'deflate';
 
 type LastSentTick = {
@@ -77,6 +78,7 @@ const CODEC_DEFLATE = 2;
 
 const textEncoder = new TextEncoder();
 const BUNDLE_SOURCES = ['alltick', 'sina', 'eastmoney', 'tencent'];
+const storageTelemetry = new StorageTelemetry('quote-do');
 const BUNDLE_SOURCE_ID = new Map(BUNDLE_SOURCES.map((name, index) => [name, index]));
 const KV_SNAPSHOT_PREFIX = 'quote:';
 const KV_SNAPSHOT_TTL_SECONDS = 300;
@@ -103,7 +105,6 @@ function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
 
 function normalizeTransport(value: unknown): TransportMode {
   if (value === 'bundle') return 'bundle';
-  if (value === 'json') return 'json';
   return 'legacy';
 }
 
@@ -386,12 +387,7 @@ export class QuoteDurableObject implements DurableObject {
         sourceStatus: this.sourceManager.status(),
         transport: defaultTransport,
         compression: defaultCompression,
-        transportPreferred:
-          defaultTransport === 'bundle'
-            ? 'bundle-protobuf'
-            : defaultTransport === 'json'
-              ? 'json'
-              : 'protobuf'
+        transportPreferred: defaultTransport === 'bundle' ? 'bundle-protobuf' : 'protobuf'
       })
     );
 
@@ -583,9 +579,11 @@ export class QuoteDurableObject implements DurableObject {
 
     this.deferSlowTask(async () => {
       const bytes = protobufCodec.encodeSnapshot(tick, Date.now());
-      await this.env.QUOTE_KV.put(this.snapshotKvKey(tick.symbol), bytes, {
-        expirationTtl: this.snapshotTtlSeconds
-      });
+      await storageTelemetry.observe('kv', 'snapshot.put', () =>
+        this.env.QUOTE_KV.put(this.snapshotKvKey(tick.symbol), bytes, {
+          expirationTtl: this.snapshotTtlSeconds
+        })
+      );
     });
   }
 
@@ -593,7 +591,9 @@ export class QuoteDurableObject implements DurableObject {
     if (!this.env.QUOTE_KV) return null;
 
     try {
-      const raw = await this.env.QUOTE_KV.get(this.snapshotKvKey(symbol), 'arrayBuffer');
+      const raw = await storageTelemetry.observe('kv', 'snapshot.get', () =>
+        this.env.QUOTE_KV.get(this.snapshotKvKey(symbol), 'arrayBuffer')
+      );
       if (!raw) return null;
 
       const decoded = protobufCodec.decodeSnapshot(raw);
@@ -607,7 +607,8 @@ export class QuoteDurableObject implements DurableObject {
       };
 
       return isQuoteTickSnapshot(normalized) ? normalized : null;
-    } catch {
+    } catch (error) {
+      storageTelemetry.record('kv', 'snapshot.read_error', 0, error);
       return null;
     }
   }
@@ -841,43 +842,35 @@ export class QuoteDurableObject implements DurableObject {
   }
 
   private sendLegacyTick(ws: WebSocket, client: ClientState, tick: QuoteTick) {
-    let frameToSend: ArrayBuffer | string;
+    let frameToSend: ArrayBuffer | null = null;
     let sentAsFallback = false;
 
-    if (client.transport === 'json') {
-      frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json' });
-      sentAsFallback = true;
-    } else {
-      try {
-        const proto = protobufCodec.encodeQuoteTick(tick);
-        frameToSend = toArrayBuffer(proto);
-      } catch {
-        const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
-        if (debugEnabled) {
-          const qt1 = encodeQt1DebugFrame(tick);
-          if (qt1) {
-            frameToSend = toArrayBuffer(qt1);
-          } else {
-            frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
-            sentAsFallback = true;
-          }
-        } else {
-          frameToSend = JSON.stringify({ type: 'tick', data: tick, transport: 'json-fallback' });
+    try {
+      const proto = protobufCodec.encodeQuoteTick(tick);
+      frameToSend = toArrayBuffer(proto);
+    } catch {
+      const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
+      if (debugEnabled) {
+        const qt1 = encodeQt1DebugFrame(tick);
+        if (qt1) {
+          frameToSend = toArrayBuffer(qt1);
           sentAsFallback = true;
         }
       }
     }
 
+    if (!frameToSend) {
+      this.stats.droppedFrames += 1;
+      return;
+    }
+
     ws.send(frameToSend);
-    if (typeof frameToSend === 'string') {
+    this.stats.sentBinaryFrames += 1;
+    this.stats.sentBytes += frameToSend.byteLength;
+    if (sentAsFallback) {
       this.stats.sentFallbackFrames += 1;
-      this.stats.sentBytes += textEncoder.encode(frameToSend).byteLength;
     } else {
-      this.stats.sentBinaryFrames += 1;
-      this.stats.sentBytes += frameToSend.byteLength;
-      if (!sentAsFallback) {
-        this.stats.sentProtobufFrames += 1;
-      }
+      this.stats.sentProtobufFrames += 1;
     }
   }
 
@@ -1151,7 +1144,8 @@ export class QuoteDurableObject implements DurableObject {
         changeDeltaBp: this.changeDeltaBp,
         forceSnapshotMs: this.forceSnapshotMs,
         snapshotTtlSeconds: this.snapshotTtlSeconds
-      }
+      },
+      storage: storageTelemetry.snapshot()
     };
   }
 }
