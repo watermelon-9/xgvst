@@ -1,0 +1,367 @@
+{
+  "ok": true,
+  "ts": "2026-02-24T18:46:38.004Z",
+  "baseUrl": "http://127.0.0.1:8787",
+  "userId": "p23-r3-history-1771958797942",
+  "checks": {
+    "allHttpOk": true,
+    "historyNotEmpty": true,
+    "hasAddAction": true,
+    "hasRemoveAction": true,
+    "metricsHistoryBatchInsertIncreased": true,
+    "metricsHistoryListIncreased": true
+  },
+  "summary": {
+    "historyCount": 6,
+    "actionKinds": [
+      "replace_remove",
+      "replace_add",
+      "remove",
+      "add"
+    ],
+    "metricsDelta": {
+      "historyBatchInsert": 5,
+      "historyList": 1
+    }
+  },
+  "steps": [
+    {
+      "method": "GET",
+      "path": "/api/infra/storage-metrics",
+      "status": 200,
+      "ok": true,
+      "latencyMs": 25.64,
+      "body": {
+        "ok": true,
+        "scope": "workers-index",
+        "storage": {
+          "scope": "workers-index",
+          "totals": {
+            "count": 0,
+            "errorCount": 0,
+            "avgLatencyMs": 0,
+            "maxLatencyMs": 0
+          },
+          "operations": [],
+          "recent": []
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/self-selects",
+      "status": 200,
+      "ok": true,
+      "latencyMs": 12.22,
+      "body": {
+        "ok": true,
+        "userId": "p23-r3-history-1771958797942",
+        "symbols": [
+          "000001",
+          "600519"
+        ],
+        "diff": {
+          "added": [
+            "000001",
+            "600519"
+          ],
+          "removed": []
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/self-selects",
+      "status": 200,
+      "ok": true,
+      "latencyMs": 3.67,
+      "body": {
+        "ok": true,
+        "userId": "p23-r3-history-1771958797942",
+        "symbol": "300750"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/self-selects/600519",
+      "status": 200,
+      "ok": true,
+      "latencyMs": 2.91,
+      "body": {
+        "ok": true,
+        "userId": "p23-r3-history-1771958797942",
+        "symbol": "600519"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/self-selects",
+      "status": 200,
+      "ok": true,
+      "latencyMs": 5.88,
+      "body": {
+        "ok": true,
+        "userId": "p23-r3-history-1771958797942",
+        "symbols": [
+          "000001",
+          "000858"
+        ],
+        "diff": {
+          "added": [
+            "000858"
+          ],
+          "removed": [
+            "300750"
+          ]
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/self-selects/history?limit=20",
+      "status": 200,
+      "ok": true,
+      "latencyMs": 2.81,
+      "body": {
+        "ok": true,
+        "userId": "p23-r3-history-1771958797942",
+        "history": [
+          {
+            "symbol": "300750",
+            "action": "replace_remove",
+            "ts": "2026-02-24T18:46:37.990Z"
+          },
+          {
+            "symbol": "000858",
+            "action": "replace_add",
+            "ts": "2026-02-24T18:46:37.989Z"
+          },
+          {
+            "symbol": "600519",
+            "action": "remove",
+            "ts": "2026-02-24T18:46:37.986Z"
+          },
+          {
+            "symbol": "300750",
+            "action": "add",
+            "ts": "2026-02-24T18:46:37.982Z"
+          },
+          {
+            "symbol": "000001",
+            "action": "replace_add",
+            "ts": "2026-02-24T18:46:37.979Z"
+          },
+          {
+            "symbol": "600519",
+            "action": "replace_add",
+            "ts": "2026-02-24T18:46:37.979Z"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/infra/storage-metrics",
+      "status": 200,
+      "ok": true,
+      "latencyMs": 7.89,
+      "body": {
+        "ok": true,
+        "scope": "workers-index",
+        "storage": {
+          "scope": "workers-index",
+          "totals": {
+            "count": 12,
+            "errorCount": 0,
+            "avgLatencyMs": 0.75,
+            "maxLatencyMs": 3
+          },
+          "operations": [
+            {
+              "key": "d1:self_select.add.batch_upsert",
+              "backend": "d1",
+              "operation": "self_select.add.batch_upsert",
+              "count": 1,
+              "errorCount": 0,
+              "avgLatencyMs": 1,
+              "maxLatencyMs": 1,
+              "lastLatencyMs": 1,
+              "lastErrorCode": null,
+              "lastAt": "2026-02-24T18:46:37.982Z"
+            },
+            {
+              "key": "d1:self_select.history.batch_insert",
+              "backend": "d1",
+              "operation": "self_select.history.batch_insert",
+              "count": 5,
+              "errorCount": 0,
+              "avgLatencyMs": 0.4,
+              "maxLatencyMs": 1,
+              "lastLatencyMs": 0,
+              "lastErrorCode": null,
+              "lastAt": "2026-02-24T18:46:37.990Z"
+            },
+            {
+              "key": "d1:self_select.history.list",
+              "backend": "d1",
+              "operation": "self_select.history.list",
+              "count": 1,
+              "errorCount": 0,
+              "avgLatencyMs": 0,
+              "maxLatencyMs": 0,
+              "lastLatencyMs": 0,
+              "lastErrorCode": null,
+              "lastAt": "2026-02-24T18:46:37.994Z"
+            },
+            {
+              "key": "d1:self_select.remove",
+              "backend": "d1",
+              "operation": "self_select.remove",
+              "count": 1,
+              "errorCount": 0,
+              "avgLatencyMs": 1,
+              "maxLatencyMs": 1,
+              "lastLatencyMs": 1,
+              "lastErrorCode": null,
+              "lastAt": "2026-02-24T18:46:37.986Z"
+            },
+            {
+              "key": "d1:self_select.replace.batch_write",
+              "backend": "d1",
+              "operation": "self_select.replace.batch_write",
+              "count": 2,
+              "errorCount": 0,
+              "avgLatencyMs": 0.5,
+              "maxLatencyMs": 1,
+              "lastLatencyMs": 0,
+              "lastErrorCode": null,
+              "lastAt": "2026-02-24T18:46:37.989Z"
+            },
+            {
+              "key": "d1:self_select.replace.read_existing",
+              "backend": "d1",
+              "operation": "self_select.replace.read_existing",
+              "count": 2,
+              "errorCount": 0,
+              "avgLatencyMs": 2,
+              "maxLatencyMs": 3,
+              "lastLatencyMs": 1,
+              "lastErrorCode": null,
+              "lastAt": "2026-02-24T18:46:37.989Z"
+            }
+          ],
+          "recent": [
+            {
+              "at": "2026-02-24T18:46:37.974Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.replace.read_existing",
+              "status": "ok",
+              "latencyMs": 3,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.979Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.replace.batch_write",
+              "status": "ok",
+              "latencyMs": 1,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.979Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.history.batch_insert",
+              "status": "ok",
+              "latencyMs": 0,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.982Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.add.batch_upsert",
+              "status": "ok",
+              "latencyMs": 1,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.983Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.history.batch_insert",
+              "status": "ok",
+              "latencyMs": 1,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.986Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.remove",
+              "status": "ok",
+              "latencyMs": 1,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.986Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.history.batch_insert",
+              "status": "ok",
+              "latencyMs": 0,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.989Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.replace.read_existing",
+              "status": "ok",
+              "latencyMs": 1,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.989Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.replace.batch_write",
+              "status": "ok",
+              "latencyMs": 0,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.990Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.history.batch_insert",
+              "status": "ok",
+              "latencyMs": 1,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.990Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.history.batch_insert",
+              "status": "ok",
+              "latencyMs": 0,
+              "errorCode": null
+            },
+            {
+              "at": "2026-02-24T18:46:37.994Z",
+              "scope": "workers-index",
+              "backend": "d1",
+              "operation": "self_select.history.list",
+              "status": "ok",
+              "latencyMs": 0,
+              "errorCode": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

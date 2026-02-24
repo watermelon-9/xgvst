@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "ts": "2026-02-24T18:46:34.382Z",
+  "wsUrl": "ws://127.0.0.1:8787/ws/quote?session=p23-r3-json-check",
+  "durationMs": 2500,
+  "checks": {
+    "noJsonTickFrames": true,
+    "noJsonFallbackTransportFrames": true,
+    "gotBinaryFrames": true
+  },
+  "counters": {
+    "textFrames": 1,
+    "textTickFrames": 0,
+    "textJsonFallbackTransportFrames": 0,
+    "resyncAckFrames": 1,
+    "resyncAckImmediateDataTotal": 0,
+    "binaryFrames": 26
+  },
+  "samples": [
+    {
+      "ok": true,
+      "type": "resync_ack",
+      "pending": true,
+      "symbols": [
+        "000001",
+        "600519"
+      ],
+      "transport": "legacy",
+      "compression": "none",
+      "dictVersion": 1,
+      "clientSentAtMs": null
+    }
+  ]
+}
