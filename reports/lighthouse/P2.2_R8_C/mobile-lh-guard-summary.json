@@ -1,0 +1,85 @@
+{
+  "generatedAt": "2026-02-24T14:50:15.028Z",
+  "pages": {
+    "home": {
+      "runs": [
+        {
+          "run": 1,
+          "file": "reports/lighthouse/P2.2_R8_C/lh-mobile-home-run1.json",
+          "score": 100,
+          "fcp": 757,
+          "lcp": 907,
+          "tbt": 0,
+          "si": 757,
+          "tti": 907,
+          "mainThread": 295
+        },
+        {
+          "run": 2,
+          "file": "reports/lighthouse/P2.2_R8_C/lh-mobile-home-run2.json",
+          "score": 100,
+          "fcp": 752,
+          "lcp": 902,
+          "tbt": 0,
+          "si": 752,
+          "tti": 902,
+          "mainThread": 118
+        },
+        {
+          "run": 3,
+          "file": "reports/lighthouse/P2.2_R8_C/lh-mobile-home-run3.json",
+          "score": 100,
+          "fcp": 754,
+          "lcp": 904,
+          "tbt": 0,
+          "si": 754,
+          "tti": 904,
+          "mainThread": 116
+        }
+      ],
+      "scoreMedian": 100,
+      "scoreMin": 100,
+      "scoreMax": 100
+    },
+    "market": {
+      "runs": [
+        {
+          "run": 1,
+          "file": "reports/lighthouse/P2.2_R8_C/lh-mobile-market-run1.json",
+          "score": 99,
+          "fcp": 1435,
+          "lcp": 1688,
+          "tbt": 0,
+          "si": 1435,
+          "tti": 1688,
+          "mainThread": 306
+        },
+        {
+          "run": 2,
+          "file": "reports/lighthouse/P2.2_R8_C/lh-mobile-market-run2.json",
+          "score": 99,
+          "fcp": 1434,
+          "lcp": 1687,
+          "tbt": 0,
+          "si": 1637,
+          "tti": 1687,
+          "mainThread": 168
+        },
+        {
+          "run": 3,
+          "file": "reports/lighthouse/P2.2_R8_C/lh-mobile-market-run3.json",
+          "score": 99,
+          "fcp": 1432,
+          "lcp": 1685,
+          "tbt": 0,
+          "si": 1432,
+          "tti": 1685,
+          "mainThread": 170
+        }
+      ],
+      "scoreMedian": 99,
+      "scoreMin": 99,
+      "scoreMax": 99
+    }
+  }
+}
