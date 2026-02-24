@@ -2,6 +2,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import UnoCSS from 'unocss/vite';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { FINANCE_THEME } from './src/lib/theme/tokens';
 
 export default defineConfig({
 	base: '/',
@@ -19,8 +20,8 @@ export default defineConfig({
 				start_url: '/market',
 				scope: '/',
 				display: 'standalone',
-				theme_color: '#4f46e5',
-				background_color: '#111827',
+				theme_color: FINANCE_THEME.accent.indigo,
+				background_color: FINANCE_THEME.dark.bgBase,
 				icons: [
 					{
 						src: '/favicon.svg',
@@ -47,6 +48,21 @@ export default defineConfig({
 							cacheName: 'ext-fonts',
 							expiration: {
 								maxEntries: 8,
+								maxAgeSeconds: 60 * 60 * 24 * 30
+							}
+						}
+					},
+					{
+						urlPattern: ({ sameOrigin, url }) =>
+							sameOrigin && /^\/theme-(light|dark)\.css$/.test(url.pathname),
+						handler: 'CacheFirst',
+						options: {
+							cacheName: 'theme-style-v1',
+							matchOptions: {
+								ignoreSearch: true
+							},
+							expiration: {
+								maxEntries: 4,
 								maxAgeSeconds: 60 * 60 * 24 * 30
 							}
 						}
