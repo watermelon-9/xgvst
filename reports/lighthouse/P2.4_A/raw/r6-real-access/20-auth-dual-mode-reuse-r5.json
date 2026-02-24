@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-02-24T19:46:16.409Z",
+  "baseUrl": "http://127.0.0.1:8899",
+  "endpoint": "/api/v2/self-selects",
+  "user": "p24-r5@example.com",
+  "passCount": 4,
+  "total": 4,
+  "allPass": true,
+  "results": [
+    {
+      "name": "unauthorized-no-token",
+      "headers": {},
+      "expectedStatus": 401,
+      "mode": "none",
+      "actualStatus": 401,
+      "ok": false,
+      "pass": true,
+      "response": {
+        "ok": false,
+        "error": "unauthorized: missing or invalid access jwt"
+      }
+    },
+    {
+      "name": "jwt-authorization-bearer",
+      "headers": {
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwMjQtcjVAZXhhbXBsZS5jb20iLCJlbWFpbCI6InAyNC1yNUBleGFtcGxlLmNvbSIsImV4cCI6MTc3MTk2Mjk3Nn0.otXbUiYquwdhEvxtc8P9dOmj_SMiRtnhQXSWbp-d55g"
+      },
+      "expectedStatus": 200,
+      "mode": "jwt-bearer",
+      "actualStatus": 200,
+      "ok": true,
+      "pass": true,
+      "response": {
+        "ok": true,
+        "userId": "p24-r5@example.com",
+        "symbols": [],
+        "items": []
+      }
+    },
+    {
+      "name": "access-cf-access-jwt-assertion",
+      "headers": {
+        "cf-access-jwt-assertion": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwMjQtcjVAZXhhbXBsZS5jb20iLCJlbWFpbCI6InAyNC1yNUBleGFtcGxlLmNvbSIsImV4cCI6MTc3MTk2Mjk3Nn0.otXbUiYquwdhEvxtc8P9dOmj_SMiRtnhQXSWbp-d55g"
+      },
+      "expectedStatus": 200,
+      "mode": "access-jwt-assertion",
+      "actualStatus": 200,
+      "ok": true,
+      "pass": true,
+      "response": {
+        "ok": true,
+        "userId": "p24-r5@example.com",
+        "symbols": [],
+        "items": []
+      }
+    },
+    {
+      "name": "access-cf-email-header-trusted",
+      "headers": {
+        "cf-access-authenticated-user-email": "p24-r5@example.com"
+      },
+      "expectedStatus": 200,
+      "mode": "access-email-header",
+      "actualStatus": 200,
+      "ok": true,
+      "pass": true,
+      "response": {
+        "ok": true,
+        "userId": "p24-r5@example.com",
+        "symbols": [],
+        "items": []
+      }
+    }
+  ]
+}

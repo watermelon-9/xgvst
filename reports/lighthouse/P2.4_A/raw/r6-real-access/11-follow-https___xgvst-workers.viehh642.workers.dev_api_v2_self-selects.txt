@@ -1,0 +1,15 @@
+HTTP/2 401 
+date: Tue, 24 Feb 2026 19:46:27 GMT
+content-type: application/json; charset=utf-8
+content-length: 66
+access-control-allow-origin: *
+vary: Origin
+access-control-allow-headers: Content-Type, Authorization, Upgrade, X-Debug-Token
+access-control-allow-methods: GET,POST,OPTIONS
+access-control-max-age: 86400
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=%2FG8fZCQXVepNUBk6Qb0D5oKVziK0QHNAnx5iW3doq6yUKtKOYdF5SiQLOecsW%2Bu%2BajbqBA8LMo4f9ZHsv7TB11URTDvS4R1t%2BtEKaLGh17IFSgOlilZH%2FHBeA1LnJ%2Fzn"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server: cloudflare
+cf-ray: 9d317816e985a8ad-HKG
+alt-svc: h3=":443"; ma=86400
+
