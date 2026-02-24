@@ -14,6 +14,7 @@ routes = [
 #   Example: wrangler secret put ALLTICK_TOKEN
 [vars]
 CORS_ALLOW_ORIGINS = ""
+QUOTE_SNAPSHOT_TTL_SECONDS = "300"
 
 [[kv_namespaces]]
 binding = "QUOTE_KV"

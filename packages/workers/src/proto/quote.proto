@@ -1,8 +1,36 @@
 syntax = "proto3";
 
+message Ticker {
+  string symbol = 1;
+  double price = 2;
+  double changePct = 3;
+  string ts = 4;
+  string source = 5;
+}
+
+message QuoteSnapshot {
+  Ticker ticker = 1;
+  uint64 capturedAtMs = 2;
+}
+
+message SelfSelectItem {
+  string userId = 1;
+  string symbol = 2;
+  string createdAt = 3;
+  string updatedAt = 4;
+}
+
+message SelfSelectList {
+  string userId = 1;
+  repeated SelfSelectItem items = 2;
+  string updatedAt = 3;
+}
+
+// Backward-compatible alias used by current runtime path.
 message QuotePayload {
   string symbol = 1;
   double price = 2;
   double changePct = 3;
   string ts = 4;
+  string source = 5;
 }

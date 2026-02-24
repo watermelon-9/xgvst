@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { QuoteDurableObject } from './durable/QuoteDurableObject';
-import { encodeQuote } from './proto/quote';
+import { protobufCodec } from './proto/codec';
 import { SourceManager } from './sources/SourceManager';
 import type { QuoteTick } from './sources/QuoteSource';
 
@@ -106,6 +106,13 @@ function buildCorsHeaders(c: { req: { header: (name: string) => string | undefin
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin'
   });
+}
+
+function percentile(values: number[], p: number): number | null {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const idx = Math.ceil((p / 100) * sorted.length) - 1;
+  return sorted[Math.max(0, Math.min(sorted.length - 1, idx))] ?? null;
 }
 
 class QuoteConnectionPool {
@@ -266,12 +273,7 @@ class QuoteConnectionPool {
     let protobufOk = false;
 
     try {
-      const protobufFrame = encodeQuote({
-        symbol: tick.symbol,
-        price: tick.price,
-        changePct: tick.changePct,
-        ts: tick.ts
-      });
+      const protobufFrame = protobufCodec.encodeQuoteTick(tick);
       frameToSend = toArrayBuffer(protobufFrame);
       protobufOk = true;
     } catch {
@@ -396,11 +398,12 @@ app.get('/api/quote/mock', (c) => {
     ts: new Date().toISOString()
   };
 
-  const proto = encodeQuote({
+  const proto = protobufCodec.encodeTicker({
     symbol: payload.symbol,
     price: payload.price,
     changePct: payload.changePct,
-    ts: payload.ts
+    ts: payload.ts,
+    source: 'mock'
   });
 
   return c.json({ ...payload, protoBase64: btoa(String.fromCharCode(...proto)) });
@@ -452,6 +455,245 @@ app.post('/api/debug/source/control', async (c) => {
   }
 
   return c.json({ ok: false, error: 'unsupported action', expected: ['switch', 'auto', 'failover'] }, 400);
+});
+
+app.post('/api/debug/storage/bench', async (c) => {
+  if (!isDebugAuthorized({ req: c.req, env: c.env as DebugBindings })) {
+    return c.json({ ok: false, error: 'debug access denied' }, 403);
+  }
+
+  const payload = await c.req.json().catch(() => ({})) as {
+    iterations?: number;
+    valueSize?: number;
+  };
+
+  const iterations = Math.max(1, Math.min(200, Number(payload.iterations ?? 30) || 30));
+  const valueSize = Math.max(16, Math.min(2048, Number(payload.valueSize ?? 256) || 256));
+  const value = 'x'.repeat(valueSize);
+
+  const runId = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+
+  const kvWriteMs: number[] = [];
+  const kvReadMs: number[] = [];
+  const d1ReadMs: number[] = [];
+  const d1WriteMs: number[] = [];
+
+  await c.env.QUOTE_DB.exec(`
+    CREATE TABLE IF NOT EXISTS p23_storage_bench (
+      id TEXT PRIMARY KEY,
+      payload TEXT,
+      created_at TEXT
+    )
+  `);
+
+  for (let i = 0; i < iterations; i += 1) {
+    const key = `p23:${runId}:${i}`;
+
+    let started = performance.now();
+    await c.env.QUOTE_KV.put(key, value, { expirationTtl: 600 });
+    kvWriteMs.push(performance.now() - started);
+
+    started = performance.now();
+    await c.env.QUOTE_KV.get(key);
+    kvReadMs.push(performance.now() - started);
+
+    started = performance.now();
+    await c.env.QUOTE_DB.prepare('SELECT ? as v').bind(i).first();
+    d1ReadMs.push(performance.now() - started);
+
+    started = performance.now();
+    await c.env.QUOTE_DB.prepare('INSERT OR REPLACE INTO p23_storage_bench (id, payload, created_at) VALUES (?, ?, ?)')
+      .bind(key, value, new Date().toISOString())
+      .run();
+    d1WriteMs.push(performance.now() - started);
+  }
+
+  const toStats = (samples: number[]) => ({
+    count: samples.length,
+    p50Ms: percentile(samples, 50),
+    p95Ms: percentile(samples, 95),
+    maxMs: percentile(samples, 100),
+    meanMs: samples.length ? samples.reduce((acc, n) => acc + n, 0) / samples.length : null
+  });
+
+  return c.json({
+    ok: true,
+    runId,
+    iterations,
+    valueSize,
+    stats: {
+      kvWrite: toStats(kvWriteMs),
+      kvRead: toStats(kvReadMs),
+      d1Read: toStats(d1ReadMs),
+      d1Write: toStats(d1WriteMs)
+    }
+  });
+});
+
+function normalizeSelfSelectSymbols(input: unknown): string[] {
+  if (!Array.isArray(input)) return [];
+
+  const set = new Set<string>();
+  for (const item of input) {
+    if (typeof item !== 'string') continue;
+    const symbol = item.trim();
+    if (!symbol) continue;
+    set.add(symbol);
+  }
+
+  return [...set];
+}
+
+function resolveUserId(c: { req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined } }) {
+  const fromQuery = c.req.query('userId');
+  if (fromQuery?.trim()) return fromQuery.trim();
+
+  const fromAccess = c.req.header('cf-access-authenticated-user-email');
+  if (fromAccess?.trim()) return fromAccess.trim().toLowerCase();
+
+  const fromHeader = c.req.header('x-user-id');
+  if (fromHeader?.trim()) return fromHeader.trim();
+
+  return null;
+}
+
+async function writeSelfSelectHistory(db: D1Database, userId: string, action: string, symbols: string[]) {
+  if (!symbols.length) return;
+
+  const now = new Date().toISOString();
+  const statements = symbols.map((symbol) =>
+    db
+      .prepare('INSERT INTO quote_history (user_id, symbol, action, ts) VALUES (?, ?, ?, ?)')
+      .bind(userId, symbol, action, now)
+  );
+
+  await db.batch(statements);
+}
+
+app.get('/api/self-selects', async (c) => {
+  const userId = resolveUserId(c);
+  if (!userId) {
+    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
+  }
+
+  const rows = await c.env.QUOTE_DB.prepare(
+    'SELECT symbol, created_at AS createdAt, updated_at AS updatedAt FROM self_selects WHERE user_id = ? ORDER BY symbol ASC'
+  )
+    .bind(userId)
+    .all<{ symbol: string; createdAt: string; updatedAt: string }>();
+
+  return c.json({ ok: true, userId, symbols: rows.results.map((row) => row.symbol), items: rows.results });
+});
+
+app.put('/api/self-selects', async (c) => {
+  const userId = resolveUserId(c);
+  if (!userId) {
+    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
+  }
+
+  const payload = (await c.req.json().catch(() => ({}))) as { symbols?: unknown };
+  const symbols = normalizeSelfSelectSymbols(payload.symbols);
+  const now = new Date().toISOString();
+
+  const existingRows = await c.env.QUOTE_DB.prepare('SELECT symbol FROM self_selects WHERE user_id = ?').bind(userId).all<{ symbol: string }>();
+  const existingSymbols = new Set(existingRows.results.map((row) => row.symbol));
+
+  const statements: D1PreparedStatement[] = [];
+  statements.push(
+    c.env.QUOTE_DB
+      .prepare('INSERT INTO users (user_id, created_at, updated_at) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET updated_at = excluded.updated_at')
+      .bind(userId, now, now)
+  );
+  statements.push(c.env.QUOTE_DB.prepare('DELETE FROM self_selects WHERE user_id = ?').bind(userId));
+
+  for (const symbol of symbols) {
+    statements.push(
+      c.env.QUOTE_DB
+        .prepare('INSERT INTO self_selects (user_id, symbol, created_at, updated_at) VALUES (?, ?, ?, ?)')
+        .bind(userId, symbol, now, now)
+    );
+  }
+
+  await c.env.QUOTE_DB.batch(statements);
+
+  const nextSymbols = new Set(symbols);
+  const added = symbols.filter((symbol) => !existingSymbols.has(symbol));
+  const removed = [...existingSymbols].filter((symbol) => !nextSymbols.has(symbol));
+
+  await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'replace_add', added);
+  await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'replace_remove', removed);
+
+  return c.json({
+    ok: true,
+    userId,
+    symbols,
+    diff: {
+      added,
+      removed
+    }
+  });
+});
+
+app.post('/api/self-selects', async (c) => {
+  const userId = resolveUserId(c);
+  if (!userId) {
+    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
+  }
+
+  const payload = (await c.req.json().catch(() => ({}))) as { symbol?: string };
+  const symbol = payload.symbol?.trim();
+  if (!symbol) {
+    return c.json({ ok: false, error: 'symbol is required' }, 400);
+  }
+
+  const now = new Date().toISOString();
+
+  await c.env.QUOTE_DB.batch([
+    c.env.QUOTE_DB
+      .prepare('INSERT INTO users (user_id, created_at, updated_at) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET updated_at = excluded.updated_at')
+      .bind(userId, now, now),
+    c.env.QUOTE_DB
+      .prepare('INSERT INTO self_selects (user_id, symbol, created_at, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(user_id, symbol) DO UPDATE SET updated_at = excluded.updated_at')
+      .bind(userId, symbol, now, now)
+  ]);
+
+  await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'add', [symbol]);
+
+  return c.json({ ok: true, userId, symbol });
+});
+
+app.delete('/api/self-selects/:symbol', async (c) => {
+  const userId = resolveUserId(c);
+  if (!userId) {
+    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
+  }
+
+  const symbol = c.req.param('symbol')?.trim();
+  if (!symbol) {
+    return c.json({ ok: false, error: 'symbol is required' }, 400);
+  }
+
+  await c.env.QUOTE_DB.prepare('DELETE FROM self_selects WHERE user_id = ? AND symbol = ?').bind(userId, symbol).run();
+  await writeSelfSelectHistory(c.env.QUOTE_DB, userId, 'remove', [symbol]);
+
+  return c.json({ ok: true, userId, symbol });
+});
+
+app.get('/api/self-selects/history', async (c) => {
+  const userId = resolveUserId(c);
+  if (!userId) {
+    return c.json({ ok: false, error: 'missing user id (x-user-id or cf-access-authenticated-user-email)' }, 400);
+  }
+
+  const limit = Math.max(1, Math.min(200, Number(c.req.query('limit') ?? 50) || 50));
+
+  const rows = await c.env.QUOTE_DB.prepare(
+    'SELECT symbol, action, ts FROM quote_history WHERE user_id = ? ORDER BY ts DESC LIMIT ?'
+  )
+    .bind(userId, limit)
+    .all<{ symbol: string; action: string; ts: string }>();
+
+  return c.json({ ok: true, userId, history: rows.results });
 });
 
 function resolveQuoteSessionKey(c: { req: { query: (key: string) => string | undefined; header: (name: string) => string | undefined } }) {

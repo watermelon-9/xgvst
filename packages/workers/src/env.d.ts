@@ -13,6 +13,7 @@ declare global {
      * Non-sensitive: can be configured in wrangler.toml [vars].
      */
     CORS_ALLOW_ORIGINS?: string;
+    QUOTE_SNAPSHOT_TTL_SECONDS?: string;
 
     /** Source auth secrets: MUST be injected via `wrangler secret put <NAME>`. */
     ALLTICK_TOKEN?: string;

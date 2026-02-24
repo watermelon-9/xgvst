@@ -1,5 +1,5 @@
-import { encodeQuote } from '../proto/quote';
 import { encodeQuoteBundleDelta } from '../proto/quoteBundleDelta';
+import { protobufCodec } from '../proto/codec';
 import { SourceManager } from '../sources/SourceManager';
 import type { QuoteTick } from '../sources/QuoteSource';
 
@@ -78,7 +78,8 @@ const CODEC_DEFLATE = 2;
 const textEncoder = new TextEncoder();
 const BUNDLE_SOURCES = ['alltick', 'sina', 'eastmoney', 'tencent'];
 const BUNDLE_SOURCE_ID = new Map(BUNDLE_SOURCES.map((name, index) => [name, index]));
-const KV_SNAPSHOT_PREFIX = 'quote:snapshot:';
+const KV_SNAPSHOT_PREFIX = 'quote:';
+const KV_SNAPSHOT_TTL_SECONDS = 300;
 
 function isQuoteTickSnapshot(value: unknown): value is QuoteTickSnapshot {
   if (typeof value !== 'object' || value === null) return false;
@@ -217,6 +218,7 @@ export class QuoteDurableObject implements DurableObject {
   private readonly priceDeltaMilli: number;
   private readonly changeDeltaBp: number;
   private readonly forceSnapshotMs: number;
+  private readonly snapshotTtlSeconds: number;
 
   private readonly stats: QuoteDOStats = {
     clients: 0,
@@ -250,6 +252,7 @@ export class QuoteDurableObject implements DurableObject {
       QUOTE_DO_PRICE_DELTA_MILLI?: string;
       QUOTE_DO_CHANGE_DELTA_BP?: string;
       QUOTE_DO_FORCE_SNAPSHOT_MS?: string;
+      QUOTE_SNAPSHOT_TTL_SECONDS?: string;
     };
 
     this.heartbeatSweepMs = parseEnvInt(
@@ -293,6 +296,12 @@ export class QuoteDurableObject implements DurableObject {
     this.priceDeltaMilli = parseEnvInt(runtimeEnv.QUOTE_DO_PRICE_DELTA_MILLI, DEFAULT_PRICE_DELTA_MILLI, 0, 100);
     this.changeDeltaBp = parseEnvInt(runtimeEnv.QUOTE_DO_CHANGE_DELTA_BP, DEFAULT_CHANGE_DELTA_BP, 0, 100);
     this.forceSnapshotMs = parseEnvInt(runtimeEnv.QUOTE_DO_FORCE_SNAPSHOT_MS, DEFAULT_FORCE_SNAPSHOT_MS, 500, 60_000);
+    this.snapshotTtlSeconds = parseEnvInt(
+      runtimeEnv.QUOTE_SNAPSHOT_TTL_SECONDS,
+      KV_SNAPSHOT_TTL_SECONDS,
+      30,
+      3600
+    );
   }
 
   async fetch(request: Request): Promise<Response> {
@@ -573,7 +582,10 @@ export class QuoteDurableObject implements DurableObject {
     if (!this.env.QUOTE_KV) return;
 
     this.deferSlowTask(async () => {
-      await this.env.QUOTE_KV.put(this.snapshotKvKey(tick.symbol), JSON.stringify(tick));
+      const bytes = protobufCodec.encodeSnapshot(tick, Date.now());
+      await this.env.QUOTE_KV.put(this.snapshotKvKey(tick.symbol), bytes, {
+        expirationTtl: this.snapshotTtlSeconds
+      });
     });
   }
 
@@ -581,8 +593,20 @@ export class QuoteDurableObject implements DurableObject {
     if (!this.env.QUOTE_KV) return null;
 
     try {
-      const raw = await this.env.QUOTE_KV.get(this.snapshotKvKey(symbol), 'json');
-      return isQuoteTickSnapshot(raw) ? raw : null;
+      const raw = await this.env.QUOTE_KV.get(this.snapshotKvKey(symbol), 'arrayBuffer');
+      if (!raw) return null;
+
+      const decoded = protobufCodec.decodeSnapshot(raw);
+      const ticker = decoded.ticker;
+      const normalized: QuoteTickSnapshot = {
+        symbol: ticker.symbol,
+        price: ticker.price,
+        changePct: ticker.changePct,
+        ts: ticker.ts,
+        source: ticker.source ?? 'unknown'
+      };
+
+      return isQuoteTickSnapshot(normalized) ? normalized : null;
     } catch {
       return null;
     }
@@ -825,12 +849,7 @@ export class QuoteDurableObject implements DurableObject {
       sentAsFallback = true;
     } else {
       try {
-        const proto = encodeQuote({
-          symbol: tick.symbol,
-          price: tick.price,
-          changePct: tick.changePct,
-          ts: tick.ts
-        });
+        const proto = protobufCodec.encodeQuoteTick(tick);
         frameToSend = toArrayBuffer(proto);
       } catch {
         const debugEnabled = (this.env as unknown as { QT1_DEBUG_FALLBACK?: string }).QT1_DEBUG_FALLBACK === '1';
@@ -1130,7 +1149,8 @@ export class QuoteDurableObject implements DurableObject {
         snapshotBackpressureYieldMs: this.snapshotBackpressureYieldMs,
         priceDeltaMilli: this.priceDeltaMilli,
         changeDeltaBp: this.changeDeltaBp,
-        forceSnapshotMs: this.forceSnapshotMs
+        forceSnapshotMs: this.forceSnapshotMs,
+        snapshotTtlSeconds: this.snapshotTtlSeconds
       }
     };
   }
