@@ -256,13 +256,13 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	const heartbeatIntervalMs = options.heartbeatIntervalMs ?? 15000;
 	const allowJsonTickFallback = options.allowJsonTickFallback ?? false;
 
-	const BASE_DELAY_MS = options.baseDelayMs ?? 800;
+	const BASE_DELAY_MS = options.baseDelayMs ?? 400;
 	const MAX_DELAY_MS = options.maxDelayMs ?? 60_000;
-	const JITTER_FACTOR = options.jitterFactor ?? 0.8;
+	const JITTER_FACTOR = options.jitterFactor ?? 0.9;
 	const MAX_RETRIES = options.maxRetries ?? 25;
-	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 1800;
-	const BACKOFF_MULTIPLIER = 2.2;
-	const MIN_RECONNECT_GAP_MS = 300;
+	const INITIAL_JITTER_RANGE_MS = options.initialJitterRangeMs ?? 1200;
+	const BACKOFF_MULTIPLIER = 2.4;
+	const MIN_RECONNECT_GAP_MS = 200;
 
 	let socket: WebSocket | null = null;
 	let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
@@ -270,6 +270,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 	let reconnectAttempt = 0;
 	let reconnectStartedAt: number | null = null;
 	let manualClose = false;
+	let consecutiveErrors = 0;
 	let lastReconnectTime = 0;
 
 	const subscribedSymbols = new Set<string>();
@@ -344,6 +345,11 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		}
 
 		let delay = BASE_DELAY_MS * Math.pow(BACKOFF_MULTIPLIER, reconnectAttempt);
+
+		if (consecutiveErrors >= 2) {
+			delay *= Math.pow(1.8, consecutiveErrors - 1);
+		}
+
 		delay = Math.min(delay, MAX_DELAY_MS);
 
 		const jitter = delay * JITTER_FACTOR * (Math.random() * 2 - 1);
@@ -358,7 +364,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 			delay += MIN_RECONNECT_GAP_MS - (now - lastReconnectTime);
 		}
 
-		return Math.max(200, Math.round(delay));
+		return Math.max(150, Math.round(delay));
 	};
 
 	const resetReconnectState = () => {
@@ -372,18 +378,23 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		reconnectStartedAt = null;
 	};
 
-	const scheduleReconnect = (closeCode?: number) => {
+	const scheduleReconnect = (closeCode?: number, isWsError = false) => {
 		if (manualClose) return;
 		if (reconnectTimer) return;
 
-		let skipOnce = false;
-		if (closeCode === 1008 || closeCode === 1011) {
-			skipOnce = true;
-			reconnectAttempt += 1;
+		reconnectAttempt += 1;
+
+		if (isWsError) {
+			consecutiveErrors += 1;
+		} else {
+			consecutiveErrors = 0;
 		}
 
-		reconnectAttempt += 1;
-		const delay = getNextReconnectDelay();
+		let delay = getNextReconnectDelay();
+
+		if (isWsError && reconnectAttempt === 1) {
+			delay = Math.random() * 300;
+		}
 
 		if (!Number.isFinite(delay)) {
 			updateStatus('failed');
@@ -399,11 +410,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		reconnectTimer = setTimeout(() => {
 			reconnectTimer = null;
 			lastReconnectTime = Date.now();
-			if (!skipOnce) {
-				connect();
-			} else {
-				scheduleReconnect();
-			}
+			connect();
 		}, delay);
 	};
 
@@ -455,6 +462,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		ws.addEventListener('open', () => {
 			clearReconnectTimer();
 			resetReconnectState();
+			consecutiveErrors = 0;
 			updateStatus('open');
 			flushSubscriptions();
 			startHeartbeat();
@@ -465,7 +473,7 @@ export function useQuoteWebSocket(options: UseQuoteWebSocketOptions = {}) {
 		ws.addEventListener('error', () => {
 			stopHeartbeat();
 			updateStatus('error');
-			scheduleReconnect();
+			scheduleReconnect(undefined, true);
 		});
 		ws.addEventListener('close', (event) => {
 			stopHeartbeat();

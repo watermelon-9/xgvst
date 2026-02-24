@@ -169,8 +169,23 @@ class ClientRunner {
     }
 
     ws.onmessage = (event) => this.onMessage(event);
-    ws.onclose = () => {
+    ws.onerror = (event) => {
+      this.events.push({
+        ts: nowIso(),
+        clientId: this.id,
+        type: 'ws_error',
+        detail: String(event?.message || 'ws_error')
+      });
+    };
+    ws.onclose = (event) => {
       this.closed = true;
+      this.events.push({
+        ts: nowIso(),
+        clientId: this.id,
+        type: 'ws_close',
+        code: event?.code ?? null,
+        reason: event?.reason ?? ''
+      });
     };
 
     ws.send(JSON.stringify({ type: 'subscribe', symbols: this.symbols }));
