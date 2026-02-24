@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-02-24T19:08:15.178Z",
+  "generatedAt": "2026-02-24T19:45:35.980Z",
   "stage": "P2.4_C",
   "baselineFiles": [
     "p24-auth-baseline.json"
   ],
   "evidenceFiles": [
-    "auth/login-latency-2026-02-24T19-08-14-884Z.json",
-    "migration/migration-latency-2026-02-24T19-08-14-884Z.json",
-    "sync/sync-latency-2026-02-24T19-08-14-884Z.json",
-    "logs/wrangler-tail-2026-02-24T19-08-14-884Z.log"
+    "auth/login-latency-2026-02-24T19-45-35-670Z.json",
+    "migration/migration-latency-2026-02-24T19-45-35-670Z.json",
+    "sync/sync-latency-2026-02-24T19-45-35-670Z.json",
+    "logs/wrangler-tail-2026-02-24T19-45-35-670Z.log"
   ],
   "expectedArtifacts": [
     "auth/login-latency-*.json",

@@ -1,0 +1,78 @@
+{
+  "generatedAt": "2026-02-24T19:48:39.676Z",
+  "method": "mobile x home/market, 2 runs median",
+  "sourceBaseline": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-summary.json",
+  "outDir": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613",
+  "baseline": {
+    "mobile": {
+      "home": 100,
+      "market": 99
+    }
+  },
+  "results": {
+    "mobile": {
+      "home": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-home-run1.json",
+            "score": 100,
+            "fcpMs": 751.6624999999999,
+            "lcpMs": 901.6624999999999,
+            "tbtMs": 0,
+            "siMs": 751.6624999999999,
+            "cls": 0
+          },
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-home-run2.json",
+            "score": 100,
+            "fcpMs": 752.106,
+            "lcpMs": 902.106,
+            "tbtMs": 0,
+            "siMs": 752.106,
+            "cls": 0
+          }
+        ],
+        "scores": [
+          100,
+          100
+        ],
+        "median": 100,
+        "baseline": 100,
+        "delta": 0,
+        "regression": false
+      },
+      "market": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-market-run1.json",
+            "score": 99,
+            "fcpMs": 1440.0662499999999,
+            "lcpMs": 1692.0529999999999,
+            "tbtMs": 0,
+            "siMs": 1440.0662499999999,
+            "cls": 0.013437731173778007
+          },
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-market-run2.json",
+            "score": 99,
+            "fcpMs": 1434.1125,
+            "lcpMs": 1687.29,
+            "tbtMs": 0,
+            "siMs": 1434.1125,
+            "cls": 0.013437731173778007
+          }
+        ],
+        "scores": [
+          99,
+          99
+        ],
+        "median": 99,
+        "baseline": 99,
+        "delta": 0,
+        "regression": false
+      }
+    }
+  },
+  "regressions": [],
+  "noNewRegression": true
+}

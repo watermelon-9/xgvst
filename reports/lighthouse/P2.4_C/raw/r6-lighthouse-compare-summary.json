@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-02-24T19:50:36.190Z",
+  "baselineRef": "reports/lighthouse/P2.3_B/raw/r3-lh-guard-20260225-023227/lh-summary.json",
+  "rule": "No-new-regression iff all scenario medians >= baseline medians (score delta >= 0)",
+  "sources": {
+    "mobileDir": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613",
+    "desktopDir": "reports/lighthouse/P2.4_C/raw/r6-lh-desktop-smoke-20260225-034901"
+  },
+  "baseline": {
+    "mobile": {
+      "home": 100,
+      "market": 99
+    },
+    "desktop": {
+      "home": 100,
+      "market": 100
+    }
+  },
+  "results": {
+    "mobile": {
+      "home": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-home-run1.json",
+            "score": 100,
+            "fcpMs": 751.6624999999999,
+            "lcpMs": 901.6624999999999,
+            "tbtMs": 0,
+            "siMs": 751.6624999999999,
+            "cls": 0
+          },
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-home-run2.json",
+            "score": 100,
+            "fcpMs": 752.106,
+            "lcpMs": 902.106,
+            "tbtMs": 0,
+            "siMs": 752.106,
+            "cls": 0
+          }
+        ],
+        "scores": [
+          100,
+          100
+        ],
+        "median": 100,
+        "baseline": 100,
+        "delta": 0,
+        "regression": false
+      },
+      "market": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-market-run1.json",
+            "score": 99,
+            "fcpMs": 1440.0662499999999,
+            "lcpMs": 1692.0529999999999,
+            "tbtMs": 0,
+            "siMs": 1440.0662499999999,
+            "cls": 0.013437731173778007
+          },
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-guard-20260225-034613/lh-mobile-market-run2.json",
+            "score": 99,
+            "fcpMs": 1434.1125,
+            "lcpMs": 1687.29,
+            "tbtMs": 0,
+            "siMs": 1434.1125,
+            "cls": 0.013437731173778007
+          }
+        ],
+        "scores": [
+          99,
+          99
+        ],
+        "median": 99,
+        "baseline": 99,
+        "delta": 0,
+        "regression": false
+      }
+    },
+    "desktop": {
+      "home": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-desktop-smoke-20260225-034901/lh-desktop-home-run1.json",
+            "score": 100,
+            "fcpMs": 202.27839999999998,
+            "lcpMs": 242.27839999999998,
+            "tbtMs": 0,
+            "siMs": 202.27839999999998,
+            "cls": 0
+          },
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-desktop-smoke-20260225-034901/lh-desktop-home-run2.json",
+            "score": 100,
+            "fcpMs": 201.531,
+            "lcpMs": 241.531,
+            "tbtMs": 0,
+            "siMs": 201.531,
+            "cls": 0
+          }
+        ],
+        "scores": [
+          100,
+          100
+        ],
+        "median": 100,
+        "baseline": 100,
+        "delta": 0,
+        "regression": false
+      },
+      "market": {
+        "runs": [
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-desktop-smoke-20260225-034901/lh-desktop-market-run1.json",
+            "score": 100,
+            "fcpMs": 390.03275,
+            "lcpMs": 478.918,
+            "tbtMs": 0,
+            "siMs": 390.03275,
+            "cls": 0.012043074257524737
+          },
+          {
+            "file": "reports/lighthouse/P2.4_C/raw/r6-lh-desktop-smoke-20260225-034901/lh-desktop-market-run2.json",
+            "score": 100,
+            "fcpMs": 387.54087499999997,
+            "lcpMs": 476.703,
+            "tbtMs": 0,
+            "siMs": 387.54087499999997,
+            "cls": 0.012043074257524737
+          }
+        ],
+        "scores": [
+          100,
+          100
+        ],
+        "median": 100,
+        "baseline": 100,
+        "delta": 0,
+        "regression": false
+      }
+    }
+  },
+  "regressions": [],
+  "noNewRegression": true
+}

@@ -1,0 +1,182 @@
+{
+  "generatedAt": "2026-02-24T19:45:35.980Z",
+  "baseUrl": "http://127.0.0.1:8787",
+  "mode": "migration-single-user-latency",
+  "symbolCountPerUser": 200,
+  "p50Ms": 14.216,
+  "p95Ms": 17.584,
+  "perUserLatencyMs": [
+    {
+      "userId": "p24-baseline-migrate-0",
+      "latencyMs": 17.584,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-1",
+      "latencyMs": 14.962,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-2",
+      "latencyMs": 15.813,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-3",
+      "latencyMs": 13.826,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-4",
+      "latencyMs": 15.148,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-5",
+      "latencyMs": 16.746,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-6",
+      "latencyMs": 13.749,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-7",
+      "latencyMs": 13.268,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-8",
+      "latencyMs": 12.305,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "userId": "p24-baseline-migrate-9",
+      "latencyMs": 14.216,
+      "importedCount": 200,
+      "expectedCount": 200,
+      "ok": true,
+      "status": 200
+    }
+  ],
+  "samples": [
+    {
+      "iteration": 0,
+      "userId": "p24-baseline-migrate-0",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 17.584,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 1,
+      "userId": "p24-baseline-migrate-1",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 14.962,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 2,
+      "userId": "p24-baseline-migrate-2",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 15.813,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 3,
+      "userId": "p24-baseline-migrate-3",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 13.826,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 4,
+      "userId": "p24-baseline-migrate-4",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 15.148,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 5,
+      "userId": "p24-baseline-migrate-5",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 16.746,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 6,
+      "userId": "p24-baseline-migrate-6",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 13.749,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 7,
+      "userId": "p24-baseline-migrate-7",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 13.268,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 8,
+      "userId": "p24-baseline-migrate-8",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 12.305,
+      "expectedCount": 200,
+      "importedCount": 200
+    },
+    {
+      "iteration": 9,
+      "userId": "p24-baseline-migrate-9",
+      "ok": true,
+      "status": 200,
+      "latencyMs": 14.216,
+      "expectedCount": 200,
+      "importedCount": 200
+    }
+  ]
+}

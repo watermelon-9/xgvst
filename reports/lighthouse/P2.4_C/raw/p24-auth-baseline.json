@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-24T19:08:15.178Z",
+  "generatedAt": "2026-02-24T19:45:35.980Z",
   "baseUrl": "http://127.0.0.1:8787",
   "auth": {
     "mode": "generated-hs256",
@@ -21,10 +21,10 @@
       "successRate": 1,
       "latency": {
         "count": 30,
-        "p50Ms": 1.846,
-        "p95Ms": 3.382,
-        "maxMs": 21.849,
-        "meanMs": 2.660466666666667
+        "p50Ms": 1.845,
+        "p95Ms": 2.932,
+        "maxMs": 25.913,
+        "meanMs": 2.7037
       },
       "samples": [
         {
@@ -32,210 +32,210 @@
           "userId": "p24-baseline-login-0",
           "ok": true,
           "status": 200,
-          "latencyMs": 21.849
+          "latencyMs": 25.913
         },
         {
           "iteration": 1,
           "userId": "p24-baseline-login-1",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.366
+          "latencyMs": 2.932
         },
         {
           "iteration": 2,
           "userId": "p24-baseline-login-2",
           "ok": true,
           "status": 200,
-          "latencyMs": 3.316
+          "latencyMs": 2.923
         },
         {
           "iteration": 3,
           "userId": "p24-baseline-login-3",
           "ok": true,
           "status": 200,
-          "latencyMs": 3.382
+          "latencyMs": 2.899
         },
         {
           "iteration": 4,
           "userId": "p24-baseline-login-4",
           "ok": true,
           "status": 200,
-          "latencyMs": 3.112
+          "latencyMs": 2.649
         },
         {
           "iteration": 5,
           "userId": "p24-baseline-login-5",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.686
+          "latencyMs": 2.643
         },
         {
           "iteration": 6,
           "userId": "p24-baseline-login-6",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.28
+          "latencyMs": 2.577
         },
         {
           "iteration": 7,
           "userId": "p24-baseline-login-7",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.923
+          "latencyMs": 1.984
         },
         {
           "iteration": 8,
           "userId": "p24-baseline-login-8",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.001
+          "latencyMs": 2.229
         },
         {
           "iteration": 9,
           "userId": "p24-baseline-login-9",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.594
+          "latencyMs": 2.192
         },
         {
           "iteration": 10,
           "userId": "p24-baseline-login-10",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.216
+          "latencyMs": 1.667
         },
         {
           "iteration": 11,
           "userId": "p24-baseline-login-11",
           "ok": true,
           "status": 200,
-          "latencyMs": 2.296
+          "latencyMs": 1.845
         },
         {
           "iteration": 12,
           "userId": "p24-baseline-login-12",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.81
+          "latencyMs": 1.612
         },
         {
           "iteration": 13,
           "userId": "p24-baseline-login-13",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.442
+          "latencyMs": 1.476
         },
         {
           "iteration": 14,
           "userId": "p24-baseline-login-14",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.595
+          "latencyMs": 1.948
         },
         {
           "iteration": 15,
           "userId": "p24-baseline-login-15",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.917
+          "latencyMs": 1.533
         },
         {
           "iteration": 16,
           "userId": "p24-baseline-login-16",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.363
+          "latencyMs": 1.446
         },
         {
           "iteration": 17,
           "userId": "p24-baseline-login-17",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.586
+          "latencyMs": 2.444
         },
         {
           "iteration": 18,
           "userId": "p24-baseline-login-18",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.477
+          "latencyMs": 2.033
         },
         {
           "iteration": 19,
           "userId": "p24-baseline-login-19",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.517
+          "latencyMs": 1.377
         },
         {
           "iteration": 20,
           "userId": "p24-baseline-login-20",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.436
+          "latencyMs": 1.328
         },
         {
           "iteration": 21,
           "userId": "p24-baseline-login-21",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.245
+          "latencyMs": 1.32
         },
         {
           "iteration": 22,
           "userId": "p24-baseline-login-22",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.246
+          "latencyMs": 1.953
         },
         {
           "iteration": 23,
           "userId": "p24-baseline-login-23",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.284
+          "latencyMs": 1.41
         },
         {
           "iteration": 24,
           "userId": "p24-baseline-login-24",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.929
+          "latencyMs": 1.86
         },
         {
           "iteration": 25,
           "userId": "p24-baseline-login-25",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.637
+          "latencyMs": 1.447
         },
         {
           "iteration": 26,
           "userId": "p24-baseline-login-26",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.846
+          "latencyMs": 1.522
         },
         {
           "iteration": 27,
           "userId": "p24-baseline-login-27",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.827
+          "latencyMs": 1.302
         },
         {
           "iteration": 28,
           "userId": "p24-baseline-login-28",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.989
+          "latencyMs": 1.264
         },
         {
           "iteration": 29,
           "userId": "p24-baseline-login-29",
           "ok": true,
           "status": 200,
-          "latencyMs": 1.647
+          "latencyMs": 1.383
         }
       ]
     },
@@ -246,10 +246,10 @@
       "successRate": 1,
       "latency": {
         "count": 10,
-        "p50Ms": 12.738,
-        "p95Ms": 15.444,
-        "maxMs": 15.444,
-        "meanMs": 13.0118
+        "p50Ms": 14.216,
+        "p95Ms": 17.584,
+        "maxMs": 17.584,
+        "meanMs": 14.7617
       },
       "samples": [
         {
@@ -257,7 +257,7 @@
           "userId": "p24-baseline-migrate-0",
           "ok": true,
           "status": 200,
-          "latencyMs": 15.444,
+          "latencyMs": 17.584,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -266,7 +266,7 @@
           "userId": "p24-baseline-migrate-1",
           "ok": true,
           "status": 200,
-          "latencyMs": 14.198,
+          "latencyMs": 14.962,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -275,7 +275,7 @@
           "userId": "p24-baseline-migrate-2",
           "ok": true,
           "status": 200,
-          "latencyMs": 12.624,
+          "latencyMs": 15.813,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -284,7 +284,7 @@
           "userId": "p24-baseline-migrate-3",
           "ok": true,
           "status": 200,
-          "latencyMs": 13.884,
+          "latencyMs": 13.826,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -293,7 +293,7 @@
           "userId": "p24-baseline-migrate-4",
           "ok": true,
           "status": 200,
-          "latencyMs": 14.785,
+          "latencyMs": 15.148,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -302,7 +302,7 @@
           "userId": "p24-baseline-migrate-5",
           "ok": true,
           "status": 200,
-          "latencyMs": 11.653,
+          "latencyMs": 16.746,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -311,7 +311,7 @@
           "userId": "p24-baseline-migrate-6",
           "ok": true,
           "status": 200,
-          "latencyMs": 10.89,
+          "latencyMs": 13.749,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -320,7 +320,7 @@
           "userId": "p24-baseline-migrate-7",
           "ok": true,
           "status": 200,
-          "latencyMs": 12.738,
+          "latencyMs": 13.268,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -329,7 +329,7 @@
           "userId": "p24-baseline-migrate-8",
           "ok": true,
           "status": 200,
-          "latencyMs": 10.839,
+          "latencyMs": 12.305,
           "expectedCount": 200,
           "importedCount": 200
         },
@@ -338,7 +338,7 @@
           "userId": "p24-baseline-migrate-9",
           "ok": true,
           "status": 200,
-          "latencyMs": 13.063,
+          "latencyMs": 14.216,
           "expectedCount": 200,
           "importedCount": 200
         }
@@ -352,10 +352,10 @@
       "successRate": 1,
       "latency": {
         "count": 12,
-        "p50Ms": 3.686,
-        "p95Ms": 6.444,
-        "maxMs": 6.444,
-        "meanMs": 4.059083333333333
+        "p50Ms": 3.371,
+        "p95Ms": 6.102,
+        "maxMs": 6.102,
+        "meanMs": 3.8465833333333332
       },
       "samples": [
         {
@@ -364,7 +364,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 4.35,
+          "syncLatencyMs": 3.853,
           "pollCount": 1
         },
         {
@@ -373,7 +373,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 3.148,
+          "syncLatencyMs": 3.953,
           "pollCount": 1
         },
         {
@@ -382,7 +382,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 6.444,
+          "syncLatencyMs": 6.102,
           "pollCount": 1
         },
         {
@@ -391,7 +391,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 4.758,
+          "syncLatencyMs": 3.371,
           "pollCount": 1
         },
         {
@@ -400,7 +400,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 3.807,
+          "syncLatencyMs": 3.612,
           "pollCount": 1
         },
         {
@@ -409,7 +409,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 3.339,
+          "syncLatencyMs": 3.337,
           "pollCount": 1
         },
         {
@@ -418,7 +418,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 4.213,
+          "syncLatencyMs": 3.299,
           "pollCount": 1
         },
         {
@@ -427,7 +427,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 4.17,
+          "syncLatencyMs": 3.333,
           "pollCount": 1
         },
         {
@@ -436,7 +436,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 3.612,
+          "syncLatencyMs": 3.133,
           "pollCount": 1
         },
         {
@@ -445,7 +445,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 3.522,
+          "syncLatencyMs": 4.082,
           "pollCount": 1
         },
         {
@@ -454,7 +454,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 3.66,
+          "syncLatencyMs": 3.111,
           "pollCount": 1
         },
         {
@@ -463,7 +463,7 @@
           "mutateOk": true,
           "mutateStatus": 200,
           "syncObserved": true,
-          "syncLatencyMs": 3.686,
+          "syncLatencyMs": 4.973,
           "pollCount": 1
         }
       ]

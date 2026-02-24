@@ -1,0 +1,215 @@
+{
+  "generatedAt": "2026-02-24T19:45:35.980Z",
+  "baseUrl": "http://127.0.0.1:8787",
+  "mode": "cross-device-sync-latency",
+  "p50Ms": 3.371,
+  "p95Ms": 6.102,
+  "perUserSyncLatencyMs": [
+    {
+      "userId": "p24-baseline-sync-0",
+      "syncLatencyMs": 3.853,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-1",
+      "syncLatencyMs": 3.953,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-2",
+      "syncLatencyMs": 6.102,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-3",
+      "syncLatencyMs": 3.371,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-4",
+      "syncLatencyMs": 3.612,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-5",
+      "syncLatencyMs": 3.337,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-6",
+      "syncLatencyMs": 3.299,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-7",
+      "syncLatencyMs": 3.333,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-8",
+      "syncLatencyMs": 3.133,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-9",
+      "syncLatencyMs": 4.082,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-10",
+      "syncLatencyMs": 3.111,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    },
+    {
+      "userId": "p24-baseline-sync-11",
+      "syncLatencyMs": 4.973,
+      "syncObserved": true,
+      "pollCount": 1,
+      "mutateOk": true,
+      "mutateStatus": 200
+    }
+  ],
+  "samples": [
+    {
+      "iteration": 0,
+      "userId": "p24-baseline-sync-0",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.853,
+      "pollCount": 1
+    },
+    {
+      "iteration": 1,
+      "userId": "p24-baseline-sync-1",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.953,
+      "pollCount": 1
+    },
+    {
+      "iteration": 2,
+      "userId": "p24-baseline-sync-2",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 6.102,
+      "pollCount": 1
+    },
+    {
+      "iteration": 3,
+      "userId": "p24-baseline-sync-3",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.371,
+      "pollCount": 1
+    },
+    {
+      "iteration": 4,
+      "userId": "p24-baseline-sync-4",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.612,
+      "pollCount": 1
+    },
+    {
+      "iteration": 5,
+      "userId": "p24-baseline-sync-5",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.337,
+      "pollCount": 1
+    },
+    {
+      "iteration": 6,
+      "userId": "p24-baseline-sync-6",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.299,
+      "pollCount": 1
+    },
+    {
+      "iteration": 7,
+      "userId": "p24-baseline-sync-7",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.333,
+      "pollCount": 1
+    },
+    {
+      "iteration": 8,
+      "userId": "p24-baseline-sync-8",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.133,
+      "pollCount": 1
+    },
+    {
+      "iteration": 9,
+      "userId": "p24-baseline-sync-9",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 4.082,
+      "pollCount": 1
+    },
+    {
+      "iteration": 10,
+      "userId": "p24-baseline-sync-10",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 3.111,
+      "pollCount": 1
+    },
+    {
+      "iteration": 11,
+      "userId": "p24-baseline-sync-11",
+      "mutateOk": true,
+      "mutateStatus": 200,
+      "syncObserved": true,
+      "syncLatencyMs": 4.973,
+      "pollCount": 1
+    }
+  ]
+}
