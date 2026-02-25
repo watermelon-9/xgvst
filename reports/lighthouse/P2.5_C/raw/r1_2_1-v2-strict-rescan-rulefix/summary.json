@@ -1,0 +1,320 @@
+{
+  "generatedAt": "2026-02-25T06:59:53.820Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "rule": {
+    "revision": "R1.2.1-rulefix",
+    "note": "仅邮箱注册/登录不等于禁止密码输入；验收禁止手机号/微信/第三方入口，必须含邮箱输入。"
+  },
+  "thresholds": {
+    "perf": 0.9,
+    "a11y": 0.9,
+    "cls": 0.1
+  },
+  "lighthouse": [
+    {
+      "route": "/auth/login",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.59,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/login",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-auth-login.json"
+    },
+    {
+      "route": "/auth/login",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.87,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/login",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-auth-login.json"
+    },
+    {
+      "route": "/auth/register",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.6,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/register",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-auth-register.json"
+    },
+    {
+      "route": "/auth/register",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.87,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/register",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-auth-register.json"
+    },
+    {
+      "route": "/auth/forgot-password",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.59,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-auth-forgot-password.json"
+    },
+    {
+      "route": "/auth/forgot-password",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.87,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-auth-forgot-password.json"
+    },
+    {
+      "route": "/market",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.6,
+      "accessibility": 0.95,
+      "cls": 0.0002,
+      "finalUrl": "http://127.0.0.1:4173/market",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-market.json"
+    },
+    {
+      "route": "/market",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.88,
+      "accessibility": 0.95,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/market",
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-market.json"
+    }
+  ],
+  "authUi": [
+    {
+      "profile": "desktop",
+      "route": "/auth/login",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 1,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "forbiddenEntrySamples": [],
+      "emailTextHit": true,
+      "notes": []
+    },
+    {
+      "profile": "desktop",
+      "route": "/auth/register",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 2,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "forbiddenEntrySamples": [],
+      "emailTextHit": true,
+      "notes": []
+    },
+    {
+      "profile": "desktop",
+      "route": "/auth/forgot-password",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 0,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "forbiddenEntrySamples": [],
+      "emailTextHit": true,
+      "notes": []
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/login",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 1,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "forbiddenEntrySamples": [],
+      "emailTextHit": true,
+      "notes": []
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/register",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 2,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "forbiddenEntrySamples": [],
+      "emailTextHit": true,
+      "notes": []
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/forgot-password",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 0,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "forbiddenEntrySamples": [],
+      "emailTextHit": true,
+      "notes": []
+    }
+  ],
+  "postLogin": {
+    "attempted": true,
+    "loginRoute": "http://127.0.0.1:4173/auth/login",
+    "hasEmailInput": true,
+    "hasPasswordInput": true,
+    "hasSubmitAction": true,
+    "clicked": true,
+    "redirectToMarket": false,
+    "finalUrl": "http://127.0.0.1:4173/auth/login",
+    "tokenSyncDetected": true,
+    "noFlicker": false,
+    "details": [
+      "点击后未跳转到 /market",
+      "未满足无闪烁判定（含回跳或未完成跳转）",
+      "flowDurationMs=6093"
+    ]
+  },
+  "dod": {
+    "dod1_multi_endpoint_scan": {
+      "pass": true,
+      "evidence": "8/8 LH samples + UI scan"
+    },
+    "dod2_auth_page_strict_ui_rulefixed": {
+      "pass": true,
+      "rule": "仅邮箱注册/登录不等于禁止密码输入；验收禁止手机号/微信/第三方入口，必须含邮箱输入。",
+      "failedRows": []
+    },
+    "dod3_lh_perf_a11y_cls": {
+      "pass": false,
+      "thresholds": {
+        "perf": 0.9,
+        "a11y": 0.9,
+        "cls": 0.1
+      },
+      "failedRows": [
+        {
+          "route": "/auth/login",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.59,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/login",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-auth-login.json"
+        },
+        {
+          "route": "/auth/login",
+          "profile": "desktop",
+          "status": "ok",
+          "performance": 0.87,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/login",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-auth-login.json"
+        },
+        {
+          "route": "/auth/register",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.6,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-auth-register.json"
+        },
+        {
+          "route": "/auth/register",
+          "profile": "desktop",
+          "status": "ok",
+          "performance": 0.87,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-auth-register.json"
+        },
+        {
+          "route": "/auth/forgot-password",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.59,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-auth-forgot-password.json"
+        },
+        {
+          "route": "/auth/forgot-password",
+          "profile": "desktop",
+          "status": "ok",
+          "performance": 0.87,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-auth-forgot-password.json"
+        },
+        {
+          "route": "/market",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.6,
+          "accessibility": 0.95,
+          "cls": 0.0002,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/mobile-market.json"
+        },
+        {
+          "route": "/market",
+          "profile": "desktop",
+          "status": "ok",
+          "performance": 0.88,
+          "accessibility": 0.95,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "file": "reports/lighthouse/P2.5_C/raw/r1_2_1-v2-strict-rescan-rulefix/lh/desktop-market.json"
+        }
+      ]
+    },
+    "dod4_post_login_redirect_sync_no_flicker": {
+      "pass": false,
+      "details": {
+        "attempted": true,
+        "loginRoute": "http://127.0.0.1:4173/auth/login",
+        "hasEmailInput": true,
+        "hasPasswordInput": true,
+        "hasSubmitAction": true,
+        "clicked": true,
+        "redirectToMarket": false,
+        "finalUrl": "http://127.0.0.1:4173/auth/login",
+        "tokenSyncDetected": true,
+        "noFlicker": false,
+        "details": [
+          "点击后未跳转到 /market",
+          "未满足无闪烁判定（含回跳或未完成跳转）",
+          "flowDurationMs=6093"
+        ]
+      }
+    }
+  },
+  "finalPass": false
+}
