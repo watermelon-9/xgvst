@@ -1,0 +1,183 @@
+{
+  "generatedAt": "2026-02-25T05:32:59.590Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "profiles": [
+    {
+      "profile": "desktop",
+      "routes": [
+        {
+          "route": "/auth/login",
+          "url": "http://127.0.0.1:4173/auth/login",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/login",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 2,
+            "emailInputs": 1,
+            "passwordInputs": 1,
+            "nonEmailInputs": 1
+          },
+          "emailTextHit": true,
+          "authUiStrictPass": false,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        },
+        {
+          "route": "/auth/register",
+          "url": "http://127.0.0.1:4173/auth/register",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 3,
+            "emailInputs": 1,
+            "passwordInputs": 2,
+            "nonEmailInputs": 2
+          },
+          "emailTextHit": true,
+          "authUiStrictPass": false,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        },
+        {
+          "route": "/auth/forgot-password",
+          "url": "http://127.0.0.1:4173/auth/forgot-password",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 1,
+            "passwordInputs": 0,
+            "nonEmailInputs": 0
+          },
+          "emailTextHit": true,
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/market",
+          "url": "http://127.0.0.1:4173/market",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 1,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 0,
+            "passwordInputs": 0,
+            "nonEmailInputs": 1
+          },
+          "emailTextHit": false,
+          "authUiStrictPass": null,
+          "notes": []
+        }
+      ],
+      "postLogin": {
+        "attempted": true,
+        "loginRoute": "http://127.0.0.1:4173/auth/login",
+        "hasEmailInput": true,
+        "hasSubmitAction": true,
+        "clicked": true,
+        "redirectToMarket": false,
+        "finalUrl": "http://127.0.0.1:4173/auth/login",
+        "tokenSyncDetected": false,
+        "noFlicker": false,
+        "details": [
+          "提交动作点击失败",
+          "点击后未跳转到 /market",
+          "未检测到本地会话/Token同步迹象",
+          "未满足无闪烁判定（含回跳或未完成跳转）",
+          "flowDurationMs=8035"
+        ]
+      }
+    },
+    {
+      "profile": "mobile",
+      "routes": [
+        {
+          "route": "/auth/login",
+          "url": "http://127.0.0.1:4173/auth/login",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/login",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 2,
+            "emailInputs": 1,
+            "passwordInputs": 1,
+            "nonEmailInputs": 1
+          },
+          "emailTextHit": true,
+          "authUiStrictPass": false,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        },
+        {
+          "route": "/auth/register",
+          "url": "http://127.0.0.1:4173/auth/register",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 3,
+            "emailInputs": 1,
+            "passwordInputs": 2,
+            "nonEmailInputs": 2
+          },
+          "emailTextHit": true,
+          "authUiStrictPass": false,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        },
+        {
+          "route": "/auth/forgot-password",
+          "url": "http://127.0.0.1:4173/auth/forgot-password",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 1,
+            "passwordInputs": 0,
+            "nonEmailInputs": 0
+          },
+          "emailTextHit": true,
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/market",
+          "url": "http://127.0.0.1:4173/market",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 1,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 0,
+            "passwordInputs": 0,
+            "nonEmailInputs": 1
+          },
+          "emailTextHit": false,
+          "authUiStrictPass": null,
+          "notes": []
+        }
+      ],
+      "postLogin": null
+    }
+  ]
+}

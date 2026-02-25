@@ -1,0 +1,368 @@
+{
+  "generatedAt": "2026-02-25T05:35:52.194Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "thresholds": {
+    "perf": 0.9,
+    "a11y": 0.9,
+    "cls": 0.1
+  },
+  "lighthouse": [
+    {
+      "route": "/auth/login",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.48,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/login",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-auth-login.json"
+    },
+    {
+      "route": "/auth/login",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.91,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/login",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/desktop-auth-login.json"
+    },
+    {
+      "route": "/auth/register",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.59,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/register",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-auth-register.json"
+    },
+    {
+      "route": "/auth/register",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.88,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/register",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/desktop-auth-register.json"
+    },
+    {
+      "route": "/auth/forgot-password",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.58,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-auth-forgot-password.json"
+    },
+    {
+      "route": "/auth/forgot-password",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.88,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/desktop-auth-forgot-password.json"
+    },
+    {
+      "route": "/market",
+      "profile": "mobile",
+      "status": "ok",
+      "performance": 0.58,
+      "accessibility": 0.95,
+      "cls": 0.0135,
+      "finalUrl": "http://127.0.0.1:4173/market",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-market.json"
+    },
+    {
+      "route": "/market",
+      "profile": "desktop",
+      "status": "ok",
+      "performance": 0.81,
+      "accessibility": 0.95,
+      "cls": 0.0123,
+      "finalUrl": "http://127.0.0.1:4173/market",
+      "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/desktop-market.json"
+    }
+  ],
+  "authUi": [
+    {
+      "profile": "desktop",
+      "route": "/auth/login",
+      "status": 200,
+      "authUiStrictPass": false,
+      "navCount": 0,
+      "emailInputs": 1,
+      "nonEmailInputs": 1,
+      "passwordInputs": 1,
+      "emailTextHit": true,
+      "notes": [
+        "认证页出现密码输入，违反“仅邮箱入口”",
+        "认证页存在非邮箱输入项"
+      ]
+    },
+    {
+      "profile": "desktop",
+      "route": "/auth/register",
+      "status": 200,
+      "authUiStrictPass": false,
+      "navCount": 0,
+      "emailInputs": 1,
+      "nonEmailInputs": 2,
+      "passwordInputs": 2,
+      "emailTextHit": true,
+      "notes": [
+        "认证页出现密码输入，违反“仅邮箱入口”",
+        "认证页存在非邮箱输入项"
+      ]
+    },
+    {
+      "profile": "desktop",
+      "route": "/auth/forgot-password",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "nonEmailInputs": 0,
+      "passwordInputs": 0,
+      "emailTextHit": true,
+      "notes": []
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/login",
+      "status": 200,
+      "authUiStrictPass": false,
+      "navCount": 0,
+      "emailInputs": 1,
+      "nonEmailInputs": 1,
+      "passwordInputs": 1,
+      "emailTextHit": true,
+      "notes": [
+        "认证页出现密码输入，违反“仅邮箱入口”",
+        "认证页存在非邮箱输入项"
+      ]
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/register",
+      "status": 200,
+      "authUiStrictPass": false,
+      "navCount": 0,
+      "emailInputs": 1,
+      "nonEmailInputs": 2,
+      "passwordInputs": 2,
+      "emailTextHit": true,
+      "notes": [
+        "认证页出现密码输入，违反“仅邮箱入口”",
+        "认证页存在非邮箱输入项"
+      ]
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/forgot-password",
+      "status": 200,
+      "authUiStrictPass": true,
+      "navCount": 0,
+      "emailInputs": 1,
+      "nonEmailInputs": 0,
+      "passwordInputs": 0,
+      "emailTextHit": true,
+      "notes": []
+    }
+  ],
+  "postLogin": {
+    "attempted": true,
+    "loginRoute": "http://127.0.0.1:4173/auth/login",
+    "hasEmailInput": true,
+    "hasSubmitAction": true,
+    "clicked": true,
+    "redirectToMarket": false,
+    "finalUrl": "http://127.0.0.1:4173/auth/login",
+    "tokenSyncDetected": false,
+    "noFlicker": false,
+    "details": [
+      "提交动作点击失败",
+      "点击后未跳转到 /market",
+      "未检测到本地会话/Token同步迹象",
+      "未满足无闪烁判定（含回跳或未完成跳转）",
+      "flowDurationMs=8035"
+    ]
+  },
+  "dod": {
+    "dod1_multi_endpoint_scan": {
+      "pass": true,
+      "evidence": "8/8 LH samples + UI scan"
+    },
+    "dod2_auth_page_strict_ui": {
+      "pass": false,
+      "failedRows": [
+        {
+          "profile": "desktop",
+          "route": "/auth/login",
+          "status": 200,
+          "authUiStrictPass": false,
+          "navCount": 0,
+          "emailInputs": 1,
+          "nonEmailInputs": 1,
+          "passwordInputs": 1,
+          "emailTextHit": true,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        },
+        {
+          "profile": "desktop",
+          "route": "/auth/register",
+          "status": 200,
+          "authUiStrictPass": false,
+          "navCount": 0,
+          "emailInputs": 1,
+          "nonEmailInputs": 2,
+          "passwordInputs": 2,
+          "emailTextHit": true,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        },
+        {
+          "profile": "mobile",
+          "route": "/auth/login",
+          "status": 200,
+          "authUiStrictPass": false,
+          "navCount": 0,
+          "emailInputs": 1,
+          "nonEmailInputs": 1,
+          "passwordInputs": 1,
+          "emailTextHit": true,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        },
+        {
+          "profile": "mobile",
+          "route": "/auth/register",
+          "status": 200,
+          "authUiStrictPass": false,
+          "navCount": 0,
+          "emailInputs": 1,
+          "nonEmailInputs": 2,
+          "passwordInputs": 2,
+          "emailTextHit": true,
+          "notes": [
+            "认证页出现密码输入，违反“仅邮箱入口”",
+            "认证页存在非邮箱输入项"
+          ]
+        }
+      ]
+    },
+    "dod3_lh_perf_a11y_cls": {
+      "pass": false,
+      "thresholds": {
+        "perf": 0.9,
+        "a11y": 0.9,
+        "cls": 0.1
+      },
+      "failedRows": [
+        {
+          "route": "/auth/login",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.48,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/login",
+          "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-auth-login.json"
+        },
+        {
+          "route": "/auth/register",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.59,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-auth-register.json"
+        },
+        {
+          "route": "/auth/register",
+          "profile": "desktop",
+          "status": "ok",
+          "performance": 0.88,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/desktop-auth-register.json"
+        },
+        {
+          "route": "/auth/forgot-password",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.58,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-auth-forgot-password.json"
+        },
+        {
+          "route": "/auth/forgot-password",
+          "profile": "desktop",
+          "status": "ok",
+          "performance": 0.88,
+          "accessibility": 1,
+          "cls": 0,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/desktop-auth-forgot-password.json"
+        },
+        {
+          "route": "/market",
+          "profile": "mobile",
+          "status": "ok",
+          "performance": 0.58,
+          "accessibility": 0.95,
+          "cls": 0.0135,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/mobile-market.json"
+        },
+        {
+          "route": "/market",
+          "profile": "desktop",
+          "status": "ok",
+          "performance": 0.81,
+          "accessibility": 0.95,
+          "cls": 0.0123,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "file": "reports/lighthouse/P2.5_C/raw/r1-v2-strict-rescan/lh/desktop-market.json"
+        }
+      ]
+    },
+    "dod4_post_login_redirect_sync_no_flicker": {
+      "pass": false,
+      "details": {
+        "attempted": true,
+        "loginRoute": "http://127.0.0.1:4173/auth/login",
+        "hasEmailInput": true,
+        "hasSubmitAction": true,
+        "clicked": true,
+        "redirectToMarket": false,
+        "finalUrl": "http://127.0.0.1:4173/auth/login",
+        "tokenSyncDetected": false,
+        "noFlicker": false,
+        "details": [
+          "提交动作点击失败",
+          "点击后未跳转到 /market",
+          "未检测到本地会话/Token同步迹象",
+          "未满足无闪烁判定（含回跳或未完成跳转）",
+          "flowDurationMs=8035"
+        ]
+      }
+    }
+  },
+  "finalPass": false
+}
