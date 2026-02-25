@@ -169,6 +169,6 @@
 	{/snippet}
 
 	{#snippet footer()}
-		<a href="/auth/register">新用户注册（邀请码必填）</a>
+		<a href="/auth/login">返回登录</a>
 	{/snippet}
 </AuthFrame>
