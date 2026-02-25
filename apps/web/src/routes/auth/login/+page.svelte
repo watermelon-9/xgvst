@@ -111,10 +111,10 @@
 
 <main class="auth-shell auth-shell-login">
 	<section class="auth-card auth-card-login" data-auth-flow="email-password" data-auth-alt-entry="none">
-		<aside class="auth-login-brand" aria-label="品牌信息">
+		<aside class="auth-side auth-side-login" aria-label="品牌信息">
 			<h1>西瓜说股</h1>
-			<p class="auth-login-brand-sub">智能版块联动 · VAR7 主力吸筹分析平台</p>
-			<div class="auth-login-tags" aria-hidden="true">
+			<p>智能版块联动 · VAR7 主力吸筹分析平台</p>
+			<div class="auth-side-tags" aria-hidden="true">
 				<span>概念/行业/地域</span>
 				<span>K线 + 成交量 + VAR7</span>
 				<span>红紫主题</span>
@@ -122,7 +122,7 @@
 			<p class="auth-login-brand-foot">© Xigua Quant Studio</p>
 		</aside>
 
-		<div class="auth-login-form-panel">
+		<div class="auth-main-panel">
 			<header class="auth-head">
 				<h1>账号登录</h1>
 				<p>请输入邮箱和密码进入西瓜说股</p>

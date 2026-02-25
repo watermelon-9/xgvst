@@ -53,85 +53,98 @@
 </script>
 
 <main class="auth-shell auth-shell-forgot">
-	<section class="auth-card-simple" data-auth-flow="email-password" data-auth-alt-entry="none">
-		<header class="auth-head auth-head-plain">
+	<section class="auth-card auth-card-forgot" data-auth-flow="email-password" data-auth-alt-entry="none">
+		<aside class="auth-side auth-side-forgot" aria-label="找回说明">
 			<h1>忘记密码</h1>
-			<p>请输入注册邮箱 + 邀请码，并设置新密码。验证通过后将直接重置密码。</p>
-			<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
-				仅邮箱账号体系，不提供手机号/微信/三方找回入口。
-			</p>
-		</header>
+			<p>通过注册邮箱 + 邀请码校验后，快速重置并回到登录流程。</p>
+			<div class="auth-side-tags" aria-hidden="true">
+				<span>仅邮箱找回</span>
+				<span>邀请码校验</span>
+				<span>一致交互</span>
+			</div>
+			<p class="auth-login-brand-foot">© Xigua Quant Studio</p>
+		</aside>
 
-		<form class="auth-form auth-form-simple" novalidate onsubmit={onSubmit}>
-			<label class="auth-label" for="forgot-email">邮箱</label>
-			<input
-				id="forgot-email"
-				type="email"
-				name="email"
-				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
-				bind:value={email}
-				placeholder="请输入注册邮箱"
-				autocomplete="email"
-				required
-			/>
-			{#if emailError}
-				<p class="auth-error">{emailError}</p>
-			{/if}
+		<div class="auth-main-panel">
+			<header class="auth-head">
+				<h1>重置密码</h1>
+				<p>请输入注册邮箱 + 邀请码，并设置新密码。验证通过后将直接重置密码。</p>
+				<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
+					仅邮箱账号体系，不提供手机号/微信/三方找回入口。
+				</p>
+			</header>
 
-			<label class="auth-label" for="forgot-invite">邀请码</label>
-			<input
-				id="forgot-invite"
-				type="text"
-				name="inviteCode"
-				class={`auth-field ${inviteError ? 'is-invalid' : ''}`}
-				bind:value={inviteCode}
-				placeholder="请输入邀请码"
-				autocomplete="off"
-				required
-			/>
-			{#if inviteError}
-				<p class="auth-error">{inviteError}</p>
-			{/if}
+			<form class="auth-form" novalidate onsubmit={onSubmit}>
+				<label class="auth-label" for="forgot-email">邮箱</label>
+				<input
+					id="forgot-email"
+					type="email"
+					name="email"
+					class={`auth-field ${emailError ? 'is-invalid' : ''}`}
+					bind:value={email}
+					placeholder="请输入注册邮箱"
+					autocomplete="email"
+					required
+				/>
+				{#if emailError}
+					<p class="auth-error">{emailError}</p>
+				{/if}
 
-			<label class="auth-label" for="forgot-password">新密码</label>
-			<input
-				id="forgot-password"
-				type="password"
-				name="newPassword"
-				class={`auth-field ${newPasswordError ? 'is-invalid' : ''}`}
-				bind:value={newPassword}
-				placeholder="至少6位"
-				autocomplete="new-password"
-				required
-			/>
-			{#if newPasswordError}
-				<p class="auth-error">{newPasswordError}</p>
-			{/if}
+				<label class="auth-label" for="forgot-invite">邀请码</label>
+				<input
+					id="forgot-invite"
+					type="text"
+					name="inviteCode"
+					class={`auth-field ${inviteError ? 'is-invalid' : ''}`}
+					bind:value={inviteCode}
+					placeholder="请输入邀请码"
+					autocomplete="off"
+					required
+				/>
+				{#if inviteError}
+					<p class="auth-error">{inviteError}</p>
+				{/if}
 
-			<label class="auth-label" for="forgot-confirm">确认新密码</label>
-			<input
-				id="forgot-confirm"
-				type="password"
-				name="confirmPassword"
-				class={`auth-field ${confirmError ? 'is-invalid' : ''}`}
-				bind:value={confirmPassword}
-				placeholder="请再次输入新密码"
-				autocomplete="new-password"
-				required
-			/>
-			{#if confirmError}
-				<p class="auth-error">{confirmError}</p>
-			{/if}
+				<label class="auth-label" for="forgot-password">新密码</label>
+				<input
+					id="forgot-password"
+					type="password"
+					name="newPassword"
+					class={`auth-field ${newPasswordError ? 'is-invalid' : ''}`}
+					bind:value={newPassword}
+					placeholder="至少6位"
+					autocomplete="new-password"
+					required
+				/>
+				{#if newPasswordError}
+					<p class="auth-error">{newPasswordError}</p>
+				{/if}
 
-			<button type="submit" class="auth-submit" disabled={!canSubmit}>
-				{loading ? '验证中…' : '验证并重置密码'}
-			</button>
-		</form>
+				<label class="auth-label" for="forgot-confirm">确认新密码</label>
+				<input
+					id="forgot-confirm"
+					type="password"
+					name="confirmPassword"
+					class={`auth-field ${confirmError ? 'is-invalid' : ''}`}
+					bind:value={confirmPassword}
+					placeholder="请再次输入新密码"
+					autocomplete="new-password"
+					required
+				/>
+				{#if confirmError}
+					<p class="auth-error">{confirmError}</p>
+				{/if}
 
-		<footer class="auth-foot">
-			<a href="/auth/login">返回登录</a>
-			<a href="/auth/register">新用户注册</a>
-			<a href="/">返回首页</a>
-		</footer>
+				<button type="submit" class="auth-submit" disabled={!canSubmit}>
+					{loading ? '验证中…' : '验证并重置密码'}
+				</button>
+			</form>
+
+			<footer class="auth-foot">
+				<a href="/auth/login">返回登录</a>
+				<a href="/auth/register">新用户注册</a>
+				<a href="/">返回首页</a>
+			</footer>
+		</div>
 	</section>
 </main>
