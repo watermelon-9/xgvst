@@ -55,7 +55,7 @@
 <AuthFrame
 	tone="register"
 	sideAriaLabel="注册说明"
-	sideTitle="新用户注册"
+	sideTitle="西瓜说股"
 	sideDescription="邮箱体系 + 邀请码机制，注册完成后可直接进入行情系统。"
 	sideTags={['仅邮箱账号', '邀请码必填', '红紫主题']}
 	headTitle="创建账号"

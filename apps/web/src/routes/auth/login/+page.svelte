@@ -130,7 +130,7 @@
 				name="email"
 				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
 				bind:value={email}
-				placeholder="vienh642@gmail.com"
+				placeholder="xgvst@gmail.com"
 				autocomplete="email"
 				required
 			/>

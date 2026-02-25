@@ -56,7 +56,7 @@
 <AuthFrame
 	tone="forgot"
 	sideAriaLabel="找回说明"
-	sideTitle="忘记密码"
+	sideTitle="西瓜说股"
 	sideDescription="通过注册邮箱 + 邀请码校验后，快速重置并回到登录流程。"
 	sideTags={['仅邮箱找回', '邀请码校验', '一致交互']}
 	headTitle="重置密码"
