@@ -95,7 +95,7 @@
 	}
 </script>
 
-<main class="auth-shell">
+<main class="auth-shell auth-shell-login">
 	<section class="auth-card auth-card-login glass-card" data-auth-flow="email-password" data-auth-alt-entry="none">
 		<header class="auth-head">
 			<p class="auth-eyebrow">XGVST v2</p>

@@ -832,6 +832,13 @@ a {
 		linear-gradient(138deg, #321033 2%, #25124a 44%, #110b22 100%);
 }
 
+.auth-shell-login {
+	background:
+		radial-gradient(circle at 8% 14%, rgb(255 255 255 / 18%), transparent 36%),
+		radial-gradient(circle at 92% 92%, rgb(255 255 255 / 12%), transparent 42%),
+		linear-gradient(120deg, #ff4e5f 0%, #d94ca9 48%, #9b4dff 100%);
+}
+
 .auth-card {
 	width: min(100%, 430px);
 	padding: 1.4rem 1.1rem 1.15rem;
