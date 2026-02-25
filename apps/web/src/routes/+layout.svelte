@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import AppHeader from '$lib/components/AppHeader.svelte';
+	import ToastViewport from '$lib/components/ToastViewport.svelte';
 	import { initPwa } from '$lib/pwa';
 	import { FINANCE_THEME } from '$lib/theme/tokens';
 	import { resolveThemeModeFromEnv, type ThemeMode, type ThemeValue } from '$lib/theme/env';
@@ -50,6 +53,8 @@
 		applyResolvedTheme(targetTheme);
 	};
 
+	const isAuthRoute = $derived(page.url.pathname.startsWith('/auth'));
+
 	onMount(() => {
 		themeMeta = document.querySelector('meta[name="theme-color"]');
 		const forcedMode = new URLSearchParams(window.location.search).get('theme');
@@ -90,4 +95,9 @@
 	<title>XGVST — Master Volatility. Master Markets.</title>
 </svelte:head>
 
+{#if !isAuthRoute}
+	<AppHeader />
+{/if}
+
 {@render children()}
+<ToastViewport />
