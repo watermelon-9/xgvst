@@ -66,7 +66,7 @@
 
 			{@render form()}
 
-			<footer class={`auth-foot ${footCentered ? 'auth-foot-center' : ''}`}>
+			<footer class={`auth-foot auth-foot-${tone} ${footCentered ? 'auth-foot-center' : ''}`}>
 				{@render footer()}
 			</footer>
 		</div>

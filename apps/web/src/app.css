@@ -1215,6 +1215,10 @@ a {
 	justify-content: center;
 }
 
+.auth-foot-login {
+	margin-top: 12px;
+}
+
 .auth-foot a {
 	display: inline-flex;
 	align-items: center;

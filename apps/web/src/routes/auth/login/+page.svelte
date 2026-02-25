@@ -173,6 +173,6 @@
 	{/snippet}
 
 	{#snippet footer()}
-		<a href="/auth/register">新用户注册（邀请码必填）</a>
+		<a class="auth-login-entry" href="/auth/register">新用户注册（邀请码必填）</a>
 	{/snippet}
 </AuthFrame>
