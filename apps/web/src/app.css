@@ -1090,6 +1090,10 @@ a {
 	color: #80879d;
 }
 
+.auth-login-form-panel .auth-head p {
+	color: #67708a;
+}
+
 .auth-login-form-panel .auth-sentinel,
 .auth-main-panel .auth-sentinel {
 	display: none;
@@ -1118,6 +1122,10 @@ a {
 	border-radius: var(--xg-radius-sm);
 }
 
+.auth-card-login .auth-field::placeholder {
+	color: #626b85;
+}
+
 .auth-card-login .auth-field:focus,
 .auth-card-register .auth-field:focus,
 .auth-card-forgot .auth-field:focus,
@@ -1134,6 +1142,10 @@ a {
 	color: #d63d6f;
 }
 
+.auth-card-login .auth-error {
+	color: #cb2f63;
+}
+
 .auth-meta-row {
 	display: flex;
 	align-items: center;
@@ -1147,6 +1159,10 @@ a {
 	gap: 0.4rem;
 	font-size: 0.84rem;
 	color: #707792;
+}
+
+.auth-card-login .auth-check {
+	color: #6b7288;
 }
 
 .auth-check input {
