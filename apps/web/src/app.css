@@ -907,7 +907,8 @@ a {
 .auth-card {
 	--auth-card-height: 620px;
 	width: min(1120px, 100%);
-	height: var(--auth-card-height);
+	min-height: var(--auth-card-height);
+	height: auto;
 	display: grid;
 	grid-template-columns: minmax(460px, 48fr) minmax(500px, 52fr);
 	border-radius: 24px;
