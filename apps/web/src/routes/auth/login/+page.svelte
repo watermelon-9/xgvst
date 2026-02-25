@@ -16,6 +16,7 @@
 	let email = $state('');
 	let password = $state('');
 	let loading = $state(false);
+	let triedSubmit = $state(false);
 
 	const emailError = $derived.by(() => {
 		if (!email.trim()) return '请输入邮箱地址';
@@ -30,6 +31,8 @@
 	});
 
 	const canSubmit = $derived(!loading && !emailError && !passwordError);
+	const showEmailError = $derived(triedSubmit || !!email.trim());
+	const showPasswordError = $derived(triedSubmit || !!password);
 
 	const ensureAuthApi = async (): Promise<AuthApi> => {
 		if (authApi) return authApi;
@@ -68,6 +71,7 @@
 	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		if (!canSubmit) {
+			triedSubmit = true;
 			toast.error('请先修正表单错误后再登录');
 			return;
 		}
@@ -128,13 +132,13 @@
 				id="login-email"
 				type="email"
 				name="email"
-				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showEmailError && emailError ? 'is-invalid' : ''}`}
 				bind:value={email}
 				placeholder="xgvst@gmail.com"
 				autocomplete="email"
 				required
 			/>
-			{#if emailError}
+			{#if showEmailError && emailError}
 				<p class="auth-error">{emailError}</p>
 			{/if}
 
@@ -144,13 +148,13 @@
 				type="password"
 				name="password"
 				data-auth-credential="password"
-				class={`auth-field ${passwordError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showPasswordError && passwordError ? 'is-invalid' : ''}`}
 				bind:value={password}
 				placeholder="••••••••••••••••"
 				autocomplete="current-password"
 				required
 			/>
-			{#if passwordError}
+			{#if showPasswordError && passwordError}
 				<p class="auth-error">{passwordError}</p>
 			{/if}
 

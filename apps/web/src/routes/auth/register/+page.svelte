@@ -12,6 +12,7 @@
 	let inviteCode = $state('');
 	let remember = $state(true);
 	let loading = $state(false);
+	let triedSubmit = $state(false);
 
 	const emailError = $derived.by(() => {
 		if (!email.trim()) return '请输入邮箱地址';
@@ -37,10 +38,15 @@
 	});
 
 	const canSubmit = $derived(!loading && !emailError && !passwordError && !confirmError && !inviteError);
+	const showEmailError = $derived(triedSubmit || !!email.trim());
+	const showPasswordError = $derived(triedSubmit || !!password);
+	const showConfirmError = $derived(triedSubmit || !!confirmPassword);
+	const showInviteError = $derived(triedSubmit || !!inviteCode.trim());
 
 	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		if (!canSubmit) {
+			triedSubmit = true;
 			toast.error('请先修正表单错误后再提交');
 			return;
 		}
@@ -68,13 +74,13 @@
 				id="register-email"
 				type="email"
 				name="email"
-				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showEmailError && emailError ? 'is-invalid' : ''}`}
 				bind:value={email}
 				placeholder="请输入邮箱地址"
 				autocomplete="email"
 				required
 			/>
-			{#if emailError}
+			{#if showEmailError && emailError}
 				<p class="auth-error">{emailError}</p>
 			{/if}
 
@@ -83,13 +89,13 @@
 				id="register-password"
 				type="password"
 				name="password"
-				class={`auth-field ${passwordError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showPasswordError && passwordError ? 'is-invalid' : ''}`}
 				bind:value={password}
 				placeholder="至少6位"
 				autocomplete="new-password"
 				required
 			/>
-			{#if passwordError}
+			{#if showPasswordError && passwordError}
 				<p class="auth-error">{passwordError}</p>
 			{/if}
 
@@ -98,13 +104,13 @@
 				id="register-confirm"
 				type="password"
 				name="confirmPassword"
-				class={`auth-field ${confirmError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showConfirmError && confirmError ? 'is-invalid' : ''}`}
 				bind:value={confirmPassword}
 				placeholder="请再次输入密码"
 				autocomplete="new-password"
 				required
 			/>
-			{#if confirmError}
+			{#if showConfirmError && confirmError}
 				<p class="auth-error">{confirmError}</p>
 			{/if}
 
@@ -113,13 +119,13 @@
 				id="register-invite"
 				type="text"
 				name="inviteCode"
-				class={`auth-field ${inviteError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showInviteError && inviteError ? 'is-invalid' : ''}`}
 				bind:value={inviteCode}
 				placeholder="请输入邀请码"
 				autocomplete="off"
 				required
 			/>
-			{#if inviteError}
+			{#if showInviteError && inviteError}
 				<p class="auth-error">{inviteError}</p>
 			{/if}
 

@@ -11,6 +11,7 @@
 	let newPassword = $state('');
 	let confirmPassword = $state('');
 	let loading = $state(false);
+	let triedSubmit = $state(false);
 
 	const emailError = $derived.by(() => {
 		if (!email.trim()) return '请输入注册邮箱';
@@ -38,10 +39,15 @@
 	const canSubmit = $derived(
 		!loading && !emailError && !inviteError && !newPasswordError && !confirmError
 	);
+	const showEmailError = $derived(triedSubmit || !!email.trim());
+	const showInviteError = $derived(triedSubmit || !!inviteCode.trim());
+	const showNewPasswordError = $derived(triedSubmit || !!newPassword);
+	const showConfirmError = $derived(triedSubmit || !!confirmPassword);
 
 	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		if (!canSubmit) {
+			triedSubmit = true;
 			toast.error('请先修正表单后再提交');
 			return;
 		}
@@ -70,13 +76,13 @@
 				id="forgot-email"
 				type="email"
 				name="email"
-				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showEmailError && emailError ? 'is-invalid' : ''}`}
 				bind:value={email}
 				placeholder="请输入注册邮箱"
 				autocomplete="email"
 				required
 			/>
-			{#if emailError}
+			{#if showEmailError && emailError}
 				<p class="auth-error">{emailError}</p>
 			{/if}
 
@@ -85,13 +91,13 @@
 				id="forgot-invite"
 				type="text"
 				name="inviteCode"
-				class={`auth-field ${inviteError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showInviteError && inviteError ? 'is-invalid' : ''}`}
 				bind:value={inviteCode}
 				placeholder="请输入邀请码"
 				autocomplete="off"
 				required
 			/>
-			{#if inviteError}
+			{#if showInviteError && inviteError}
 				<p class="auth-error">{inviteError}</p>
 			{/if}
 
@@ -100,13 +106,13 @@
 				id="forgot-password"
 				type="password"
 				name="newPassword"
-				class={`auth-field ${newPasswordError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showNewPasswordError && newPasswordError ? 'is-invalid' : ''}`}
 				bind:value={newPassword}
 				placeholder="至少6位"
 				autocomplete="new-password"
 				required
 			/>
-			{#if newPasswordError}
+			{#if showNewPasswordError && newPasswordError}
 				<p class="auth-error">{newPasswordError}</p>
 			{/if}
 
@@ -115,13 +121,13 @@
 				id="forgot-confirm"
 				type="password"
 				name="confirmPassword"
-				class={`auth-field ${confirmError ? 'is-invalid' : ''}`}
+				class={`auth-field ${showConfirmError && confirmError ? 'is-invalid' : ''}`}
 				bind:value={confirmPassword}
 				placeholder="请再次输入新密码"
 				autocomplete="new-password"
 				required
 			/>
-			{#if confirmError}
+			{#if showConfirmError && confirmError}
 				<p class="auth-error">{confirmError}</p>
 			{/if}
 
