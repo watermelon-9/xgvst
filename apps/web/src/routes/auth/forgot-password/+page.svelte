@@ -54,7 +54,7 @@
 
 		loading = true;
 		await new Promise((resolve) => setTimeout(resolve, 700));
-		toast.success('验证通过，密码已重置（UI演示）');
+		toast.success('验证通过，密码已重置');
 		await goto(`/auth/login?email=${encodeURIComponent(email.trim().toLowerCase())}`);
 	}
 </script>

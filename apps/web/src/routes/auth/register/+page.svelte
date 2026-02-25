@@ -62,10 +62,10 @@
 	tone="register"
 	sideAriaLabel="注册说明"
 	sideTitle="西瓜说股"
-	sideDescription="邮箱体系 + 邀请码机制，注册完成后可直接进入行情系统。"
+	sideDescription="邮箱体系 + 邀请码机制，注册成功后请使用账号密码登录。"
 	sideTags={['仅邮箱账号', '邀请码必填', '红紫主题']}
 	headTitle="创建账号"
-	headDescription="注册后自动登录，注册账号必须为邮箱，邀请码为必填项。"
+	headDescription="注册账号必须为邮箱，邀请码为必填项；注册成功后请返回登录。"
 >
 	{#snippet form()}
 		<form class="auth-form" novalidate onsubmit={onSubmit}>
