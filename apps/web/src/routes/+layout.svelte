@@ -50,18 +50,6 @@
 		applyResolvedTheme(targetTheme);
 	};
 
-	const setThemeMode = (nextMode: ThemeMode) => {
-		syncTheme(nextMode);
-		if (typeof window !== 'undefined') {
-			window.localStorage.setItem(THEME_MODE_KEY, nextMode);
-		}
-	};
-
-	const toggleTheme = () => {
-		const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
-		setThemeMode(nextTheme);
-	};
-
 	onMount(() => {
 		themeMeta = document.querySelector('meta[name="theme-color"]');
 		const forcedMode = new URLSearchParams(window.location.search).get('theme');
@@ -101,30 +89,5 @@
 	<link rel="preconnect" href="https://xgvst-workers.viehh642.workers.dev" crossorigin="anonymous" />
 	<title>XGVST — Master Volatility. Master Markets.</title>
 </svelte:head>
-
-<header class="app-header glass">
-	<a class="brand-link" href="/" aria-label="返回首页">
-		<div class="brand-emblem" aria-hidden="true">XG</div>
-		<div class="brand-copy">
-			<div class="brand-main neon-text">XGVST</div>
-			<div class="brand-sub">Master Volatility. Master Markets.</div>
-		</div>
-	</a>
-
-	<div class="header-actions">
-		<div class="user-chip">Hoeltu ▼</div>
-		<button type="button" class="theme-toggle" onclick={toggleTheme} aria-label="切换亮暗主题">
-			{resolvedTheme === 'light' ? '🌙 暗色' : '☀️ 亮色'}
-		</button>
-		<button
-			type="button"
-			class={`theme-toggle ${themeMode === 'system' ? 'is-active' : ''}`}
-			onclick={() => setThemeMode('system')}
-			aria-label="跟随系统主题"
-		>
-			系统
-		</button>
-	</div>
-</header>
 
 {@render children()}

@@ -1,0 +1,55 @@
+{
+  "url": "https://xgvst-web.pages.dev/market",
+  "durationMs": 30000,
+  "generatedAt": "2026-02-24T20:32:10.300Z",
+  "results": [
+    {
+      "viewport": {
+        "name": "pc",
+        "width": 1920,
+        "height": 1080,
+        "deviceScaleFactor": 1,
+        "isMobile": false
+      },
+      "elapsedMs": 30011,
+      "frames": 1300,
+      "fps": 43.32,
+      "cls": 0,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "avgLongTaskMs": 0
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 1024,
+        "height": 1366,
+        "deviceScaleFactor": 2,
+        "isMobile": false
+      },
+      "elapsedMs": 30008,
+      "frames": 1294,
+      "fps": 43.12,
+      "cls": 0,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "avgLongTaskMs": 0
+    },
+    {
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844,
+        "deviceScaleFactor": 3,
+        "isMobile": true
+      },
+      "elapsedMs": 30008,
+      "frames": 1296,
+      "fps": 43.19,
+      "cls": 0,
+      "longTaskCount": 0,
+      "maxLongTaskMs": 0,
+      "avgLongTaskMs": 0
+    }
+  ]
+}
