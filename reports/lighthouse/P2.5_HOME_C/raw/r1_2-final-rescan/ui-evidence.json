@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-02-25T07:49:05.371Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "profiles": [
+    {
+      "profile": "desktop",
+      "routes": [
+        {
+          "route": "/auth/login",
+          "navCount": 0,
+          "emailInputs": 1,
+          "telInputs": 0,
+          "forbiddenProviderCount": 0,
+          "forbiddenSamples": [],
+          "hasEmailText": true,
+          "pass": true
+        },
+        {
+          "route": "/auth/register",
+          "navCount": 0,
+          "emailInputs": 1,
+          "telInputs": 0,
+          "forbiddenProviderCount": 0,
+          "forbiddenSamples": [],
+          "hasEmailText": true,
+          "pass": true
+        },
+        {
+          "route": "/auth/forgot-password",
+          "navCount": 0,
+          "emailInputs": 1,
+          "telInputs": 0,
+          "forbiddenProviderCount": 0,
+          "forbiddenSamples": [],
+          "hasEmailText": true,
+          "pass": true
+        }
+      ],
+      "postLogin": {
+        "attempted": true,
+        "finalUrl": "http://127.0.0.1:4173/market?authFlow=login-success&sync=degraded&uid=p25-home-r1%40example.com&redirect=%2Fmarket",
+        "pass": true
+      }
+    },
+    {
+      "profile": "mobile",
+      "routes": [
+        {
+          "route": "/auth/login",
+          "navCount": 0,
+          "emailInputs": 1,
+          "telInputs": 0,
+          "forbiddenProviderCount": 0,
+          "forbiddenSamples": [],
+          "hasEmailText": true,
+          "pass": true
+        },
+        {
+          "route": "/auth/register",
+          "navCount": 0,
+          "emailInputs": 1,
+          "telInputs": 0,
+          "forbiddenProviderCount": 0,
+          "forbiddenSamples": [],
+          "hasEmailText": true,
+          "pass": true
+        },
+        {
+          "route": "/auth/forgot-password",
+          "navCount": 0,
+          "emailInputs": 1,
+          "telInputs": 0,
+          "forbiddenProviderCount": 0,
+          "forbiddenSamples": [],
+          "hasEmailText": true,
+          "pass": true
+        }
+      ],
+      "postLogin": {
+        "attempted": false
+      }
+    }
+  ],
+  "authPass": true,
+  "loginClosurePass": true
+}

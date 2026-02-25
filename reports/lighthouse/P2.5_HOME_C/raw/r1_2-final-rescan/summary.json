@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-02-25T07:50:41.843Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "gitHead": "78dd659",
+  "lighthouse": {
+    "desktop": {
+      "route": "/",
+      "mode": "desktop",
+      "file": "reports/lighthouse/P2.5_HOME_C/raw/r1_2-final-rescan/lh/home-desktop-a11y.json",
+      "a11y": 1,
+      "pass": true
+    },
+    "mobile": {
+      "route": "/",
+      "mode": "mobile",
+      "file": "reports/lighthouse/P2.5_HOME_C/raw/r1_2-final-rescan/lh/home-mobile-a11y.json",
+      "a11y": 1,
+      "pass": true
+    }
+  },
+  "regression": {
+    "authNoNavAndEmailOnlyPass": true,
+    "loginClosurePass": true,
+    "loginFinalUrl": "http://127.0.0.1:4173/market?authFlow=login-success&sync=degraded&uid=p25-home-r1%40example.com&redirect=%2Fmarket"
+  },
+  "finalPass": true
+}
