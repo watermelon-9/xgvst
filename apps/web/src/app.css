@@ -1024,6 +1024,7 @@ a {
 .auth-main-panel {
 	display: grid;
 	grid-template-rows: auto auto auto;
+	align-content: start;
 	gap: 16px;
 	padding: 36px 34px 30px;
 	background: linear-gradient(180deg, #fff 0%, #fcfaff 100%);
