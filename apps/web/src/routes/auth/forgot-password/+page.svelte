@@ -29,40 +29,52 @@
 	}
 </script>
 
-<main class="auth-shell">
-	<section class="auth-card glass-card" data-auth-flow="email-password" data-auth-alt-entry="none">
-		<header class="auth-head">
-			<p class="auth-eyebrow">XGVST v2</p>
+<main class="auth-shell auth-shell-forgot">
+	<section class="auth-card auth-card-forgot" data-auth-flow="email-password" data-auth-alt-entry="none">
+		<aside class="auth-side auth-side-forgot" aria-label="找回密码品牌信息">
 			<h1>找回密码</h1>
-			<p>请输入注册邮箱，我们会发送重置链接（演示环境为模拟发送）。</p>
-			<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
-				仅邮箱账号体系，不提供手机号/微信/三方找回入口。
-			</p>
-		</header>
+			<p>通过邮箱重置密码，继续访问你的红紫交易台。</p>
+			<div class="auth-side-tags" aria-hidden="true">
+				<span>邮箱验证</span>
+				<span>安全重置</span>
+				<span>快速恢复</span>
+			</div>
+		</aside>
 
-		<form class="auth-form" novalidate onsubmit={onSubmit}>
-			<label class="auth-label" for="forgot-email">邮箱</label>
-			<input
-				id="forgot-email"
-				type="email"
-				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
-				bind:value={email}
-				placeholder="name@example.com"
-				autocomplete="email"
-				required
-			/>
-			{#if emailError}
-				<p class="auth-error">{emailError}</p>
-			{/if}
+		<div class="auth-main-panel">
+			<header class="auth-head auth-head-plain">
+				<h2>重置入口</h2>
+				<p>请输入注册邮箱，我们会发送重置链接（演示环境为模拟发送）。</p>
+				<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
+					仅邮箱账号体系，不提供手机号/微信/三方找回入口。
+				</p>
+			</header>
 
-			<button type="submit" class="auth-submit" disabled={!canSubmit}>
-				{loading ? '发送中...' : '发送重置邮件'}
-			</button>
-		</form>
+			<form class="auth-form" novalidate onsubmit={onSubmit}>
+				<label class="auth-label" for="forgot-email">邮箱</label>
+				<input
+					id="forgot-email"
+					type="email"
+					name="email"
+					class={`auth-field ${emailError ? 'is-invalid' : ''}`}
+					bind:value={email}
+					placeholder="name@example.com"
+					autocomplete="email"
+					required
+				/>
+				{#if emailError}
+					<p class="auth-error">{emailError}</p>
+				{/if}
 
-		<footer class="auth-foot">
-			<a href="/auth/login">返回登录</a>
-			<a href="/auth/register">去注册</a>
-		</footer>
+				<button type="submit" class="auth-submit" disabled={!canSubmit}>
+					{loading ? '发送中…' : '发送重置邮件'}
+				</button>
+			</form>
+
+			<footer class="auth-foot">
+				<a href="/auth/login">返回登录</a>
+				<a href="/auth/register">去注册</a>
+			</footer>
+		</div>
 	</section>
 </main>
