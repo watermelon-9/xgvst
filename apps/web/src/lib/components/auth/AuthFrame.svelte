@@ -55,7 +55,7 @@
 			<p class="auth-login-brand-foot">© Xigua Quant Studio</p>
 		</aside>
 
-		<div class="auth-main-panel">
+		<div class={`auth-main-panel auth-main-panel-${tone}`}>
 			<header class="auth-head">
 				<h1>{headTitle}</h1>
 				<p>{headDescription}</p>
