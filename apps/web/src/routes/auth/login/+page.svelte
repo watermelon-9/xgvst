@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { useToast } from '$lib/ui/toast.svelte';
 	import type { useAuth as useAuthFactory } from '$lib/auth/useAuth.svelte';
+	import AuthFrame from '$lib/components/auth/AuthFrame.svelte';
 
 	type AuthApi = ReturnType<typeof useAuthFactory>;
 
@@ -109,76 +110,65 @@
 	}
 </script>
 
-<main class="auth-shell auth-shell-login">
-	<section class="auth-card auth-card-login" data-auth-flow="email-password" data-auth-alt-entry="none">
-		<aside class="auth-side auth-side-login" aria-label="品牌信息">
-			<h1>西瓜说股</h1>
-			<p>智能版块联动 · VAR7 主力吸筹分析平台</p>
-			<div class="auth-side-tags" aria-hidden="true">
-				<span>概念/行业/地域</span>
-				<span>K线 + 成交量 + VAR7</span>
-				<span>红紫主题</span>
+<AuthFrame
+	tone="login"
+	sideAriaLabel="品牌信息"
+	sideTitle="西瓜说股"
+	sideDescription="智能版块联动 · VAR7 主力吸筹分析平台"
+	sideTags={['概念/行业/地域', 'K线 + 成交量 + VAR7', '红紫主题']}
+	headTitle="账号登录"
+	headDescription="请输入邮箱和密码进入西瓜说股"
+	headSentinel="认证入口：仅邮箱（含密码凭证），不提供手机号/微信/三方登录。"
+	footCentered={true}
+>
+	{#snippet form()}
+		<form class="auth-form" novalidate onsubmit={onSubmit} data-auth-entry-rule="email-only">
+			<label class="auth-label" for="login-email">邮箱</label>
+			<input
+				id="login-email"
+				type="email"
+				name="email"
+				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
+				bind:value={email}
+				placeholder="vienh642@gmail.com"
+				autocomplete="email"
+				required
+			/>
+			{#if emailError}
+				<p class="auth-error">{emailError}</p>
+			{/if}
+
+			<label class="auth-label" for="login-password">密码</label>
+			<input
+				id="login-password"
+				type="password"
+				name="password"
+				data-auth-credential="password"
+				class={`auth-field ${passwordError ? 'is-invalid' : ''}`}
+				bind:value={password}
+				placeholder="••••••••••••••••"
+				autocomplete="current-password"
+				required
+			/>
+			{#if passwordError}
+				<p class="auth-error">{passwordError}</p>
+			{/if}
+
+			<div class="auth-meta-row">
+				<label class="auth-check">
+					<input type="checkbox" name="remember" checked />
+					<span>记住账号</span>
+				</label>
+				<a class="auth-link" href="/auth/forgot-password">忘记密码?</a>
 			</div>
-			<p class="auth-login-brand-foot">© Xigua Quant Studio</p>
-		</aside>
 
-		<div class="auth-main-panel">
-			<header class="auth-head">
-				<h1>账号登录</h1>
-				<p>请输入邮箱和密码进入西瓜说股</p>
-				<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
-					认证入口：仅邮箱（含密码凭证），不提供手机号/微信/三方登录。
-				</p>
-			</header>
+			<button type="submit" class="auth-submit" disabled={!canSubmit}>
+				{loading ? '登录中…' : '登录'}
+			</button>
+		</form>
+	{/snippet}
 
-			<form class="auth-form" novalidate onsubmit={onSubmit} data-auth-entry-rule="email-only">
-				<label class="auth-label" for="login-email">邮箱</label>
-				<input
-					id="login-email"
-					type="email"
-					name="email"
-					class={`auth-field ${emailError ? 'is-invalid' : ''}`}
-					bind:value={email}
-					placeholder="vienh642@gmail.com"
-					autocomplete="email"
-					required
-				/>
-				{#if emailError}
-					<p class="auth-error">{emailError}</p>
-				{/if}
-
-				<label class="auth-label" for="login-password">密码</label>
-				<input
-					id="login-password"
-					type="password"
-					name="password"
-					data-auth-credential="password"
-					class={`auth-field ${passwordError ? 'is-invalid' : ''}`}
-					bind:value={password}
-					placeholder="••••••••••••••••"
-					autocomplete="current-password"
-					required
-				/>
-				{#if passwordError}
-					<p class="auth-error">{passwordError}</p>
-				{/if}
-
-				<div class="auth-meta-row">
-					<label class="auth-check">
-						<input type="checkbox" name="remember" checked />
-						<span>记住账号</span>
-					</label>
-					<a class="auth-link" href="/auth/forgot-password">忘记密码?</a>
-				</div>
-
-				<button type="submit" class="auth-submit" disabled={!canSubmit}>
-					{loading ? '登录中…' : '登录'}
-				</button>
-			</form>
-
-			<footer class="auth-foot auth-foot-center">
-				<a href="/auth/register">新用户注册（邀请码必填）</a>
-			</footer>
-		</div>
-	</section>
-</main>
+	{#snippet footer()}
+		<a href="/auth/register">新用户注册（邀请码必填）</a>
+	{/snippet}
+</AuthFrame>
