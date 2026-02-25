@@ -1,10 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { useToast } from '$lib/ui/toast.svelte';
+	import type { useAuth as useAuthFactory } from '$lib/auth/useAuth.svelte';
 	import AuthFrame from '$lib/components/auth/AuthFrame.svelte';
+
+	type AuthApi = ReturnType<typeof useAuthFactory>;
 
 	const toast = useToast();
 	const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const REGISTER_REDIRECT_TARGET = '/market';
+
+	let authApi = $state<AuthApi | null>(null);
 
 	let email = $state('');
 	let password = $state('');
@@ -43,6 +49,13 @@
 	const showConfirmError = $derived(triedSubmit || !!confirmPassword);
 	const showInviteError = $derived(triedSubmit || !!inviteCode.trim());
 
+	const ensureAuthApi = async (): Promise<AuthApi> => {
+		if (authApi) return authApi;
+		const { useAuth } = await import('$lib/auth/useAuth.svelte');
+		authApi = useAuth();
+		return authApi;
+	};
+
 	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		if (!canSubmit) {
@@ -52,9 +65,31 @@
 		}
 
 		loading = true;
-		await new Promise((resolve) => setTimeout(resolve, 700));
-		toast.success('注册成功，请登录');
-		await goto(`/auth/login?email=${encodeURIComponent(email.trim().toLowerCase())}`);
+		try {
+			await new Promise((resolve) => setTimeout(resolve, 700));
+			const auth = await ensureAuthApi();
+			const normalizedEmail = email.trim().toLowerCase();
+			auth.signIn(normalizedEmail);
+
+			const { mockUniverse } = await import('$lib/api/mock');
+			const syncResult = await auth.syncWatchlist(mockUniverse.watchlist.map((item) => item.symbol));
+			if (syncResult.ok) {
+				toast.success('注册成功，已自动登录并同步自选股');
+			} else {
+				const syncError = syncResult.error ?? '未知错误';
+				toast.info(`注册成功，已自动登录；自选同步异常：${syncError}`);
+			}
+
+			await goto(
+				`${REGISTER_REDIRECT_TARGET}?authFlow=register-success&sync=${syncResult.ok ? 'ok' : 'degraded'}&uid=${encodeURIComponent(normalizedEmail)}&redirect=${encodeURIComponent(REGISTER_REDIRECT_TARGET)}`,
+				{ replaceState: true }
+			);
+		} catch (error) {
+			const message = error instanceof Error ? error.message : String(error);
+			toast.error(`注册失败：${message}`);
+		} finally {
+			loading = false;
+		}
 	}
 </script>
 
