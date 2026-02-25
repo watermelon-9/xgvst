@@ -128,8 +128,10 @@
 			</button>
 		</form>
 
-		<footer class="auth-foot auth-foot-center">
+		<footer class="auth-foot">
 			<a href="/auth/login">返回登录</a>
+			<a href="/auth/register">新用户注册</a>
+			<a href="/">返回首页</a>
 		</footer>
 	</section>
 </main>
