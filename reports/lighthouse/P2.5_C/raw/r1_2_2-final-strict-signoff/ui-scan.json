@@ -1,0 +1,190 @@
+{
+  "generatedAt": "2026-02-25T07:10:52.500Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "ruleRevision": "R1.2.1-rulefix",
+  "ruleChangelog": [
+    "R1.2.1 规则修正：仅邮箱注册/登录 ≠ 禁止密码输入。",
+    "认证页允许 password 输入；不再将 password 作为失败项。",
+    "认证页仍强制：必须包含邮箱输入、不得出现手机号/微信/第三方登录入口、不得出现导航结构。"
+  ],
+  "profiles": [
+    {
+      "profile": "desktop",
+      "routes": [
+        {
+          "route": "/auth/login",
+          "url": "http://127.0.0.1:4173/auth/login",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/login",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 2,
+            "emailInputs": 1,
+            "passwordInputs": 1,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/auth/register",
+          "url": "http://127.0.0.1:4173/auth/register",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 3,
+            "emailInputs": 1,
+            "passwordInputs": 2,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/auth/forgot-password",
+          "url": "http://127.0.0.1:4173/auth/forgot-password",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 1,
+            "passwordInputs": 0,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/market",
+          "url": "http://127.0.0.1:4173/market",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 1,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 1,
+            "passwordInputs": 0,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": null,
+          "notes": []
+        }
+      ],
+      "postLogin": {
+        "attempted": true,
+        "loginRoute": "http://127.0.0.1:4173/auth/login",
+        "hasEmailInput": true,
+        "hasPasswordInput": true,
+        "hasSubmitAction": true,
+        "clicked": true,
+        "redirectToMarket": true,
+        "finalUrl": "http://127.0.0.1:4173/market?authFlow=login-success&sync=degraded&uid=p25-r121%40example.com&redirect=%2Fmarket",
+        "tokenSyncDetected": true,
+        "noFlicker": true,
+        "details": [
+          "flowDurationMs=6122"
+        ]
+      }
+    },
+    {
+      "profile": "mobile",
+      "routes": [
+        {
+          "route": "/auth/login",
+          "url": "http://127.0.0.1:4173/auth/login",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/login",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 2,
+            "emailInputs": 1,
+            "passwordInputs": 1,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/auth/register",
+          "url": "http://127.0.0.1:4173/auth/register",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/register",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 3,
+            "emailInputs": 1,
+            "passwordInputs": 2,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/auth/forgot-password",
+          "url": "http://127.0.0.1:4173/auth/forgot-password",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/auth/forgot-password",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 0,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 1,
+            "passwordInputs": 0,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": true,
+          "notes": []
+        },
+        {
+          "route": "/market",
+          "url": "http://127.0.0.1:4173/market",
+          "status": 200,
+          "finalUrl": "http://127.0.0.1:4173/market",
+          "title": "XGVST — Master Volatility. Master Markets.",
+          "navCount": 1,
+          "inputSummary": {
+            "allInputs": 1,
+            "emailInputs": 1,
+            "passwordInputs": 0,
+            "phoneLikeInputs": 0
+          },
+          "emailTextHit": true,
+          "forbiddenEntryHit": false,
+          "forbiddenEntrySamples": [],
+          "authUiStrictPass": null,
+          "notes": []
+        }
+      ],
+      "postLogin": null
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "generatedAt": "2026-02-25T07:10:52.500Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "thresholds": {
+    "performance": 0.9,
+    "accessibility": 0.9,
+    "cls": 0.1
+  },
+  "authUi": [
+    {
+      "profile": "desktop",
+      "route": "/auth/login",
+      "status": 200,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 1,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "authUiStrictPass": true
+    },
+    {
+      "profile": "desktop",
+      "route": "/auth/register",
+      "status": 200,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 2,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "authUiStrictPass": true
+    },
+    {
+      "profile": "desktop",
+      "route": "/auth/forgot-password",
+      "status": 200,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 0,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "authUiStrictPass": true
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/login",
+      "status": 200,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 1,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "authUiStrictPass": true
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/register",
+      "status": 200,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 2,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "authUiStrictPass": true
+    },
+    {
+      "profile": "mobile",
+      "route": "/auth/forgot-password",
+      "status": 200,
+      "navCount": 0,
+      "emailInputs": 1,
+      "passwordInputs": 0,
+      "phoneLikeInputs": 0,
+      "forbiddenEntryHit": false,
+      "authUiStrictPass": true
+    }
+  ],
+  "postLogin": {
+    "attempted": true,
+    "loginRoute": "http://127.0.0.1:4173/auth/login",
+    "hasEmailInput": true,
+    "hasPasswordInput": true,
+    "hasSubmitAction": true,
+    "clicked": true,
+    "redirectToMarket": true,
+    "finalUrl": "http://127.0.0.1:4173/market?authFlow=login-success&sync=degraded&uid=p25-r121%40example.com&redirect=%2Fmarket",
+    "tokenSyncDetected": true,
+    "noFlicker": true,
+    "details": [
+      "flowDurationMs=6122"
+    ]
+  },
+  "lighthouse": [
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/desktop-auth-forgot-password.json",
+      "route": "/auth/forgot-password",
+      "profile": "desktop",
+      "performance": 1,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/forgot-password"
+    },
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/desktop-auth-login.json",
+      "route": "/auth/login",
+      "profile": "desktop",
+      "performance": 1,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/login"
+    },
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/desktop-auth-register.json",
+      "route": "/auth/register",
+      "profile": "desktop",
+      "performance": 1,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/register"
+    },
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/desktop-market.json",
+      "route": "/market",
+      "profile": "desktop",
+      "performance": 1,
+      "accessibility": 0.95,
+      "cls": 4.3e-05,
+      "finalUrl": "http://127.0.0.1:4173/market"
+    },
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/mobile-auth-forgot-password.json",
+      "route": "/auth/forgot-password",
+      "profile": "mobile",
+      "performance": 0.99,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/forgot-password"
+    },
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/mobile-auth-login.json",
+      "route": "/auth/login",
+      "profile": "mobile",
+      "performance": 0.99,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/login"
+    },
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/mobile-auth-register.json",
+      "route": "/auth/register",
+      "profile": "mobile",
+      "performance": 0.99,
+      "accessibility": 1,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/auth/register"
+    },
+    {
+      "file": "reports/lighthouse/P2.5_C/raw/r1_2_2-final-strict-signoff/lh/mobile-market.json",
+      "route": "/market",
+      "profile": "mobile",
+      "performance": 0.98,
+      "accessibility": 0.95,
+      "cls": 0,
+      "finalUrl": "http://127.0.0.1:4173/market"
+    }
+  ],
+  "doD": {
+    "DoD1_multi_endpoints_and_multidevice": true,
+    "DoD2_auth_pages_no_nav": true,
+    "DoD3_email_only_system_rule": true,
+    "DoD4_allow_email_password_credentials": true,
+    "DoD5_post_login_redirect_market": true,
+    "DoD6_post_login_sync_detected": true,
+    "DoD7_post_login_no_flicker": true,
+    "DoD8_lighthouse_threshold": true
+  },
+  "finalPass": true
+}
