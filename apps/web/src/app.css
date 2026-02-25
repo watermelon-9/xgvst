@@ -843,42 +843,44 @@ a {
 
 .auth-shell-register {
 	background:
-		radial-gradient(circle at 12% 18%, rgb(255 255 255 / 22%), transparent 34%),
-		radial-gradient(circle at 86% 82%, rgb(255 255 255 / 14%), transparent 40%),
-		linear-gradient(124deg, #ff5572 0%, #df4ea7 48%, #9d54ff 100%);
+		radial-gradient(circle at 12% 16%, rgb(255 255 255 / 34%), transparent 36%),
+		radial-gradient(circle at 88% 84%, rgb(255 255 255 / 22%), transparent 42%),
+		linear-gradient(124deg, #ff5e7c 0%, #e356b2 46%, #a35bff 100%);
 }
 
 .auth-shell-forgot {
 	background:
-		radial-gradient(circle at 9% 16%, rgb(255 255 255 / 20%), transparent 34%),
-		radial-gradient(circle at 90% 84%, rgb(255 255 255 / 12%), transparent 42%),
-		linear-gradient(126deg, #ff4e66 0%, #d84ca2 46%, #9453ff 100%);
+		radial-gradient(circle at 10% 14%, rgb(255 255 255 / 32%), transparent 36%),
+		radial-gradient(circle at 90% 86%, rgb(255 255 255 / 20%), transparent 44%),
+		linear-gradient(126deg, #ff5570 0%, #dd53ab 45%, #9f5aff 100%);
 }
 
 .auth-card-simple {
-	width: min(100%, 660px);
-	padding: 1.7rem 1.5rem 1.2rem;
-	border-radius: 1.05rem;
-	background: rgb(248 243 251 / 96%);
-	border: 1px solid rgb(255 255 255 / 55%);
-	box-shadow: 0 22px 40px rgb(66 20 105 / 24%);
+	width: min(100%, 760px);
+	padding: 2.1rem 2rem 1.55rem;
+	border-radius: 1.2rem;
+	background: rgb(255 250 255 / 96%);
+	border: 1px solid rgb(255 255 255 / 72%);
+	box-shadow: 0 24px 56px rgb(96 39 134 / 28%);
 }
 
 .auth-form-simple {
-	margin-top: 0.7rem;
+	margin-top: 1rem;
+	gap: 0.58rem;
 }
 
 .auth-head-plain h1,
 .auth-head-plain h2 {
-	color: #1d2435;
-	font-size: clamp(2rem, 2.2vw, 2.7rem);
-	line-height: 1.06;
+	color: #1c2333;
+	font-size: clamp(2.35rem, 2.8vw, 3.1rem);
+	line-height: 1.04;
+	letter-spacing: -0.01em;
 	margin: 0;
 }
 
 .auth-head-plain p {
-	color: #7f869a;
-	font-size: 0.92rem;
+	color: #6d768e;
+	font-size: 1rem;
 }
 
 .auth-head-plain .auth-sentinel {
@@ -886,27 +888,40 @@ a {
 }
 
 .auth-card-simple .auth-label {
-	color: #47506a;
+	color: #3f4863;
+	font-size: 0.95rem;
+	font-weight: 600;
 }
 
 .auth-card-simple .auth-field {
+	height: 3.1rem;
+	padding: 0.86rem 0.96rem;
+	font-size: 1.02rem;
 	background: #fff;
 	color: #1f2434;
-	border-color: #d8deee;
+	border-color: #cfd9ea;
+}
+
+.auth-card-simple .auth-field::placeholder {
+	color: #9aa4bb;
 }
 
 .auth-card-simple .auth-field:focus {
-	border-color: rgb(155 77 255 / 56%);
-	box-shadow: 0 0 0 3px rgb(155 77 255 / 16%);
+	border-color: rgb(155 77 255 / 62%);
+	box-shadow: 0 0 0 4px rgb(155 77 255 / 14%);
 }
 
 .auth-card-simple .auth-error {
 	color: #c83866;
+	font-size: 0.82rem;
 }
 
 .auth-card-simple .auth-submit {
+	height: 3rem;
+	font-size: 1.03rem;
+	font-weight: 700;
 	background: linear-gradient(90deg, #ff4e5f 0%, #9b4dff 100%);
-	box-shadow: 0 11px 20px rgb(155 77 255 / 26%);
+	box-shadow: 0 12px 24px rgb(155 77 255 / 26%);
 }
 
 .auth-card {
