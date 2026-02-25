@@ -1,15 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { useAuth } from '$lib/auth/useAuth.svelte';
 	import { useToast } from '$lib/ui/toast.svelte';
+	import type { useAuth as useAuthFactory } from '$lib/auth/useAuth.svelte';
 
-	const auth = useAuth();
+	type AuthApi = ReturnType<typeof useAuthFactory>;
+
 	const toast = useToast();
 	const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	const LOGIN_FLOW_STORAGE_KEY = 'xgvst.auth.loginFlow';
 	const LOGIN_REDIRECT_TARGET = '/market';
 
+	let authApi = $state<AuthApi | null>(null);
 	let email = $state('');
 	let password = $state('');
 	let loading = $state(false);
@@ -28,8 +30,17 @@
 
 	const canSubmit = $derived(!loading && !emailError && !passwordError);
 
+	const ensureAuthApi = async (): Promise<AuthApi> => {
+		if (authApi) return authApi;
+		const { useAuth } = await import('$lib/auth/useAuth.svelte');
+		authApi = useAuth();
+		return authApi;
+	};
+
 	onMount(() => {
-		auth.bootstrap();
+		void ensureAuthApi().then((api) => {
+			api.bootstrap();
+		});
 		const emailFromQuery = new URLSearchParams(window.location.search).get('email')?.trim();
 		if (emailFromQuery) {
 			email = emailFromQuery;
@@ -60,6 +71,7 @@
 
 		loading = true;
 		try {
+			const auth = await ensureAuthApi();
 			const normalizedEmail = email.trim().toLowerCase();
 			auth.signIn(normalizedEmail);
 
