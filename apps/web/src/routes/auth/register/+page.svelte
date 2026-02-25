@@ -139,7 +139,6 @@
 
 	{#snippet footer()}
 		<a href="/auth/login">返回登录</a>
-		<a href="/auth/forgot-password">忘记密码</a>
-		<a href="/">返回首页</a>
+		<a class="auth-link-muted" href="/">返回首页</a>
 	{/snippet}
 </AuthFrame>

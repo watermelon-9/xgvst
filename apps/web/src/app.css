@@ -1225,6 +1225,16 @@ a {
 	color: #ff5c7a;
 }
 
+.auth-foot a.auth-link-muted {
+	color: #8f97ab;
+	font-weight: 500;
+}
+
+.auth-foot a.auth-link-muted:hover,
+.auth-foot a.auth-link-muted:focus-visible {
+	color: #707a95;
+}
+
 .toast-viewport {
 	position: fixed;
 	right: 1rem;
