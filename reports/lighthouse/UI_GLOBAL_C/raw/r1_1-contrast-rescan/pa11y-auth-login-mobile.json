@@ -1,0 +1,4 @@
+{
+  "status": "not-run",
+  "reason": "pa11y CLI does not support viewport flags (--screen-width/--screen-height unavailable in current version); mobile A11y validated via Lighthouse mobile run"
+}

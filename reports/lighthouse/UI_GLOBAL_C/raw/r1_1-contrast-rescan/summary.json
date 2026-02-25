@@ -1,0 +1,93 @@
+{
+  "generatedAt": "2026-02-25T09:08:58.692Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "pages": [
+    {
+      "key": "auth-login",
+      "path": "/auth/login",
+      "lh": {
+        "desktop": {
+          "performance": 81,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "seo": 100,
+          "colorContrastAuditScore": 1,
+          "colorContrastNumericValue": null
+        },
+        "mobile": {
+          "performance": 59,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "seo": 100,
+          "colorContrastAuditScore": 1,
+          "colorContrastNumericValue": null
+        }
+      },
+      "pa11y": {
+        "desktop": {
+          "issues": 0,
+          "errors": 0,
+          "warnings": 0
+        }
+      }
+    },
+    {
+      "key": "auth-register",
+      "path": "/auth/register",
+      "lh": {
+        "desktop": {
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 96,
+          "seo": 100,
+          "colorContrastAuditScore": 1,
+          "colorContrastNumericValue": null
+        },
+        "mobile": {
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 96,
+          "seo": 100,
+          "colorContrastAuditScore": 1,
+          "colorContrastNumericValue": null
+        }
+      },
+      "pa11y": {
+        "desktop": {
+          "issues": 0,
+          "errors": 0,
+          "warnings": 0
+        }
+      }
+    },
+    {
+      "key": "auth-forgot-password",
+      "path": "/auth/forgot-password",
+      "lh": {
+        "desktop": {
+          "performance": 82,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "seo": 100,
+          "colorContrastAuditScore": 1,
+          "colorContrastNumericValue": null
+        },
+        "mobile": {
+          "performance": 60,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "seo": 100,
+          "colorContrastAuditScore": 1,
+          "colorContrastNumericValue": null
+        }
+      },
+      "pa11y": {
+        "desktop": {
+          "issues": 0,
+          "errors": 0,
+          "warnings": 0
+        }
+      }
+    }
+  ]
+}
