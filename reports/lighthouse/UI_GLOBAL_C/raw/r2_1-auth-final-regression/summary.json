@@ -1,0 +1,111 @@
+{
+  "generatedAt": "2026-02-25T09:59:03.959Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "scope": [
+    "/auth/login",
+    "/auth/register",
+    "/auth/forgot-password"
+  ],
+  "desktop": {
+    "auth-login": {
+      "lighthouse": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 96,
+        "seo": 100,
+        "colorContrast": 1,
+        "errorsInConsole": 0,
+        "consoleErrorItems": [
+          "[pwa] service worker register failed TypeError: Failed to register a ServiceWorker for scope ('http://127.0.0.1:4173/auth/') with script ('http://127.0.0.1:4173/auth/sw.js'): A bad HTTP response code (404) was received when fetching the script.",
+          "A bad HTTP response code (404) was received when fetching the script."
+        ]
+      },
+      "pa11y": {
+        "issues": 0,
+        "errors": 0,
+        "warnings": 0
+      },
+      "deltaVsR1_1": {
+        "performance": 19,
+        "accessibility": 0,
+        "bestPractices": -4,
+        "seo": 0
+      }
+    },
+    "auth-register": {
+      "lighthouse": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 96,
+        "seo": 100,
+        "colorContrast": 1,
+        "errorsInConsole": 0,
+        "consoleErrorItems": [
+          "[pwa] service worker register failed TypeError: Failed to register a ServiceWorker for scope ('http://127.0.0.1:4173/auth/') with script ('http://127.0.0.1:4173/auth/sw.js'): A bad HTTP response code (404) was received when fetching the script.",
+          "A bad HTTP response code (404) was received when fetching the script."
+        ]
+      },
+      "pa11y": {
+        "issues": 0,
+        "errors": 0,
+        "warnings": 0
+      },
+      "deltaVsR1_1": {
+        "performance": 0,
+        "accessibility": 0,
+        "bestPractices": 0,
+        "seo": 0
+      }
+    },
+    "auth-forgot-password": {
+      "lighthouse": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 96,
+        "seo": 100,
+        "colorContrast": 1,
+        "errorsInConsole": 0,
+        "consoleErrorItems": [
+          "[pwa] service worker register failed TypeError: Failed to register a ServiceWorker for scope ('http://127.0.0.1:4173/auth/') with script ('http://127.0.0.1:4173/auth/sw.js'): A bad HTTP response code (404) was received when fetching the script.",
+          "A bad HTTP response code (404) was received when fetching the script."
+        ]
+      },
+      "pa11y": {
+        "issues": 0,
+        "errors": 0,
+        "warnings": 0
+      },
+      "deltaVsR1_1": {
+        "performance": 18,
+        "accessibility": 0,
+        "bestPractices": -4,
+        "seo": 0
+      }
+    }
+  },
+  "visualConsistencyAudit": {
+    "color": "PASS",
+    "typography": "PASS",
+    "spacing": "FAIL",
+    "componentStates": "PASS",
+    "notes": [
+      "三页背景仍为同一红紫品牌轴变体（auth-shell-login/register/forgot）。",
+      "字体体系统一使用 --xg-font-display / --xg-font-body。",
+      "骨架未统一：login 为双栏 auth-card-login；register/forgot 为单卡 auth-card-simple。",
+      "容器宽度/内边距仍分叉：980px 双栏 vs 760px 单卡。",
+      "输入框/按钮/错误态均走统一 auth-field/auth-submit 状态规则。"
+    ]
+  },
+  "regressionDecision": {
+    "a11yRegression": false,
+    "lighthouseRegression": true,
+    "bpRecovered": false,
+    "noConsoleErrors": false,
+    "lighthouseRegressionReason": [
+      "auth-login BP 96 (vs R1.1 100)",
+      "auth-forgot-password BP 96 (vs R1.1 100)",
+      "errors-in-console 审计未通过（service worker /auth/sw.js 404）"
+    ]
+  },
+  "final": "FAIL"
+}
