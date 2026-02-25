@@ -46,7 +46,27 @@ export const FINANCE_THEME = {
 	ui: {
 		headerBorder: 'rgba(147,51,234,0.2)',
 		emblemShadow: '0 0 20px rgba(168,85,247,0.35)',
-		chipBorder: 'rgba(255,255,255,0.14)'
+		chipBorder: 'rgba(255,255,255,0.14)',
+		fontDisplay: "Inter, 'Inter var', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+		fontBody: "Inter, 'Inter var', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+		radius: {
+			sm: '0.72rem',
+			md: '0.92rem',
+			lg: '1.2rem'
+		},
+		space: {
+			xs: '0.5rem',
+			sm: '0.75rem',
+			md: '1rem',
+			lg: '1.25rem',
+			xl: '1.5rem'
+		},
+		button: {
+			primary: 'linear-gradient(94deg,#ff4e5f 0%,#d349c0 48%,#8857ff 100%)',
+			hover: 'linear-gradient(94deg,#ff6473 0%,#dc5ec9 48%,#9b6bff 100%)',
+			active: 'linear-gradient(94deg,#f04355 0%,#c541b3 48%,#7f4ff0 100%)',
+			minTouchTarget: '44px'
+		}
 	}
 } as const;
 
