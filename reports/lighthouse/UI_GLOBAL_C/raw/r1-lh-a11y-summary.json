@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-02-25T08:49:45.707Z",
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "lh": {
+        "performance": 99,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "pa11yErrors": 0,
+      "pa11yWarnings": 0
+    },
+    {
+      "key": "auth-login",
+      "path": "/auth/login",
+      "lh": {
+        "performance": 99,
+        "accessibility": 95,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "pa11yErrors": 4,
+      "pa11yWarnings": 0
+    },
+    {
+      "key": "auth-register",
+      "path": "/auth/register",
+      "lh": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "pa11yErrors": 0,
+      "pa11yWarnings": 0
+    },
+    {
+      "key": "auth-forgot",
+      "path": "/auth/forgot-password",
+      "lh": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "pa11yErrors": 0,
+      "pa11yWarnings": 0
+    }
+  ]
+}
