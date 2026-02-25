@@ -1,0 +1,103 @@
+     1	<script lang="ts">
+     2		import { onMount } from 'svelte';
+     3		import { page } from '$app/state';
+     4		import AppHeader from '$lib/components/AppHeader.svelte';
+     5		import ToastViewport from '$lib/components/ToastViewport.svelte';
+     6		import { initPwa } from '$lib/pwa';
+     7		import { FINANCE_THEME } from '$lib/theme/tokens';
+     8		import { resolveThemeModeFromEnv, type ThemeMode, type ThemeValue } from '$lib/theme/env';
+     9		import '../app.css';
+    10	
+    11		let { children } = $props();
+    12	
+    13		const THEME_MODE_KEY = 'xgvst-theme-mode';
+    14		const THEME_CSS_LINK_ID = 'xg-theme-style';
+    15		const THEME_VERSION = FINANCE_THEME.name;
+    16		const ENV_THEME_MODE = resolveThemeModeFromEnv(import.meta.env.PUBLIC_THEME);
+    17	
+    18		let themeMode = $state<ThemeMode>(ENV_THEME_MODE);
+    19		let resolvedTheme = $state<ThemeValue>('dark');
+    20		let themeMeta: HTMLMetaElement | null = null;
+    21		let themeCssLink: HTMLLinkElement | null = null;
+    22		let mediaQuery: MediaQueryList | null = null;
+    23	
+    24		const getSystemTheme = (): ThemeValue =>
+    25			typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+    26				? 'dark'
+    27				: 'light';
+    28	
+    29		const getThemeCssHref = (value: ThemeValue) => `/${value === 'dark' ? 'theme-dark' : 'theme-light'}.css?v=${THEME_VERSION}`;
+    30	
+    31		const ensureThemeCssLink = () => {
+    32			themeCssLink = (document.getElementById(THEME_CSS_LINK_ID) as HTMLLinkElement | null) ?? null;
+    33			if (themeCssLink) return;
+    34	
+    35			themeCssLink = document.createElement('link');
+    36			themeCssLink.id = THEME_CSS_LINK_ID;
+    37			themeCssLink.rel = 'stylesheet';
+    38			themeCssLink.href = getThemeCssHref(resolvedTheme);
+    39			document.head.appendChild(themeCssLink);
+    40		};
+    41	
+    42		const applyResolvedTheme = (value: ThemeValue) => {
+    43			resolvedTheme = value;
+    44			document.documentElement.dataset.theme = value;
+    45			themeMeta?.setAttribute('content', value === 'dark' ? FINANCE_THEME.dark.themeMeta : FINANCE_THEME.light.themeMeta);
+    46			ensureThemeCssLink();
+    47			if (themeCssLink) themeCssLink.href = getThemeCssHref(value);
+    48		};
+    49	
+    50		const syncTheme = (nextMode: ThemeMode) => {
+    51			themeMode = nextMode;
+    52			const targetTheme = nextMode === 'system' ? getSystemTheme() : nextMode;
+    53			applyResolvedTheme(targetTheme);
+    54		};
+    55	
+    56		const isAuthRoute = $derived(page.url.pathname.startsWith('/auth'));
+    57	
+    58		onMount(() => {
+    59			themeMeta = document.querySelector('meta[name="theme-color"]');
+    60			const forcedMode = new URLSearchParams(window.location.search).get('theme');
+    61			const savedMode = window.localStorage.getItem(THEME_MODE_KEY) as ThemeMode | null;
+    62			const initialMode =
+    63				forcedMode === 'light' || forcedMode === 'dark'
+    64					? forcedMode
+    65					: savedMode === 'light' || savedMode === 'dark' || savedMode === 'system'
+    66						? savedMode
+    67						: ENV_THEME_MODE;
+    68			syncTheme(initialMode);
+    69			initPwa();
+    70	
+    71			mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    72			const handleSystemThemeChange = () => {
+    73				if (themeMode !== 'system') return;
+    74				syncTheme('system');
+    75			};
+    76	
+    77			mediaQuery.addEventListener('change', handleSystemThemeChange);
+    78			return () => mediaQuery?.removeEventListener('change', handleSystemThemeChange);
+    79		});
+    80	</script>
+    81	
+    82	<svelte:head>
+    83		<link rel="icon" href="/favicon.svg" />
+    84		<meta name="viewport" content="width=device-width, initial-scale=1" />
+    85		<meta
+    86			name="description"
+    87			content="XGVST — Master Volatility. Master Markets. 提供市场总览、行情追踪与个股分析。"
+    88		/>
+    89		<meta name="theme-color" content={FINANCE_THEME.dark.themeMeta} />
+    90		<meta name="xg-ui-baseline" content={FINANCE_THEME.baseline.uiVersion} />
+    91		<meta name="xg-ui-reference" content={FINANCE_THEME.baseline.reference} />
+    92		<link id={THEME_CSS_LINK_ID} rel="stylesheet" href={`/theme-dark.css?v=${THEME_VERSION}`} />
+    93		<link rel="dns-prefetch" href="//xgvst-workers.viehh642.workers.dev" />
+    94		<link rel="preconnect" href="https://xgvst-workers.viehh642.workers.dev" crossorigin="anonymous" />
+    95		<title>XGVST — Master Volatility. Master Markets.</title>
+    96	</svelte:head>
+    97	
+    98	{#if !isAuthRoute}
+    99		<AppHeader />
+   100	{/if}
+   101	
+   102	{@render children()}
+   103	<ToastViewport />

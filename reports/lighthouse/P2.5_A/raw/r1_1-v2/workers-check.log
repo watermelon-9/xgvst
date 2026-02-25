@@ -1,0 +1,47 @@
+
+> workers@0.0.1 check /Users/mac/.openclaw/workspace/xgvst/packages/workers
+> wrangler types && tsc --noEmit
+
+
+ ⛅️ wrangler 4.67.0 (update available 4.68.1)
+─────────────────────────────────────────────
+Generating project types...
+
+declare namespace Cloudflare {
+	interface GlobalProps {
+		mainModule: typeof import("./src/index");
+		durableNamespaces: "QuoteDurableObject";
+	}
+	interface Env {
+		QUOTE_KV: KVNamespace;
+		QUOTE_DB: D1Database;
+		CORS_ALLOW_ORIGINS: "";
+		QUOTE_SNAPSHOT_TTL_SECONDS: "300";
+		ACCESS_TRUST_CF_HEADERS: "0";
+		ACCESS_JWT_ISS: "";
+		ACCESS_JWT_AUD: "";
+		ACCESS_JWT_HS256_SECRET: string;
+		AUTH_PASSWORD_PEPPER: string;
+		AUTH_RESET_TOKEN_PEPPER: string;
+		AUTH_FORGOT_DEBUG_RETURN_TOKEN: string;
+		ACCESS_AUTH_REQUIRED: string;
+		QUOTE_DO: DurableObjectNamespace<import("./src/index").QuoteDurableObject>;
+	}
+}
+interface Env extends Cloudflare.Env {}
+
+Generating runtime types...
+
+Runtime types generated.
+
+
+✨ Types written to worker-configuration.d.ts
+
+Action required Migrate from @cloudflare/workers-types to generated runtime types
+`wrangler types` now generates runtime types and supersedes @cloudflare/workers-types.
+You should now uninstall @cloudflare/workers-types and remove it from your tsconfig.json.
+
+📖 Read about runtime types
+https://developers.cloudflare.com/workers/languages/typescript/#generate-types
+📣 Remember to rerun 'wrangler types' after you change your wrangler.toml file.
+

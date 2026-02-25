@@ -1,0 +1,292 @@
+{
+  "generatedAt": "2026-02-25T05:39:36.203Z",
+  "baseUrl": "http://127.0.0.1:8787",
+  "email": "p25-v2-1771997976104@example.com",
+  "env": {
+    "accessJwtAudConfigured": false,
+    "accessJwtIssConfigured": false
+  },
+  "pass": {
+    "registerSuccess": true,
+    "loginSuccess": true,
+    "forgotSuccess": true,
+    "selfSelectProtected": true,
+    "selfSelectJwtSuccess": true,
+    "selfSelectJwtExpiredRejected": true,
+    "selfSelectJwtBadSigRejected": true,
+    "subOnlyTokenAccepted": true,
+    "clearBoundaryAccepted": true
+  },
+  "steps": [
+    {
+      "name": "register-invalid-email",
+      "result": {
+        "path": "/api/v2/auth/register",
+        "method": "POST",
+        "status": 400,
+        "ok": false,
+        "latencyMs": 30.897,
+        "json": {
+          "ok": false,
+          "error": "invalid email"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "register-short-password",
+      "result": {
+        "path": "/api/v2/auth/register",
+        "method": "POST",
+        "status": 400,
+        "ok": false,
+        "latencyMs": 3.175,
+        "json": {
+          "ok": false,
+          "error": "password must be at least 8 characters"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "register-success",
+      "result": {
+        "path": "/api/v2/auth/register",
+        "method": "POST",
+        "status": 200,
+        "ok": true,
+        "latencyMs": 16.634,
+        "json": {
+          "ok": true,
+          "email": "p25-v2-1771997976104@example.com",
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwMjUtdjItMTc3MTk5Nzk3NjEwNEBleGFtcGxlLmNvbSIsImVtYWlsIjoicDI1LXYyLTE3NzE5OTc5NzYxMDRAZXhhbXBsZS5jb20iLCJpYXQiOjE3NzE5OTc5NzYsImV4cCI6MTc3MjAwNTE3Nn0.XlDS9xvXYvQQ0lg-pA6y6N5-0Q7ac8ljWF6qN_pxQDg",
+          "tokenType": "Bearer",
+          "userId": "p25-v2-1771997976104@example.com"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "login-wrong-password",
+      "result": {
+        "path": "/api/v2/auth/login",
+        "method": "POST",
+        "status": 401,
+        "ok": false,
+        "latencyMs": 10.701,
+        "json": {
+          "ok": false,
+          "error": "invalid email or password"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "login-success",
+      "result": {
+        "path": "/api/v2/auth/login",
+        "method": "POST",
+        "status": 200,
+        "ok": true,
+        "latencyMs": 10.633,
+        "json": {
+          "ok": true,
+          "email": "p25-v2-1771997976104@example.com",
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwMjUtdjItMTc3MTk5Nzk3NjEwNEBleGFtcGxlLmNvbSIsImVtYWlsIjoicDI1LXYyLTE3NzE5OTc5NzYxMDRAZXhhbXBsZS5jb20iLCJpYXQiOjE3NzE5OTc5NzYsImV4cCI6MTc3MjAwNTE3Nn0.XlDS9xvXYvQQ0lg-pA6y6N5-0Q7ac8ljWF6qN_pxQDg",
+          "tokenType": "Bearer",
+          "userId": "p25-v2-1771997976104@example.com"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "forgot-invalid-email",
+      "result": {
+        "path": "/api/v2/auth/forgot-password",
+        "method": "POST",
+        "status": 400,
+        "ok": false,
+        "latencyMs": 2.283,
+        "json": {
+          "ok": false,
+          "error": "invalid email"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "forgot-success",
+      "result": {
+        "path": "/api/v2/auth/forgot-password",
+        "method": "POST",
+        "status": 200,
+        "ok": true,
+        "latencyMs": 2.887,
+        "json": {
+          "ok": true,
+          "accepted": true,
+          "message": "If the email exists, reset instructions will be sent.",
+          "debugResetToken": "gSIj1jroXX8cSX60z4GD7O6mIn1h6uS7",
+          "debugResetExpiresAt": "2026-02-25T05:54:36.181Z"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "self-select-no-token",
+      "result": {
+        "path": "/api/v2/self-selects",
+        "method": "GET",
+        "status": 401,
+        "ok": false,
+        "latencyMs": 1.361,
+        "json": {
+          "ok": false,
+          "error": "unauthorized: missing or invalid access jwt"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "self-select-put-with-login-token",
+      "result": {
+        "path": "/api/v2/self-selects",
+        "method": "PUT",
+        "status": 200,
+        "ok": true,
+        "latencyMs": 9.165,
+        "json": {
+          "ok": true,
+          "userId": "p25-v2-1771997976104@example.com",
+          "symbols": [
+            "000001",
+            "600519"
+          ],
+          "diff": {
+            "added": [
+              "000001",
+              "600519"
+            ],
+            "removed": []
+          }
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "self-select-get-with-login-token",
+      "result": {
+        "path": "/api/v2/self-selects",
+        "method": "GET",
+        "status": 200,
+        "ok": true,
+        "latencyMs": 2.132,
+        "json": {
+          "ok": true,
+          "userId": "p25-v2-1771997976104@example.com",
+          "symbols": [
+            "000001",
+            "600519"
+          ],
+          "items": [
+            {
+              "symbol": "000001",
+              "createdAt": "2026-02-25T05:39:36.185Z",
+              "updatedAt": "2026-02-25T05:39:36.185Z"
+            },
+            {
+              "symbol": "600519",
+              "createdAt": "2026-02-25T05:39:36.185Z",
+              "updatedAt": "2026-02-25T05:39:36.185Z"
+            }
+          ]
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "self-select-boundary-sub-only-token",
+      "result": {
+        "path": "/api/v2/self-selects",
+        "method": "GET",
+        "status": 200,
+        "ok": true,
+        "latencyMs": 2.069,
+        "json": {
+          "ok": true,
+          "userId": "p25-v2-1771997976104@example.com",
+          "symbols": [
+            "000001",
+            "600519"
+          ],
+          "items": [
+            {
+              "symbol": "000001",
+              "createdAt": "2026-02-25T05:39:36.185Z",
+              "updatedAt": "2026-02-25T05:39:36.185Z"
+            },
+            {
+              "symbol": "600519",
+              "createdAt": "2026-02-25T05:39:36.185Z",
+              "updatedAt": "2026-02-25T05:39:36.185Z"
+            }
+          ]
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "self-select-expired-token",
+      "result": {
+        "path": "/api/v2/self-selects",
+        "method": "GET",
+        "status": 401,
+        "ok": false,
+        "latencyMs": 1.268,
+        "json": {
+          "ok": false,
+          "error": "unauthorized: missing or invalid access jwt"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "self-select-invalid-signature-token",
+      "result": {
+        "path": "/api/v2/self-selects",
+        "method": "GET",
+        "status": 401,
+        "ok": false,
+        "latencyMs": 0.987,
+        "json": {
+          "ok": false,
+          "error": "unauthorized: missing or invalid access jwt"
+        },
+        "text": ""
+      }
+    },
+    {
+      "name": "self-select-boundary-clear-empty-array",
+      "result": {
+        "path": "/api/v2/self-selects",
+        "method": "PUT",
+        "status": 200,
+        "ok": true,
+        "latencyMs": 3.059,
+        "json": {
+          "ok": true,
+          "userId": "p25-v2-1771997976104@example.com",
+          "symbols": [],
+          "diff": {
+            "added": [],
+            "removed": [
+              "000001",
+              "600519"
+            ]
+          }
+        },
+        "text": ""
+      }
+    }
+  ]
+}

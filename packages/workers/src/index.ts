@@ -5,6 +5,22 @@ import { SourceManager } from './sources/SourceManager';
 import type { QuoteTick } from './sources/QuoteSource';
 import { StorageTelemetry } from './observability/storageTelemetry';
 import { accessJwtMiddleware, type AccessIdentity } from './auth/accessJwt';
+import {
+  ensureEmailAuthTables,
+  forgotDebugReturnToken,
+  genericForgotResponse,
+  hashPasswordForStorage,
+  hashResetTokenForStorage,
+  invalidAuthConfigResponse,
+  issueEmailAccessJwt,
+  newResetToken,
+  parseForgotPayload,
+  parseLoginPayload,
+  parseRegisterPayload,
+  resetTokenExpiryIso,
+  validatePasswordStrength,
+  verifyPasswordAgainstStorage
+} from './auth/emailAuth';
 
 type Bindings = Env;
 type AppVariables = { auth?: AccessIdentity };
@@ -357,6 +373,161 @@ app.use('*', async (c, next) => {
     }
   }
 });
+
+type AuthAccountRow = {
+  email: string;
+  password_hash: string;
+  password_salt: string;
+  password_iter: number;
+};
+
+async function registerWithEmail(c: {
+  env: Bindings;
+  req: { json: () => Promise<unknown> };
+  json: (obj: unknown, status?: number) => Response;
+}) {
+  await ensureEmailAuthTables(c.env.QUOTE_DB);
+
+  const parsed = parseRegisterPayload(await c.req.json().catch(() => ({})));
+  if (parsed.error) return c.json({ ok: false, error: parsed.error }, 400);
+
+  const pwdError = validatePasswordStrength(parsed.password, c.env);
+  if (pwdError) return c.json({ ok: false, error: pwdError }, 400);
+
+  const existing = await c.env.QUOTE_DB.prepare('SELECT email FROM auth_accounts WHERE email = ? LIMIT 1')
+    .bind(parsed.email)
+    .first<{ email: string }>();
+  if (existing?.email) {
+    return c.json({ ok: false, error: 'email already registered' }, 409);
+  }
+
+  const now = new Date().toISOString();
+  const hashed = await hashPasswordForStorage(parsed.password, c.env);
+
+  await c.env.QUOTE_DB.batch([
+    c.env.QUOTE_DB
+      .prepare(
+        'INSERT INTO auth_accounts (email, password_hash, password_salt, password_algo, password_iter, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      )
+      .bind(
+        parsed.email,
+        hashed.passwordHash,
+        hashed.passwordSalt,
+        hashed.passwordAlgo,
+        hashed.passwordIter,
+        now,
+        now
+      ),
+    c.env.QUOTE_DB
+      .prepare(
+        'INSERT INTO users (user_id, created_at, updated_at) VALUES (?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET updated_at = excluded.updated_at'
+      )
+      .bind(parsed.email, now, now)
+  ]);
+
+  const accessToken = await issueEmailAccessJwt(parsed.email, c.env);
+  if (!accessToken) return invalidAuthConfigResponse();
+
+  return c.json({
+    ok: true,
+    email: parsed.email,
+    accessToken,
+    tokenType: 'Bearer',
+    userId: parsed.email
+  });
+}
+
+async function loginWithEmail(c: {
+  env: Bindings;
+  req: { json: () => Promise<unknown> };
+  json: (obj: unknown, status?: number) => Response;
+}) {
+  await ensureEmailAuthTables(c.env.QUOTE_DB);
+
+  const parsed = parseLoginPayload(await c.req.json().catch(() => ({})));
+  if (parsed.error) return c.json({ ok: false, error: parsed.error }, 400);
+
+  const row = await c.env.QUOTE_DB.prepare(
+    'SELECT email, password_hash, password_salt, password_iter FROM auth_accounts WHERE email = ? LIMIT 1'
+  )
+    .bind(parsed.email)
+    .first<AuthAccountRow>();
+
+  if (!row) {
+    return c.json({ ok: false, error: 'invalid email or password' }, 401);
+  }
+
+  const ok = await verifyPasswordAgainstStorage(
+    parsed.password,
+    row.password_hash,
+    row.password_salt,
+    Number(row.password_iter),
+    c.env
+  );
+  if (!ok) {
+    return c.json({ ok: false, error: 'invalid email or password' }, 401);
+  }
+
+  const now = new Date().toISOString();
+  await c.env.QUOTE_DB.prepare('UPDATE auth_accounts SET updated_at = ?, last_login_at = ? WHERE email = ?')
+    .bind(now, now, parsed.email)
+    .run();
+
+  const accessToken = await issueEmailAccessJwt(parsed.email, c.env);
+  if (!accessToken) return invalidAuthConfigResponse();
+
+  return c.json({
+    ok: true,
+    email: parsed.email,
+    accessToken,
+    tokenType: 'Bearer',
+    userId: parsed.email
+  });
+}
+
+async function forgotPasswordWithEmail(c: {
+  env: Bindings;
+  req: { json: () => Promise<unknown> };
+  json: (obj: unknown, status?: number) => Response;
+}) {
+  await ensureEmailAuthTables(c.env.QUOTE_DB);
+
+  const parsed = parseForgotPayload(await c.req.json().catch(() => ({})));
+  if (parsed.error) return c.json({ ok: false, error: parsed.error }, 400);
+
+  const existing = await c.env.QUOTE_DB.prepare('SELECT email FROM auth_accounts WHERE email = ? LIMIT 1')
+    .bind(parsed.email)
+    .first<{ email: string }>();
+
+  if (!existing?.email) {
+    return c.json(genericForgotResponse());
+  }
+
+  const resetToken = newResetToken();
+  const resetTokenHash = await hashResetTokenForStorage(resetToken, c.env);
+  const resetTokenExp = resetTokenExpiryIso(c.env);
+  const now = new Date().toISOString();
+
+  await c.env.QUOTE_DB.prepare(
+    'UPDATE auth_accounts SET reset_token_hash = ?, reset_token_exp = ?, reset_requested_at = ?, updated_at = ? WHERE email = ?'
+  )
+    .bind(resetTokenHash, resetTokenExp, now, now, parsed.email)
+    .run();
+
+  return c.json({
+    ...genericForgotResponse(),
+    ...(forgotDebugReturnToken(c.env) ? { debugResetToken: resetToken, debugResetExpiresAt: resetTokenExp } : {})
+  });
+}
+
+function registerEmailAuthRoutes(prefix: '/api/auth' | '/api/v2/auth') {
+  app.post(`${prefix}/register`, registerWithEmail as never);
+  app.post(`${prefix}/login`, loginWithEmail as never);
+  app.post(`${prefix}/forgot-password`, forgotPasswordWithEmail as never);
+}
+
+registerEmailAuthRoutes('/api/auth');
+registerEmailAuthRoutes('/api/v2/auth');
 
 app.use('/api/self-selects', accessJwtMiddleware);
 app.use('/api/self-selects/*', accessJwtMiddleware);

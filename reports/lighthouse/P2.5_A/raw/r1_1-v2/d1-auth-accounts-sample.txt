@@ -1,0 +1,27 @@
+
+ ⛅️ wrangler 4.67.0 (update available 4.68.1)
+─────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+🌀 Executing on local database xgvst_quote (9db19911-21e7-4245-8c94-6571aa7a35fb) from .wrangler/state/v3/d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 1 command executed successfully.
+[
+  {
+    "results": [
+      {
+        "email": "p25-v2-1771997976104@example.com",
+        "password_hash": "TBWKOq5mnZwzg7V7rbHN56q9DvhHhe32abJsu-V0avI",
+        "password_salt": "LDmHrXtEBNmff1BmDxH-SQ",
+        "password_iter": 120000,
+        "reset_token_hash": "sbqgweGAi4OTlgDV-0pagGyaiuE-lFpGg3qF-VpZBFI"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "duration": 0
+    }
+  }
+]

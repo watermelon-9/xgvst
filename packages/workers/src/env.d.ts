@@ -36,6 +36,15 @@ declare global {
     /** Optional strict audience check. */
     ACCESS_JWT_AUD?: string;
 
+    /** Email auth runtime knobs (worker-side). */
+    AUTH_PASSWORD_PEPPER?: string;
+    AUTH_RESET_TOKEN_PEPPER?: string;
+    AUTH_FORGOT_DEBUG_RETURN_TOKEN?: string;
+    AUTH_PASSWORD_MIN_LENGTH?: string;
+    AUTH_PBKDF2_ITERATIONS?: string;
+    AUTH_ACCESS_TOKEN_TTL_SECONDS?: string;
+    AUTH_RESET_TOKEN_TTL_SECONDS?: string;
+
     /** Source auth secrets: MUST be injected via `wrangler secret put <NAME>`. */
     ALLTICK_TOKEN?: string;
     SINA_COOKIE?: string;
