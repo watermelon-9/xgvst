@@ -1,0 +1,16 @@
+{
+  "home": {
+    "route": "/",
+    "performance": 0.83,
+    "accessibility": 1,
+    "cls": 0,
+    "screenshot": "reports/lighthouse/P2.5_HOME_C/raw/r1_3-color-loginpanel-acceptance/home-desktop.jpg"
+  },
+  "authLogin": {
+    "route": "/auth/login",
+    "performance": 0.87,
+    "accessibility": 1,
+    "cls": 0,
+    "screenshot": "reports/lighthouse/P2.5_HOME_C/raw/r1_3-color-loginpanel-acceptance/login-desktop.jpg"
+  }
+}
