@@ -1284,28 +1284,26 @@ a {
 	-webkit-backdrop-filter: blur(10px);
 }
 
-.toast-success {
-	background: rgb(22 163 74 / 80%);
-	color: #ecfdf3;
-}
-
-.toast-error {
-	background: rgb(225 29 72 / 82%);
-	color: #fff1f5;
-}
-
+.toast-success,
+.toast-error,
 .toast-info {
-	background: rgb(88 28 135 / 82%);
-	color: #faf5ff;
+	background: rgb(22 163 74 / 92%);
+	color: #fff;
 }
 
 .toast-close {
 	background: transparent;
 	color: inherit;
+	opacity: 0.9;
 	border: none;
 	font-size: 1.05rem;
 	line-height: 1;
 	cursor: pointer;
+}
+
+.toast-close:hover,
+.toast-close:focus-visible {
+	opacity: 1;
 }
 
 @media (max-width: 1280px) {

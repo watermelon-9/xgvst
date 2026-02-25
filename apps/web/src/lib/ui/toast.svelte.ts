@@ -7,7 +7,7 @@ type ToastItem = {
 	durationMs: number;
 };
 
-const DEFAULT_DURATION_MS = 2600;
+const DEFAULT_DURATION_MS = 5000;
 
 const toastState = $state({
 	items: [] as ToastItem[]
@@ -17,8 +17,9 @@ function removeToast(id: number) {
 	toastState.items = toastState.items.filter((item) => item.id !== id);
 }
 
-function pushToast(message: string, tone: ToastTone = 'info', durationMs = DEFAULT_DURATION_MS) {
+function pushToast(message: string, tone: ToastTone = 'info', _durationMs = DEFAULT_DURATION_MS) {
 	const id = Date.now() + Math.floor(Math.random() * 1000);
+	const durationMs = DEFAULT_DURATION_MS;
 	toastState.items = [...toastState.items, { id, message, tone, durationMs }];
 
 	if (typeof window !== 'undefined') {
