@@ -916,22 +916,21 @@ a {
 
 .auth-form-simple {
 	margin-top: var(--xg-space-4);
-	gap: 0.62rem;
 }
 
 .auth-head-plain h1,
 .auth-head-plain h2 {
 	color: var(--xg-text-auth-primary);
 	font-family: var(--xg-font-display);
-	font-size: clamp(2.3rem, 2.8vw, 3rem);
-	line-height: 1.04;
-	letter-spacing: -0.012em;
+	font-size: clamp(1.95rem, 2.2vw, 2.25rem);
+	line-height: 1.1;
+	letter-spacing: -0.011em;
 	margin: 0;
 }
 
 .auth-head-plain p {
 	color: var(--xg-text-auth-subtle);
-	font-size: 1rem;
+	font-size: 0.95rem;
 }
 
 .auth-head-plain .auth-sentinel {
@@ -945,9 +944,6 @@ a {
 }
 
 .auth-card-simple .auth-field {
-	height: 3.1rem;
-	padding: 0.86rem 0.96rem;
-	font-size: 1.02rem;
 	background: #fff;
 	color: #1f2434;
 	border-color: #cfd9ea;
@@ -969,8 +965,6 @@ a {
 }
 
 .auth-card-simple .auth-submit {
-	height: 3rem;
-	font-size: 1.03rem;
 	font-weight: 700;
 }
 
@@ -1073,21 +1067,25 @@ a {
 	gap: 0.42rem;
 }
 
+.auth-login-form-panel .auth-head h1,
 .auth-login-form-panel .auth-head h2,
+.auth-main-panel .auth-head h1,
 .auth-main-panel .auth-head h2 {
 	margin: 0;
 	font-family: var(--xg-font-display);
-	font-size: 2rem;
-	line-height: 1.08;
+	font-size: clamp(1.95rem, 2.2vw, 2.25rem);
+	line-height: 1.1;
 	font-weight: 800;
+	letter-spacing: -0.011em;
 	color: var(--xg-text-auth-primary);
 }
 
 .auth-login-form-panel .auth-head p,
 .auth-main-panel .auth-head p {
 	margin: 0;
-	font-size: 0.9rem;
-	color: #80879d;
+	font-size: 0.95rem;
+	line-height: 1.5;
+	color: #707792;
 }
 
 .auth-login-form-panel .auth-head p {
@@ -1103,14 +1101,14 @@ a {
 .auth-card-register .auth-form,
 .auth-card-forgot .auth-form {
 	margin-top: 0;
-	gap: 0.5rem;
 }
 
 .auth-card-login .auth-label,
 .auth-card-register .auth-label,
 .auth-card-forgot .auth-label {
 	color: #4b536b;
-	font-size: 0.84rem;
+	font-size: 0.86rem;
+	font-weight: 600;
 }
 
 .auth-card-login .auth-field,
@@ -1150,14 +1148,16 @@ a {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: 0.4rem;
+	gap: 0.7rem;
+	margin-top: 0.46rem;
 }
 
 .auth-check {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.4rem;
+	gap: 0.42rem;
 	font-size: 0.84rem;
+	line-height: 1.3;
 	color: #707792;
 }
 
@@ -1203,6 +1203,10 @@ a {
 .auth-card-login .auth-foot a,
 .auth-card-register .auth-foot a,
 .auth-card-forgot .auth-foot a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 1.6rem;
 	color: #6c4bcb;
 }
 
@@ -1234,21 +1238,29 @@ a {
 
 .auth-form {
 	display: grid;
-	gap: 0.45rem;
+	gap: 0.56rem;
 	margin-top: var(--xg-space-4);
 }
 
 .auth-label {
-	font-size: 0.84rem;
-	font-weight: 500;
+	margin-top: 0.24rem;
+	font-size: 0.86rem;
+	font-weight: 600;
+	letter-spacing: 0.004em;
 	color: rgb(244 236 255 / 82%);
 }
 
+.auth-label:first-of-type {
+	margin-top: 0;
+}
+
 .auth-field {
+	min-height: 3rem;
 	border: 1px solid rgb(255 255 255 / 18%);
 	border-radius: var(--xg-radius-sm);
-	padding: 0.74rem 0.82rem;
-	font-size: 0.94rem;
+	padding: 0.86rem 0.96rem;
+	font-size: 1rem;
+	line-height: 1.4;
 	background: rgb(255 255 255 / 9%);
 	color: #fff;
 	outline: none;
@@ -1266,25 +1278,26 @@ a {
 }
 
 .auth-error {
-	margin: 0.1rem 0 0.35rem;
-	font-size: 0.76rem;
+	margin: 0.16rem 0 0.3rem;
+	font-size: 0.8rem;
+	line-height: 1.35;
 	color: #ff9ec0;
 }
 
 .auth-submit {
-	margin-top: 0.58rem;
+	margin-top: 0.62rem;
 	border: none;
 	border-radius: var(--xg-radius-sm);
-	padding: 0.8rem 0.92rem;
-	font-size: 0.95rem;
+	padding: 0.84rem 1rem;
+	font-size: 1rem;
 	font-weight: 700;
-	letter-spacing: 0.01em;
+	letter-spacing: 0.008em;
 	color: #fff;
 	cursor: pointer;
 	background: var(--xg-button-primary);
-	box-shadow: var(--xg-shadow-pop);
+	box-shadow: 0 12px 24px rgb(155 77 255 / 26%);
 	transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.18s ease;
-	min-height: 2.75rem;
+	min-height: 3rem;
 }
 
 .auth-submit:hover {
@@ -1299,7 +1312,7 @@ a {
 }
 
 .auth-submit:focus-visible {
-	box-shadow: var(--xg-focus-ring), var(--xg-shadow-pop);
+	box-shadow: var(--xg-focus-ring), 0 12px 24px rgb(155 77 255 / 26%);
 }
 
 .auth-submit:disabled {
@@ -1312,9 +1325,12 @@ a {
 .auth-foot {
 	margin-top: var(--xg-space-4);
 	display: flex;
-	justify-content: space-between;
-	gap: 0.7rem;
-	font-size: 0.82rem;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0.7rem 1.1rem;
+	font-size: 0.84rem;
+	text-align: center;
 	color: rgb(248 231 255 / 84%);
 }
 
@@ -1466,8 +1482,8 @@ a {
 
 
 	.auth-foot {
-		flex-direction: column;
-		align-items: flex-start;
+		justify-content: center;
+		gap: 0.6rem 0.95rem;
 	}
 
 	.toast-viewport {

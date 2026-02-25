@@ -124,7 +124,7 @@
 
 		<div class="auth-login-form-panel">
 			<header class="auth-head">
-				<h2>账号登录</h2>
+				<h1>账号登录</h1>
 				<p>请输入邮箱和密码进入西瓜说股</p>
 				<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
 					认证入口：仅邮箱（含密码凭证），不提供手机号/微信/三方登录。
