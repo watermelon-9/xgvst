@@ -68,6 +68,7 @@
 	headTitle="重置密码"
 	headDescription="请输入注册邮箱 + 邀请码，并设置新密码。验证通过后将直接重置密码。"
 	headSentinel="仅邮箱账号体系，不提供手机号/微信/三方找回入口。"
+	footCentered={true}
 >
 	{#snippet form()}
 		<form class="auth-form" novalidate onsubmit={onSubmit}>

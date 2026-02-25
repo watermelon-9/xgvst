@@ -66,6 +66,7 @@
 	sideTags={['仅邮箱账号', '邀请码必填', '红紫主题']}
 	headTitle="创建账号"
 	headDescription="注册账号必须为邮箱，邀请码为必填项；注册成功后请返回登录。"
+	footCentered={true}
 >
 	{#snippet form()}
 		<form class="auth-form" novalidate onsubmit={onSubmit}>
