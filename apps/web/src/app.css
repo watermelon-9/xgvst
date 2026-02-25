@@ -855,6 +855,60 @@ a {
 		linear-gradient(126deg, #ff4e66 0%, #d84ca2 46%, #9453ff 100%);
 }
 
+.auth-card-simple {
+	width: min(100%, 660px);
+	padding: 1.7rem 1.5rem 1.2rem;
+	border-radius: 1.05rem;
+	background: rgb(248 243 251 / 96%);
+	border: 1px solid rgb(255 255 255 / 55%);
+	box-shadow: 0 22px 40px rgb(66 20 105 / 24%);
+}
+
+.auth-form-simple {
+	margin-top: 0.7rem;
+}
+
+.auth-head-plain h1,
+.auth-head-plain h2 {
+	color: #1d2435;
+	font-size: clamp(2rem, 2.2vw, 2.7rem);
+	line-height: 1.06;
+	margin: 0;
+}
+
+.auth-head-plain p {
+	color: #7f869a;
+	font-size: 0.92rem;
+}
+
+.auth-head-plain .auth-sentinel {
+	display: none;
+}
+
+.auth-card-simple .auth-label {
+	color: #47506a;
+}
+
+.auth-card-simple .auth-field {
+	background: #fff;
+	color: #1f2434;
+	border-color: #d8deee;
+}
+
+.auth-card-simple .auth-field:focus {
+	border-color: rgb(155 77 255 / 56%);
+	box-shadow: 0 0 0 3px rgb(155 77 255 / 16%);
+}
+
+.auth-card-simple .auth-error {
+	color: #c83866;
+}
+
+.auth-card-simple .auth-submit {
+	background: linear-gradient(90deg, #ff4e5f 0%, #9b4dff 100%);
+	box-shadow: 0 11px 20px rgb(155 77 255 / 26%);
+}
+
 .auth-card {
 	width: min(100%, 430px);
 	padding: 1.4rem 1.1rem 1.15rem;
@@ -1264,6 +1318,16 @@ a {
 	.auth-login-form-panel .auth-head h2,
 	.auth-main-panel .auth-head h2 {
 		font-size: 1.6rem;
+	}
+
+	.auth-card-simple {
+		width: min(100%, 540px);
+		padding: 1.2rem 1rem 0.95rem;
+	}
+
+	.auth-head-plain h1,
+	.auth-head-plain h2 {
+		font-size: 1.8rem;
 	}
 
 	.quote-head-v2039,
