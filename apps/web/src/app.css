@@ -38,6 +38,73 @@
 	--xg-ui-header-border: rgb(147 51 234 / 20%);
 	--xg-ui-emblem-shadow: 0 0 20px rgb(168 85 247 / 35%);
 	--xg-ui-chip-border: rgb(255 255 255 / 14%);
+
+	/* Design Tokens v1 (non-breaking semantic alias layer) */
+	--xg-tk-color-bg-canvas: var(--xg-color-bg);
+	--xg-tk-color-bg-surface: var(--xg-color-surface);
+	--xg-tk-color-bg-surface-hover: var(--xg-color-surface-hover);
+	--xg-tk-color-bg-brand: linear-gradient(108deg, var(--xg-v2039-rose) 0%, var(--xg-v2039-violet) 100%);
+	--xg-tk-color-text-primary: var(--xg-color-text);
+	--xg-tk-color-text-secondary: var(--xg-color-subtle);
+	--xg-tk-color-text-inverse: #fff;
+	--xg-tk-color-border-default: var(--xg-color-border);
+	--xg-tk-color-border-strong: rgb(255 255 255 / 24%);
+	--xg-tk-color-state-positive: var(--xg-color-down);
+	--xg-tk-color-state-negative: var(--xg-color-up);
+	--xg-tk-color-state-info: var(--xg-brand-violet-b);
+
+	--xg-tk-font-sans: Inter, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, -apple-system,
+		'Segoe UI', sans-serif;
+	--xg-tk-font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, 'Cascadia Mono', 'Segoe UI Mono',
+		'Roboto Mono', 'Source Code Pro', Menlo, Monaco, Consolas, monospace;
+	--xg-tk-font-size-100: 0.75rem;
+	--xg-tk-font-size-200: 0.8125rem;
+	--xg-tk-font-size-300: 0.875rem;
+	--xg-tk-font-size-400: 1rem;
+	--xg-tk-font-size-500: 1.125rem;
+	--xg-tk-font-size-600: 1.25rem;
+	--xg-tk-font-size-700: 1.5rem;
+	--xg-tk-font-size-800: 2rem;
+	--xg-tk-line-height-tight: 1.2;
+	--xg-tk-line-height-base: 1.5;
+	--xg-tk-line-height-relaxed: 1.7;
+
+	--xg-tk-space-0: 0;
+	--xg-tk-space-1: 0.25rem;
+	--xg-tk-space-2: 0.5rem;
+	--xg-tk-space-3: 0.75rem;
+	--xg-tk-space-4: 1rem;
+	--xg-tk-space-5: 1.25rem;
+	--xg-tk-space-6: 1.5rem;
+	--xg-tk-space-8: 2rem;
+	--xg-tk-space-10: 2.5rem;
+	--xg-tk-space-12: 3rem;
+
+	--xg-tk-radius-sm: 0.375rem;
+	--xg-tk-radius-md: 0.5rem;
+	--xg-tk-radius-lg: 0.75rem;
+	--xg-tk-radius-xl: 1rem;
+	--xg-tk-radius-pill: 999px;
+
+	--xg-tk-shadow-sm: 0 2px 6px rgb(15 23 42 / 8%);
+	--xg-tk-shadow-md: 0 8px 24px rgb(15 23 42 / 14%);
+	--xg-tk-shadow-lg: 0 16px 42px rgb(39 9 59 / 24%);
+	--xg-tk-shadow-glass: var(--xg-glass-shadow);
+
+	--xg-tk-motion-fast: 120ms;
+	--xg-tk-motion-base: 180ms;
+	--xg-tk-motion-slow: 260ms;
+	--xg-tk-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+	--xg-tk-state-hover-opacity: 0.92;
+	--xg-tk-state-disabled-opacity: 0.55;
+	--xg-tk-focus-ring-width: 2px;
+	--xg-tk-focus-ring-color: color-mix(in srgb, var(--xg-brand-violet-b) 72%, white);
+	--xg-tk-focus-ring-shadow: 0 0 0 3px color-mix(in srgb, var(--xg-brand-violet-b) 28%, transparent);
+
+	--xg-tk-a11y-contrast-text-min: 4.5;
+	--xg-tk-a11y-contrast-large-min: 3;
+	--xg-tk-a11y-focus-visible-min: 3;
+	--xg-tk-a11y-target-size-min: 44px;
 }
 
 :root[data-theme='dark'] {
@@ -47,6 +114,11 @@
 	--xg-color-surface: rgb(255 255 255 / 10%);
 	--xg-color-surface-hover: rgb(255 255 255 / 16%);
 	--xg-color-border: rgb(255 255 255 / 12%);
+
+	--xg-tk-color-border-strong: rgb(255 255 255 / 28%);
+	--xg-tk-shadow-sm: 0 2px 8px rgb(0 0 0 / 22%);
+	--xg-tk-shadow-md: 0 10px 28px rgb(0 0 0 / 28%);
+	--xg-tk-shadow-lg: 0 20px 44px rgb(0 0 0 / 34%);
 }
 
 * {
@@ -859,7 +931,7 @@ a {
 	width: min(100%, 760px);
 	padding: 2.1rem 2rem 1.55rem;
 	border-radius: 1.2rem;
-	background: rgb(255 250 255 / 96%);
+	background: #ffffff;
 	border: 1px solid rgb(255 255 255 / 72%);
 	box-shadow: 0 24px 56px rgb(96 39 134 / 28%);
 }
