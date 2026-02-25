@@ -30,11 +30,14 @@
 </script>
 
 <main class="auth-shell">
-	<section class="auth-card glass-card">
+	<section class="auth-card glass-card" data-auth-flow="email-password" data-auth-alt-entry="none">
 		<header class="auth-head">
 			<p class="auth-eyebrow">XGVST v2</p>
 			<h1>找回密码</h1>
 			<p>请输入注册邮箱，我们会发送重置链接（演示环境为模拟发送）。</p>
+			<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
+				仅邮箱账号体系，不提供手机号/微信/三方找回入口。
+			</p>
 		</header>
 
 		<form class="auth-form" novalidate onsubmit={onSubmit}>

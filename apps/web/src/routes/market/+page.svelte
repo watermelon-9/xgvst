@@ -5,17 +5,68 @@
 	import { marketState, getTopBoardName } from '$lib/runes/market-state.svelte';
 	import { quoteStore, mountQuoteStore, setQuoteSubscriptionScope } from '$lib/runes/quote-store.svelte';
 	import { useAuth } from '$lib/auth/useAuth.svelte';
+	import { useToast } from '$lib/ui/toast.svelte';
 
 	const tickRenderChain =
 		'WS frame(binary/protobuf) → useQuoteWebSocket.resync(当前个股+自选) → quoteStore → 页面渲染';
+	const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const LOGIN_FLOW_STORAGE_KEY = 'xgvst.auth.loginFlow';
 	const auth = useAuth();
+	const toast = useToast();
 
 	let loginUserId = $state('');
+	let loginClosure = $state({
+		detected: false,
+		redirectTo: '--',
+		sync: 'unknown' as 'ok' | 'degraded' | 'unknown',
+		syncError: null as string | null,
+		email: '--',
+		at: '--',
+		querySync: '--',
+		queryFlow: '--'
+	});
 	let authPullReady = $state(false);
 	let mergeEvidence = $state({
 		lastMergedAt: null as string | null,
 		addedSymbols: [] as string[]
 	});
+
+	function resolveLoginClosureEvidence() {
+		if (typeof window === 'undefined') return;
+		const params = new URLSearchParams(window.location.search);
+		const queryFlow = params.get('authFlow') ?? '--';
+		const querySync = params.get('sync') ?? '--';
+		const queryRedirect = params.get('redirect') ?? '--';
+		const queryUid = params.get('uid') ?? '--';
+
+		type LoginFlowPayload = {
+			email?: string;
+			sync?: 'ok' | 'degraded';
+			syncError?: string | null;
+			redirectTo?: string;
+			at?: string;
+		};
+		let fromStorage: LoginFlowPayload | null = null;
+
+		try {
+			const raw = window.sessionStorage.getItem(LOGIN_FLOW_STORAGE_KEY);
+			if (raw) {
+				fromStorage = JSON.parse(raw) as LoginFlowPayload;
+			}
+		} catch {
+			fromStorage = null;
+		}
+
+		const detected = queryFlow === 'login-success' || Boolean(fromStorage?.email);
+		loginClosure.detected = detected;
+		loginClosure.redirectTo = fromStorage?.redirectTo ?? queryRedirect;
+		loginClosure.sync = fromStorage?.sync ?? (querySync === 'ok' || querySync === 'degraded' ? querySync : 'unknown');
+		loginClosure.syncError = fromStorage?.syncError ?? null;
+		loginClosure.email = fromStorage?.email ?? queryUid;
+		loginClosure.at = fromStorage?.at ?? '--';
+		loginClosure.querySync = querySync;
+		loginClosure.queryFlow = queryFlow;
+	}
 
 	async function pullAndMergeWatchlist() {
 		if (!auth.isAuthenticated()) {
@@ -40,10 +91,14 @@
 	}
 
 	function handleSignIn() {
-		const userId = loginUserId.trim();
-		if (!userId) return;
+		const email = loginUserId.trim().toLowerCase();
+		if (!email) return;
+		if (!EMAIL_PATTERN.test(email)) {
+			toast.error('仅支持邮箱账号登录，请输入有效邮箱地址');
+			return;
+		}
 		authPullReady = false;
-		auth.signIn(userId);
+		auth.signIn(email);
 	}
 
 	function handleSignOut() {
@@ -57,6 +112,7 @@
 		auth.bootstrap();
 		loginUserId = auth.state.user?.id ?? '';
 		authPullReady = auth.state.status !== 'authenticated';
+		resolveLoginClosureEvidence();
 
 		let disposed = false;
 		let unmountQuoteStore: () => void = () => {};
@@ -126,7 +182,52 @@
 			<a href="/" class="back-link">返回首页</a>
 		</header>
 
-		<section class="panel panel-spaced">
+		<section
+			class="panel panel-spaced"
+			data-login-closure-detected={loginClosure.detected ? 'yes' : 'no'}
+			data-login-sync-state={loginClosure.sync}
+		>
+			<h2>登录闭环观测（R1.2.1）</h2>
+			<div class="list">
+				<div class="row-link">
+					<div class="row-between">
+						<div>闭环检测</div>
+						<div class="muted">{loginClosure.detected ? '已检测' : '未检测'}</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>跳转目标</div>
+						<div class="muted">{loginClosure.redirectTo}</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>同步状态</div>
+						<div class="muted">{loginClosure.sync}</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>账号（邮箱）</div>
+						<div class="muted">{loginClosure.email}</div>
+					</div>
+				</div>
+				<div class="row-link">
+					<div class="row-between">
+						<div>记录时间</div>
+						<div class="muted">{loginClosure.at}</div>
+					</div>
+				</div>
+				{#if loginClosure.syncError}
+					<div class="row-link">
+						<div class="muted">syncError: {loginClosure.syncError}</div>
+					</div>
+				{/if}
+			</div>
+		</section>
+
+		<section class="panel panel-spaced" data-auth-account-system="email-only">
 			<h2>Auth 状态流（P2.4 R2 证据）</h2>
 			<div class="list">
 				<div class="row-link">
@@ -183,12 +284,19 @@
 				{/if}
 			</div>
 
-			<div class="list card-grid-spaced">
-				<label class="muted" for="auth-user-id">模拟登录 userId（本地演示）</label>
-				<input id="auth-user-id" bind:value={loginUserId} placeholder="例如：demo-user-a" class="auth-input" />
+			<div class="list card-grid-spaced" data-auth-entry-rule="email-only">
+				<label class="muted" for="auth-user-id">模拟登录邮箱账号（仅邮箱体系演示）</label>
+				<input
+					id="auth-user-id"
+					type="email"
+					bind:value={loginUserId}
+					placeholder="例如：demo@example.com"
+					autocomplete="email"
+					class="auth-input"
+				/>
 				<div class="row-between">
-					<button type="button" class="row-btn" onclick={handleSignIn}>登录（切换 authenticated）</button>
-					<button type="button" class="row-btn" onclick={handleSignOut}>退出（回到 anonymous）</button>
+					<button type="button" class="row-btn" onclick={handleSignIn}>邮箱登录（authenticated）</button>
+					<button type="button" class="row-btn" onclick={handleSignOut}>退出（anonymous）</button>
 				</div>
 			</div>
 		</section>

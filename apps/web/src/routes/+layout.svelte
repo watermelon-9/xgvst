@@ -66,7 +66,14 @@
 					? savedMode
 					: ENV_THEME_MODE;
 		syncTheme(initialMode);
-		initPwa();
+		const pwaInitHandle =
+			typeof window.requestIdleCallback === 'function'
+				? window.requestIdleCallback(() => {
+					initPwa();
+				})
+				: window.setTimeout(() => {
+					initPwa();
+				}, 220);
 
 		mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		const handleSystemThemeChange = () => {
@@ -75,7 +82,14 @@
 		};
 
 		mediaQuery.addEventListener('change', handleSystemThemeChange);
-		return () => mediaQuery?.removeEventListener('change', handleSystemThemeChange);
+		return () => {
+			mediaQuery?.removeEventListener('change', handleSystemThemeChange);
+			if (typeof window.cancelIdleCallback === 'function') {
+				window.cancelIdleCallback(pwaInitHandle);
+			} else {
+				window.clearTimeout(pwaInitHandle);
+			}
+		};
 	});
 </script>
 
@@ -90,8 +104,10 @@
 	<meta name="xg-ui-baseline" content={FINANCE_THEME.baseline.uiVersion} />
 	<meta name="xg-ui-reference" content={FINANCE_THEME.baseline.reference} />
 	<link id={THEME_CSS_LINK_ID} rel="stylesheet" href={`/theme-dark.css?v=${THEME_VERSION}`} />
-	<link rel="dns-prefetch" href="//xgvst-workers.viehh642.workers.dev" />
-	<link rel="preconnect" href="https://xgvst-workers.viehh642.workers.dev" crossorigin="anonymous" />
+	{#if !isAuthRoute}
+		<link rel="dns-prefetch" href="//xgvst-workers.viehh642.workers.dev" />
+		<link rel="preconnect" href="https://xgvst-workers.viehh642.workers.dev" crossorigin="anonymous" />
+	{/if}
 	<title>XGVST — Master Volatility. Master Markets.</title>
 </svelte:head>
 

@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-02-25T07:02:50.211Z",
+  "beforeMobile": {
+    "performance": 99,
+    "fcpMs": 1585,
+    "lcpMs": 1809,
+    "speedIndexMs": 1585,
+    "tbtMs": 0,
+    "requests": 30,
+    "totalByteWeight": 62027,
+    "mainThreadMs": 318,
+    "bootupMs": 53
+  },
+  "afterMobile": {
+    "performance": 99,
+    "fcpMs": 1586,
+    "lcpMs": 1667,
+    "speedIndexMs": 2523,
+    "tbtMs": 0,
+    "requests": 29,
+    "totalByteWeight": 61302,
+    "mainThreadMs": 207,
+    "bootupMs": 40
+  },
+  "beforeDesktop": {
+    "performance": 100,
+    "fcpMs": 429,
+    "lcpMs": 451,
+    "speedIndexMs": 429,
+    "tbtMs": 0,
+    "requests": 30,
+    "totalByteWeight": 62027,
+    "mainThreadMs": 44,
+    "bootupMs": 0
+  },
+  "afterDesktop": {
+    "performance": 100,
+    "fcpMs": 412,
+    "lcpMs": 453,
+    "speedIndexMs": 412,
+    "tbtMs": 0,
+    "requests": 29,
+    "totalByteWeight": 61302,
+    "mainThreadMs": 45,
+    "bootupMs": 0
+  },
+  "delta": {
+    "mobile": {
+      "requests": -1,
+      "totalByteWeight": -725,
+      "mainThreadMs": -111,
+      "bootupMs": -13,
+      "lcpMs": -142,
+      "speedIndexMs": 938,
+      "performance": 0
+    },
+    "desktop": {
+      "requests": -1,
+      "totalByteWeight": -725,
+      "mainThreadMs": 1,
+      "bootupMs": 0,
+      "lcpMs": 2,
+      "speedIndexMs": -17,
+      "performance": 0
+    }
+  }
+}

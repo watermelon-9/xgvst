@@ -45,11 +45,14 @@
 </script>
 
 <main class="auth-shell">
-	<section class="auth-card glass-card">
+	<section class="auth-card glass-card" data-auth-flow="email-password" data-auth-alt-entry="none">
 		<header class="auth-head">
 			<p class="auth-eyebrow">XGVST v2</p>
 			<h1>邮箱注册</h1>
-			<p>仅支持邮箱注册流程，不提供手机号注册入口。</p>
+			<p>仅支持邮箱+密码注册流程，不提供手机号/微信/三方登录入口。</p>
+			<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
+				认证入口：仅邮箱账号体系（含密码凭证）。
+			</p>
 		</header>
 
 		<form class="auth-form" novalidate onsubmit={onSubmit}>
