@@ -108,56 +108,75 @@
 </script>
 
 <main class="auth-shell auth-shell-login">
-	<section class="auth-card auth-card-login glass-card" data-auth-flow="email-password" data-auth-alt-entry="none">
-		<header class="auth-head">
-			<p class="auth-eyebrow">XGVST v2</p>
-			<h1>邮箱登录</h1>
-			<p>仅支持邮箱流程登录，登录后自动进入市场页并触发自选同步。</p>
-			<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
-				认证入口：仅邮箱（含密码凭证），不提供手机号/微信/三方登录。
-			</p>
-		</header>
+	<section class="auth-card auth-card-login" data-auth-flow="email-password" data-auth-alt-entry="none">
+		<aside class="auth-login-brand" aria-label="品牌信息">
+			<h1>西瓜说股</h1>
+			<p class="auth-login-brand-sub">智能版块联动 · VAR7 主力吸筹分析平台</p>
+			<div class="auth-login-tags" aria-hidden="true">
+				<span>概念/行业/地域</span>
+				<span>K线 + 成交量 + VAR7</span>
+				<span>红紫主题</span>
+			</div>
+			<p class="auth-login-brand-foot">© Xigua Quant Studio</p>
+		</aside>
 
-		<form class="auth-form" novalidate onsubmit={onSubmit} data-auth-entry-rule="email-only">
-			<label class="auth-label" for="login-email">邮箱</label>
-			<input
-				id="login-email"
-				type="email"
-				name="email"
-				class={`auth-field ${emailError ? 'is-invalid' : ''}`}
-				bind:value={email}
-				placeholder="name@example.com"
-				autocomplete="email"
-				required
-			/>
-			{#if emailError}
-				<p class="auth-error">{emailError}</p>
-			{/if}
+		<div class="auth-login-form-panel">
+			<header class="auth-head">
+				<h2>账号登录</h2>
+				<p>请输入邮箱和密码进入西瓜说股</p>
+				<p class="auth-sentinel" data-auth-entry-rule="email-only" data-auth-provider="none-phone-wechat-third-party">
+					认证入口：仅邮箱（含密码凭证），不提供手机号/微信/三方登录。
+				</p>
+			</header>
 
-			<label class="auth-label" for="login-password">密码</label>
-			<input
-				id="login-password"
-				type="password"
-				name="password"
-				data-auth-credential="password"
-				class={`auth-field ${passwordError ? 'is-invalid' : ''}`}
-				bind:value={password}
-				placeholder="至少 6 位"
-				autocomplete="current-password"
-				required
-			/>
-			{#if passwordError}
-				<p class="auth-error">{passwordError}</p>
-			{/if}
+			<form class="auth-form" novalidate onsubmit={onSubmit} data-auth-entry-rule="email-only">
+				<label class="auth-label" for="login-email">邮箱</label>
+				<input
+					id="login-email"
+					type="email"
+					name="email"
+					class={`auth-field ${emailError ? 'is-invalid' : ''}`}
+					bind:value={email}
+					placeholder="vienh642@gmail.com"
+					autocomplete="email"
+					required
+				/>
+				{#if emailError}
+					<p class="auth-error">{emailError}</p>
+				{/if}
 
-			<button type="submit" class="auth-submit" disabled={!canSubmit}>
-				{loading ? '登录中...' : '登录并进入市场'}
-			</button>
-		</form>
+				<label class="auth-label" for="login-password">密码</label>
+				<input
+					id="login-password"
+					type="password"
+					name="password"
+					data-auth-credential="password"
+					class={`auth-field ${passwordError ? 'is-invalid' : ''}`}
+					bind:value={password}
+					placeholder="••••••••••••••••"
+					autocomplete="current-password"
+					required
+				/>
+				{#if passwordError}
+					<p class="auth-error">{passwordError}</p>
+				{/if}
 
-		<footer class="auth-foot">
-			<a href="/auth/register">注册账号</a>
-			<a href="/auth/forgot-password">忘记密码</a>
-		</footer>
+				<div class="auth-meta-row">
+					<label class="auth-check">
+						<input type="checkbox" name="remember" checked />
+						<span>记住账号</span>
+					</label>
+					<a class="auth-link" href="/auth/forgot-password">忘记密码?</a>
+				</div>
+
+				<button type="submit" class="auth-submit" disabled={!canSubmit}>
+					{loading ? '登录中…' : '登录'}
+				</button>
+			</form>
+
+			<footer class="auth-foot auth-foot-center">
+				<a href="/auth/register">新用户注册（邀请码必填）</a>
+			</footer>
+		</div>
 	</section>
 </main>
