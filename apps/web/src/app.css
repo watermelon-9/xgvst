@@ -1235,6 +1235,17 @@ a {
 	color: #707a95;
 }
 
+.auth-foot-current {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 26px;
+	font-weight: 600;
+	color: #6c4bcb;
+	opacity: 0.72;
+	cursor: default;
+}
+
 .toast-viewport {
 	position: fixed;
 	right: 1rem;

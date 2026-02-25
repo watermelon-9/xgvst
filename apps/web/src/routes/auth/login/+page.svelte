@@ -169,6 +169,6 @@
 	{/snippet}
 
 	{#snippet footer()}
-		<a href="/auth/login">返回登录</a>
+		<span class="auth-foot-current" aria-current="page">返回登录</span>
 	{/snippet}
 </AuthFrame>
