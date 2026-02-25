@@ -44,6 +44,8 @@
 		const emailFromQuery = new URLSearchParams(window.location.search).get('email')?.trim();
 		if (emailFromQuery) {
 			email = emailFromQuery;
+		} else {
+			email = 'xgvst@gmail.com';
 		}
 	});
 
