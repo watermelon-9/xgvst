@@ -53,7 +53,7 @@
 </script>
 
 <main class="auth-shell auth-shell-forgot">
-	<section class="auth-card auth-card-simple" data-auth-flow="email-password" data-auth-alt-entry="none">
+	<section class="auth-card-simple" data-auth-flow="email-password" data-auth-alt-entry="none">
 		<header class="auth-head auth-head-plain">
 			<h1>忘记密码</h1>
 			<p>请输入注册邮箱 + 邀请码，并设置新密码。验证通过后将直接重置密码。</p>
